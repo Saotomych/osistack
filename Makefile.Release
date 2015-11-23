@@ -14,7 +14,7 @@ CXX           = g++
 DEFINES       = -DOSISTACK_LIBRARY -DQT_NO_DEBUG -DQT_NETWORK_LIB -DQT_CORE_LIB
 CFLAGS        = -m64 -pipe -O2 -fPIC -Wall -W -D_REENTRANT $(DEFINES)
 CXXFLAGS      = -m64 -pipe -O2 -fPIC -std=c++0x -Wall -W -Wno-unused-parameter -D_REENTRANT $(DEFINES)
-INCPATH       = -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I. -I../ASN1/include -I$(JENKINS_HOME)/jobs/ASN1/workspace/include -Iinclude -I$(JENKINS_HOME)/jobs/osistack/workspace/include -Iinclude/acse-asn1 -I$(JENKINS_HOME)/jobs/osistack/workspace/include/acse-asn1 -Isrc -Iinclude -I/usr/include/qt5 -I/usr/include/qt5/QtNetwork -I/usr/include/qt5/QtCore -Irelease
+INCPATH       = -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I. -I../ositransport/include -I$(JENKINS_HOME)/jobs/ositransport/workspace/include -I../ASN1/include -I$(JENKINS_HOME)/jobs/ASN1/workspace/include -Iinclude -I$(JENKINS_HOME)/jobs/osistack/workspace/include -Iinclude/acse-asn1 -I$(JENKINS_HOME)/jobs/osistack/workspace/include/acse-asn1 -Isrc -Iinclude -I/usr/include/qt5 -I/usr/include/qt5/QtNetwork -I/usr/include/qt5/QtCore -Irelease
 AR            = ar cqs
 RANLIB        = 
 QMAKE         = /usr/lib/x86_64-linux-gnu/qt5/bin/qmake
@@ -203,204 +203,100 @@ compiler_rcc_clean:
 compiler_moc_header_make_all: release/moc_APtitle.cpp release/moc_AEtitle.cpp release/moc_AEqualifier.cpp release/moc_externalLinkV1.cpp release/moc_externalLinkV2.cpp release/moc_associateSourceDiagnostic.cpp release/moc_authenticationValue.cpp release/moc_applicationContextNameList.cpp release/moc_associationInformation.cpp release/moc_RLreApdu.cpp release/moc_RLrqApdu.cpp release/moc_AAreApdu.cpp release/moc_AArqApdu.cpp release/moc_AcseApdu.cpp
 compiler_moc_header_clean:
 	-$(DEL_FILE) release/moc_APtitle.cpp release/moc_AEtitle.cpp release/moc_AEqualifier.cpp release/moc_externalLinkV1.cpp release/moc_externalLinkV2.cpp release/moc_associateSourceDiagnostic.cpp release/moc_authenticationValue.cpp release/moc_applicationContextNameList.cpp release/moc_associationInformation.cpp release/moc_RLreApdu.cpp release/moc_RLrqApdu.cpp release/moc_AAreApdu.cpp release/moc_AArqApdu.cpp release/moc_AcseApdu.cpp
-release/moc_APtitle.cpp: ../ASN1/include/berObjectIdentifier.h \
+release/moc_APtitle.cpp: include/osistack_global.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/QObject \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		/usr/include/qt5/QtNetwork/QHostAddress \
+		/usr/include/qt5/QtNetwork/qhostaddress.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtNetwork/qabstractsocket.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		/usr/include/qt5/QtCore/QMutex \
+		/usr/include/qt5/QtCore/QDebug \
+		/usr/include/qt5/QtCore/QLinkedList \
+		/usr/include/qt5/QtCore/qlinkedlist.h \
+		/usr/include/qt5/QtCore/QVector \
+		/usr/include/qt5/QtCore/QDataStream \
+		/usr/include/qt5/QtCore/QScopedPointer \
+		/usr/include/qt5/QtCore/QSharedPointer \
+		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/QByteArray \
+		/usr/include/qt5/QtCore/QBitArray \
+		/usr/include/qt5/QtCore/qbitarray.h \
+		/usr/include/qt5/QtCore/qmath.h \
 		../ASN1/include/berIdentifier.h \
 		../ASN1/include/asn1_global.h \
-		/usr/include/qt5/QtCore/qglobal.h \
-		/usr/include/qt5/QtCore/qconfig.h \
-		/usr/include/qt5/QtCore/qfeatures.h \
-		/usr/include/qt5/QtCore/qsystemdetection.h \
-		/usr/include/qt5/QtCore/qprocessordetection.h \
-		/usr/include/qt5/QtCore/qcompilerdetection.h \
-		/usr/include/qt5/QtCore/qglobalstatic.h \
-		/usr/include/qt5/QtCore/qatomic.h \
-		/usr/include/qt5/QtCore/qbasicatomic.h \
-		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
-		/usr/include/qt5/QtCore/qgenericatomic.h \
-		/usr/include/qt5/QtCore/qatomic_msvc.h \
-		/usr/include/qt5/QtCore/qatomic_integrity.h \
-		/usr/include/qt5/QtCore/qoldbasicatomic.h \
-		/usr/include/qt5/QtCore/qatomic_vxworks.h \
-		/usr/include/qt5/QtCore/qatomic_power.h \
-		/usr/include/qt5/QtCore/qatomic_alpha.h \
-		/usr/include/qt5/QtCore/qatomic_armv7.h \
-		/usr/include/qt5/QtCore/qatomic_armv6.h \
-		/usr/include/qt5/QtCore/qatomic_armv5.h \
-		/usr/include/qt5/QtCore/qatomic_bfin.h \
-		/usr/include/qt5/QtCore/qatomic_ia64.h \
-		/usr/include/qt5/QtCore/qatomic_mips.h \
-		/usr/include/qt5/QtCore/qatomic_s390.h \
-		/usr/include/qt5/QtCore/qatomic_sh4a.h \
-		/usr/include/qt5/QtCore/qatomic_sparc.h \
-		/usr/include/qt5/QtCore/qatomic_gcc.h \
-		/usr/include/qt5/QtCore/qatomic_x86.h \
-		/usr/include/qt5/QtCore/qatomic_cxx11.h \
-		/usr/include/qt5/QtCore/qatomic_unix.h \
-		/usr/include/qt5/QtCore/qmutex.h \
-		/usr/include/qt5/QtCore/qlogging.h \
-		/usr/include/qt5/QtCore/qflags.h \
-		/usr/include/qt5/QtCore/qtypeinfo.h \
-		/usr/include/qt5/QtCore/qtypetraits.h \
-		/usr/include/qt5/QtCore/qsysinfo.h \
-		/usr/include/qt5/QtCore/QObject \
-		/usr/include/qt5/QtCore/qobject.h \
-		/usr/include/qt5/QtCore/qobjectdefs.h \
-		/usr/include/qt5/QtCore/qnamespace.h \
-		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
-		/usr/include/qt5/QtCore/qstring.h \
-		/usr/include/qt5/QtCore/qchar.h \
-		/usr/include/qt5/QtCore/qbytearray.h \
-		/usr/include/qt5/QtCore/qrefcount.h \
-		/usr/include/qt5/QtCore/qarraydata.h \
-		/usr/include/qt5/QtCore/qstringbuilder.h \
-		/usr/include/qt5/QtCore/qlist.h \
-		/usr/include/qt5/QtCore/qalgorithms.h \
-		/usr/include/qt5/QtCore/qiterator.h \
-		/usr/include/qt5/QtCore/qcoreevent.h \
-		/usr/include/qt5/QtCore/qscopedpointer.h \
-		/usr/include/qt5/QtCore/qmetatype.h \
-		/usr/include/qt5/QtCore/qvarlengtharray.h \
-		/usr/include/qt5/QtCore/qcontainerfwd.h \
-		/usr/include/qt5/QtCore/qisenum.h \
-		/usr/include/qt5/QtCore/qobject_impl.h \
-		/usr/include/qt5/QtNetwork/QHostAddress \
-		/usr/include/qt5/QtNetwork/qhostaddress.h \
-		/usr/include/qt5/QtCore/qpair.h \
-		/usr/include/qt5/QtNetwork/qabstractsocket.h \
-		/usr/include/qt5/QtCore/qiodevice.h \
-		/usr/include/qt5/QtCore/qdebug.h \
-		/usr/include/qt5/QtCore/qhash.h \
-		/usr/include/qt5/QtCore/qmap.h \
-		/usr/include/qt5/QtCore/qtextstream.h \
-		/usr/include/qt5/QtCore/qlocale.h \
-		/usr/include/qt5/QtCore/qvariant.h \
-		/usr/include/qt5/QtCore/qstringlist.h \
-		/usr/include/qt5/QtCore/qdatastream.h \
-		/usr/include/qt5/QtCore/qregexp.h \
-		/usr/include/qt5/QtCore/qstringmatcher.h \
-		/usr/include/qt5/QtCore/qshareddata.h \
-		/usr/include/qt5/QtCore/qvector.h \
-		/usr/include/qt5/QtCore/qpoint.h \
-		/usr/include/qt5/QtCore/qset.h \
-		/usr/include/qt5/QtCore/qcontiguouscache.h \
-		/usr/include/qt5/QtCore/QMutex \
-		/usr/include/qt5/QtCore/QDebug \
-		/usr/include/qt5/QtCore/QLinkedList \
-		/usr/include/qt5/QtCore/qlinkedlist.h \
-		/usr/include/qt5/QtCore/QVector \
-		/usr/include/qt5/QtCore/QScopedPointer \
-		/usr/include/qt5/QtCore/QSharedPointer \
-		/usr/include/qt5/QtCore/qsharedpointer.h \
-		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
-		/usr/include/qt5/QtCore/QByteArray \
-		/usr/include/qt5/QtCore/QBitArray \
-		/usr/include/qt5/QtCore/qbitarray.h \
-		/usr/include/qt5/QtCore/qmath.h \
-		/usr/include/qt5/QtCore/QMetaObject \
-		/usr/include/qt5/QtCore/QMetaProperty \
-		/usr/include/qt5/QtCore/qmetaobject.h \
-		/usr/include/qt5/QtCore/QVariant \
-		../ASN1/include/berByteArrayOutputStream.h \
-		../ASN1/include/berByteArrayInputStream.h \
-		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berObjectIdentifierStorage.h \
-		../ASN1/include/storages/berBaseType.h \
-		../ASN1/include/storages/decoder.h \
-		include/acse-asn1/APtitle.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/acse-asn1/APtitle.h -o release/moc_APtitle.cpp
-
-release/moc_AEtitle.cpp: ../ASN1/include/berIdentifier.h \
-		../ASN1/include/asn1_global.h \
-		/usr/include/qt5/QtCore/qglobal.h \
-		/usr/include/qt5/QtCore/qconfig.h \
-		/usr/include/qt5/QtCore/qfeatures.h \
-		/usr/include/qt5/QtCore/qsystemdetection.h \
-		/usr/include/qt5/QtCore/qprocessordetection.h \
-		/usr/include/qt5/QtCore/qcompilerdetection.h \
-		/usr/include/qt5/QtCore/qglobalstatic.h \
-		/usr/include/qt5/QtCore/qatomic.h \
-		/usr/include/qt5/QtCore/qbasicatomic.h \
-		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
-		/usr/include/qt5/QtCore/qgenericatomic.h \
-		/usr/include/qt5/QtCore/qatomic_msvc.h \
-		/usr/include/qt5/QtCore/qatomic_integrity.h \
-		/usr/include/qt5/QtCore/qoldbasicatomic.h \
-		/usr/include/qt5/QtCore/qatomic_vxworks.h \
-		/usr/include/qt5/QtCore/qatomic_power.h \
-		/usr/include/qt5/QtCore/qatomic_alpha.h \
-		/usr/include/qt5/QtCore/qatomic_armv7.h \
-		/usr/include/qt5/QtCore/qatomic_armv6.h \
-		/usr/include/qt5/QtCore/qatomic_armv5.h \
-		/usr/include/qt5/QtCore/qatomic_bfin.h \
-		/usr/include/qt5/QtCore/qatomic_ia64.h \
-		/usr/include/qt5/QtCore/qatomic_mips.h \
-		/usr/include/qt5/QtCore/qatomic_s390.h \
-		/usr/include/qt5/QtCore/qatomic_sh4a.h \
-		/usr/include/qt5/QtCore/qatomic_sparc.h \
-		/usr/include/qt5/QtCore/qatomic_gcc.h \
-		/usr/include/qt5/QtCore/qatomic_x86.h \
-		/usr/include/qt5/QtCore/qatomic_cxx11.h \
-		/usr/include/qt5/QtCore/qatomic_unix.h \
-		/usr/include/qt5/QtCore/qmutex.h \
-		/usr/include/qt5/QtCore/qlogging.h \
-		/usr/include/qt5/QtCore/qflags.h \
-		/usr/include/qt5/QtCore/qtypeinfo.h \
-		/usr/include/qt5/QtCore/qtypetraits.h \
-		/usr/include/qt5/QtCore/qsysinfo.h \
-		/usr/include/qt5/QtCore/QObject \
-		/usr/include/qt5/QtCore/qobject.h \
-		/usr/include/qt5/QtCore/qobjectdefs.h \
-		/usr/include/qt5/QtCore/qnamespace.h \
-		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
-		/usr/include/qt5/QtCore/qstring.h \
-		/usr/include/qt5/QtCore/qchar.h \
-		/usr/include/qt5/QtCore/qbytearray.h \
-		/usr/include/qt5/QtCore/qrefcount.h \
-		/usr/include/qt5/QtCore/qarraydata.h \
-		/usr/include/qt5/QtCore/qstringbuilder.h \
-		/usr/include/qt5/QtCore/qlist.h \
-		/usr/include/qt5/QtCore/qalgorithms.h \
-		/usr/include/qt5/QtCore/qiterator.h \
-		/usr/include/qt5/QtCore/qcoreevent.h \
-		/usr/include/qt5/QtCore/qscopedpointer.h \
-		/usr/include/qt5/QtCore/qmetatype.h \
-		/usr/include/qt5/QtCore/qvarlengtharray.h \
-		/usr/include/qt5/QtCore/qcontainerfwd.h \
-		/usr/include/qt5/QtCore/qisenum.h \
-		/usr/include/qt5/QtCore/qobject_impl.h \
-		/usr/include/qt5/QtNetwork/QHostAddress \
-		/usr/include/qt5/QtNetwork/qhostaddress.h \
-		/usr/include/qt5/QtCore/qpair.h \
-		/usr/include/qt5/QtNetwork/qabstractsocket.h \
-		/usr/include/qt5/QtCore/qiodevice.h \
-		/usr/include/qt5/QtCore/qdebug.h \
-		/usr/include/qt5/QtCore/qhash.h \
-		/usr/include/qt5/QtCore/qmap.h \
-		/usr/include/qt5/QtCore/qtextstream.h \
-		/usr/include/qt5/QtCore/qlocale.h \
-		/usr/include/qt5/QtCore/qvariant.h \
-		/usr/include/qt5/QtCore/qstringlist.h \
-		/usr/include/qt5/QtCore/qdatastream.h \
-		/usr/include/qt5/QtCore/qregexp.h \
-		/usr/include/qt5/QtCore/qstringmatcher.h \
-		/usr/include/qt5/QtCore/qshareddata.h \
-		/usr/include/qt5/QtCore/qvector.h \
-		/usr/include/qt5/QtCore/qpoint.h \
-		/usr/include/qt5/QtCore/qset.h \
-		/usr/include/qt5/QtCore/qcontiguouscache.h \
-		/usr/include/qt5/QtCore/QMutex \
-		/usr/include/qt5/QtCore/QDebug \
-		/usr/include/qt5/QtCore/QLinkedList \
-		/usr/include/qt5/QtCore/qlinkedlist.h \
-		/usr/include/qt5/QtCore/QVector \
-		/usr/include/qt5/QtCore/QScopedPointer \
-		/usr/include/qt5/QtCore/QSharedPointer \
-		/usr/include/qt5/QtCore/qsharedpointer.h \
-		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
-		/usr/include/qt5/QtCore/QByteArray \
-		/usr/include/qt5/QtCore/QBitArray \
-		/usr/include/qt5/QtCore/qbitarray.h \
-		/usr/include/qt5/QtCore/qmath.h \
 		/usr/include/qt5/QtCore/QMetaObject \
 		/usr/include/qt5/QtCore/QMetaProperty \
 		/usr/include/qt5/QtCore/qmetaobject.h \
@@ -411,13 +307,123 @@ release/moc_AEtitle.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
+		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/berObjectIdentifier.h \
+		../ASN1/include/storages/berObjectIdentifierStorage.h \
+		include/acse-asn1/APtitle.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/acse-asn1/APtitle.h -o release/moc_APtitle.cpp
+
+release/moc_AEtitle.cpp: include/osistack_global.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/QObject \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		/usr/include/qt5/QtNetwork/QHostAddress \
+		/usr/include/qt5/QtNetwork/qhostaddress.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtNetwork/qabstractsocket.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qdebug.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtCore/qmap.h \
+		/usr/include/qt5/QtCore/qtextstream.h \
+		/usr/include/qt5/QtCore/qlocale.h \
+		/usr/include/qt5/QtCore/qvariant.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtCore/qset.h \
+		/usr/include/qt5/QtCore/qcontiguouscache.h \
+		/usr/include/qt5/QtCore/QMutex \
+		/usr/include/qt5/QtCore/QDebug \
+		/usr/include/qt5/QtCore/QLinkedList \
+		/usr/include/qt5/QtCore/qlinkedlist.h \
+		/usr/include/qt5/QtCore/QVector \
+		/usr/include/qt5/QtCore/QDataStream \
+		/usr/include/qt5/QtCore/QScopedPointer \
+		/usr/include/qt5/QtCore/QSharedPointer \
+		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/QByteArray \
+		/usr/include/qt5/QtCore/QBitArray \
+		/usr/include/qt5/QtCore/qbitarray.h \
+		/usr/include/qt5/QtCore/qmath.h \
+		../ASN1/include/berIdentifier.h \
+		../ASN1/include/asn1_global.h \
+		/usr/include/qt5/QtCore/QMetaObject \
+		/usr/include/qt5/QtCore/QMetaProperty \
+		/usr/include/qt5/QtCore/qmetaobject.h \
+		/usr/include/qt5/QtCore/QVariant \
+		../ASN1/include/berByteArrayOutputStream.h \
+		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/berBase.h \
+		../ASN1/include/berLength.h \
+		../ASN1/include/storages/berBaseType.h \
+		../ASN1/include/storages/decoder.h \
+		../ASN1/include/storages/containerStorage.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		include/acse-asn1/AEtitle.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/acse-asn1/AEtitle.h -o release/moc_AEtitle.cpp
 
-release/moc_AEqualifier.cpp: ../ASN1/include/berIdentifier.h \
-		../ASN1/include/asn1_global.h \
+release/moc_AEqualifier.cpp: include/osistack_global.h \
 		/usr/include/qt5/QtCore/qglobal.h \
 		/usr/include/qt5/QtCore/qconfig.h \
 		/usr/include/qt5/QtCore/qfeatures.h \
@@ -500,6 +506,7 @@ release/moc_AEqualifier.cpp: ../ASN1/include/berIdentifier.h \
 		/usr/include/qt5/QtCore/QLinkedList \
 		/usr/include/qt5/QtCore/qlinkedlist.h \
 		/usr/include/qt5/QtCore/QVector \
+		/usr/include/qt5/QtCore/QDataStream \
 		/usr/include/qt5/QtCore/QScopedPointer \
 		/usr/include/qt5/QtCore/QSharedPointer \
 		/usr/include/qt5/QtCore/qsharedpointer.h \
@@ -508,6 +515,8 @@ release/moc_AEqualifier.cpp: ../ASN1/include/berIdentifier.h \
 		/usr/include/qt5/QtCore/QBitArray \
 		/usr/include/qt5/QtCore/qbitarray.h \
 		/usr/include/qt5/QtCore/qmath.h \
+		../ASN1/include/berIdentifier.h \
+		../ASN1/include/asn1_global.h \
 		/usr/include/qt5/QtCore/QMetaObject \
 		/usr/include/qt5/QtCore/QMetaProperty \
 		/usr/include/qt5/QtCore/qmetaobject.h \
@@ -518,13 +527,13 @@ release/moc_AEqualifier.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
+		../ASN1/include/storages/containerStorage.h \
 		../ASN1/include/berInteger.h \
 		../ASN1/include/storages/berIntegerStorage.h \
 		include/acse-asn1/AEqualifier.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/acse-asn1/AEqualifier.h -o release/moc_AEqualifier.cpp
 
-release/moc_externalLinkV1.cpp: ../ASN1/include/berIdentifier.h \
-		../ASN1/include/asn1_global.h \
+release/moc_externalLinkV1.cpp: include/osistack_global.h \
 		/usr/include/qt5/QtCore/qglobal.h \
 		/usr/include/qt5/QtCore/qconfig.h \
 		/usr/include/qt5/QtCore/qfeatures.h \
@@ -607,6 +616,7 @@ release/moc_externalLinkV1.cpp: ../ASN1/include/berIdentifier.h \
 		/usr/include/qt5/QtCore/QLinkedList \
 		/usr/include/qt5/QtCore/qlinkedlist.h \
 		/usr/include/qt5/QtCore/QVector \
+		/usr/include/qt5/QtCore/QDataStream \
 		/usr/include/qt5/QtCore/QScopedPointer \
 		/usr/include/qt5/QtCore/QSharedPointer \
 		/usr/include/qt5/QtCore/qsharedpointer.h \
@@ -615,6 +625,8 @@ release/moc_externalLinkV1.cpp: ../ASN1/include/berIdentifier.h \
 		/usr/include/qt5/QtCore/QBitArray \
 		/usr/include/qt5/QtCore/qbitarray.h \
 		/usr/include/qt5/QtCore/qmath.h \
+		../ASN1/include/berIdentifier.h \
+		../ASN1/include/asn1_global.h \
 		/usr/include/qt5/QtCore/QMetaObject \
 		/usr/include/qt5/QtCore/QMetaProperty \
 		/usr/include/qt5/QtCore/qmetaobject.h \
@@ -625,6 +637,7 @@ release/moc_externalLinkV1.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
+		../ASN1/include/storages/containerStorage.h \
 		../ASN1/include/berAnyNoDecode.h \
 		../ASN1/include/berOctetString.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
@@ -633,8 +646,7 @@ release/moc_externalLinkV1.cpp: ../ASN1/include/berIdentifier.h \
 		include/acse-asn1/externalLinkV1.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/acse-asn1/externalLinkV1.h -o release/moc_externalLinkV1.cpp
 
-release/moc_externalLinkV2.cpp: ../ASN1/include/berIdentifier.h \
-		../ASN1/include/asn1_global.h \
+release/moc_externalLinkV2.cpp: include/osistack_global.h \
 		/usr/include/qt5/QtCore/qglobal.h \
 		/usr/include/qt5/QtCore/qconfig.h \
 		/usr/include/qt5/QtCore/qfeatures.h \
@@ -717,6 +729,7 @@ release/moc_externalLinkV2.cpp: ../ASN1/include/berIdentifier.h \
 		/usr/include/qt5/QtCore/QLinkedList \
 		/usr/include/qt5/QtCore/qlinkedlist.h \
 		/usr/include/qt5/QtCore/QVector \
+		/usr/include/qt5/QtCore/QDataStream \
 		/usr/include/qt5/QtCore/QScopedPointer \
 		/usr/include/qt5/QtCore/QSharedPointer \
 		/usr/include/qt5/QtCore/qsharedpointer.h \
@@ -725,6 +738,8 @@ release/moc_externalLinkV2.cpp: ../ASN1/include/berIdentifier.h \
 		/usr/include/qt5/QtCore/QBitArray \
 		/usr/include/qt5/QtCore/qbitarray.h \
 		/usr/include/qt5/QtCore/qmath.h \
+		../ASN1/include/berIdentifier.h \
+		../ASN1/include/asn1_global.h \
 		/usr/include/qt5/QtCore/QMetaObject \
 		/usr/include/qt5/QtCore/QMetaProperty \
 		/usr/include/qt5/QtCore/qmetaobject.h \
@@ -735,6 +750,7 @@ release/moc_externalLinkV2.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
+		../ASN1/include/storages/containerStorage.h \
 		../ASN1/include/berAny.h \
 		../ASN1/include/berOctetString.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
@@ -743,8 +759,7 @@ release/moc_externalLinkV2.cpp: ../ASN1/include/berIdentifier.h \
 		include/acse-asn1/externalLinkV2.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/acse-asn1/externalLinkV2.h -o release/moc_externalLinkV2.cpp
 
-release/moc_associateSourceDiagnostic.cpp: ../ASN1/include/berIdentifier.h \
-		../ASN1/include/asn1_global.h \
+release/moc_associateSourceDiagnostic.cpp: include/osistack_global.h \
 		/usr/include/qt5/QtCore/qglobal.h \
 		/usr/include/qt5/QtCore/qconfig.h \
 		/usr/include/qt5/QtCore/qfeatures.h \
@@ -827,6 +842,7 @@ release/moc_associateSourceDiagnostic.cpp: ../ASN1/include/berIdentifier.h \
 		/usr/include/qt5/QtCore/QLinkedList \
 		/usr/include/qt5/QtCore/qlinkedlist.h \
 		/usr/include/qt5/QtCore/QVector \
+		/usr/include/qt5/QtCore/QDataStream \
 		/usr/include/qt5/QtCore/QScopedPointer \
 		/usr/include/qt5/QtCore/QSharedPointer \
 		/usr/include/qt5/QtCore/qsharedpointer.h \
@@ -835,6 +851,8 @@ release/moc_associateSourceDiagnostic.cpp: ../ASN1/include/berIdentifier.h \
 		/usr/include/qt5/QtCore/QBitArray \
 		/usr/include/qt5/QtCore/qbitarray.h \
 		/usr/include/qt5/QtCore/qmath.h \
+		../ASN1/include/berIdentifier.h \
+		../ASN1/include/asn1_global.h \
 		/usr/include/qt5/QtCore/QMetaObject \
 		/usr/include/qt5/QtCore/QMetaProperty \
 		/usr/include/qt5/QtCore/qmetaobject.h \
@@ -845,14 +863,14 @@ release/moc_associateSourceDiagnostic.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
+		../ASN1/include/storages/containerStorage.h \
 		../ASN1/include/berAny.h \
 		../ASN1/include/berInteger.h \
 		../ASN1/include/storages/berIntegerStorage.h \
 		include/acse-asn1/associateSourceDiagnostic.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/acse-asn1/associateSourceDiagnostic.h -o release/moc_associateSourceDiagnostic.cpp
 
-release/moc_authenticationValue.cpp: ../ASN1/include/berIdentifier.h \
-		../ASN1/include/asn1_global.h \
+release/moc_authenticationValue.cpp: include/osistack_global.h \
 		/usr/include/qt5/QtCore/qglobal.h \
 		/usr/include/qt5/QtCore/qconfig.h \
 		/usr/include/qt5/QtCore/qfeatures.h \
@@ -935,6 +953,7 @@ release/moc_authenticationValue.cpp: ../ASN1/include/berIdentifier.h \
 		/usr/include/qt5/QtCore/QLinkedList \
 		/usr/include/qt5/QtCore/qlinkedlist.h \
 		/usr/include/qt5/QtCore/QVector \
+		/usr/include/qt5/QtCore/QDataStream \
 		/usr/include/qt5/QtCore/QScopedPointer \
 		/usr/include/qt5/QtCore/QSharedPointer \
 		/usr/include/qt5/QtCore/qsharedpointer.h \
@@ -943,6 +962,8 @@ release/moc_authenticationValue.cpp: ../ASN1/include/berIdentifier.h \
 		/usr/include/qt5/QtCore/QBitArray \
 		/usr/include/qt5/QtCore/qbitarray.h \
 		/usr/include/qt5/QtCore/qmath.h \
+		../ASN1/include/berIdentifier.h \
+		../ASN1/include/asn1_global.h \
 		/usr/include/qt5/QtCore/QMetaObject \
 		/usr/include/qt5/QtCore/QMetaProperty \
 		/usr/include/qt5/QtCore/qmetaobject.h \
@@ -953,6 +974,7 @@ release/moc_authenticationValue.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
+		../ASN1/include/storages/containerStorage.h \
 		include/acse-asn1/externalLinkV2.h \
 		../ASN1/include/berAny.h \
 		../ASN1/include/berOctetString.h \
@@ -963,8 +985,7 @@ release/moc_authenticationValue.cpp: ../ASN1/include/berIdentifier.h \
 		include/acse-asn1/authenticationValue.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/acse-asn1/authenticationValue.h -o release/moc_authenticationValue.cpp
 
-release/moc_applicationContextNameList.cpp: ../ASN1/include/berIdentifier.h \
-		../ASN1/include/asn1_global.h \
+release/moc_applicationContextNameList.cpp: include/osistack_global.h \
 		/usr/include/qt5/QtCore/qglobal.h \
 		/usr/include/qt5/QtCore/qconfig.h \
 		/usr/include/qt5/QtCore/qfeatures.h \
@@ -1047,6 +1068,7 @@ release/moc_applicationContextNameList.cpp: ../ASN1/include/berIdentifier.h \
 		/usr/include/qt5/QtCore/QLinkedList \
 		/usr/include/qt5/QtCore/qlinkedlist.h \
 		/usr/include/qt5/QtCore/QVector \
+		/usr/include/qt5/QtCore/QDataStream \
 		/usr/include/qt5/QtCore/QScopedPointer \
 		/usr/include/qt5/QtCore/QSharedPointer \
 		/usr/include/qt5/QtCore/qsharedpointer.h \
@@ -1055,6 +1077,8 @@ release/moc_applicationContextNameList.cpp: ../ASN1/include/berIdentifier.h \
 		/usr/include/qt5/QtCore/QBitArray \
 		/usr/include/qt5/QtCore/qbitarray.h \
 		/usr/include/qt5/QtCore/qmath.h \
+		../ASN1/include/berIdentifier.h \
+		../ASN1/include/asn1_global.h \
 		/usr/include/qt5/QtCore/QMetaObject \
 		/usr/include/qt5/QtCore/QMetaProperty \
 		/usr/include/qt5/QtCore/qmetaobject.h \
@@ -1071,8 +1095,7 @@ release/moc_applicationContextNameList.cpp: ../ASN1/include/berIdentifier.h \
 		include/acse-asn1/applicationContextNameList.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/acse-asn1/applicationContextNameList.h -o release/moc_applicationContextNameList.cpp
 
-release/moc_associationInformation.cpp: ../ASN1/include/berIdentifier.h \
-		../ASN1/include/asn1_global.h \
+release/moc_associationInformation.cpp: include/osistack_global.h \
 		/usr/include/qt5/QtCore/qglobal.h \
 		/usr/include/qt5/QtCore/qconfig.h \
 		/usr/include/qt5/QtCore/qfeatures.h \
@@ -1155,6 +1178,7 @@ release/moc_associationInformation.cpp: ../ASN1/include/berIdentifier.h \
 		/usr/include/qt5/QtCore/QLinkedList \
 		/usr/include/qt5/QtCore/qlinkedlist.h \
 		/usr/include/qt5/QtCore/QVector \
+		/usr/include/qt5/QtCore/QDataStream \
 		/usr/include/qt5/QtCore/QScopedPointer \
 		/usr/include/qt5/QtCore/QSharedPointer \
 		/usr/include/qt5/QtCore/qsharedpointer.h \
@@ -1163,6 +1187,8 @@ release/moc_associationInformation.cpp: ../ASN1/include/berIdentifier.h \
 		/usr/include/qt5/QtCore/QBitArray \
 		/usr/include/qt5/QtCore/qbitarray.h \
 		/usr/include/qt5/QtCore/qmath.h \
+		../ASN1/include/berIdentifier.h \
+		../ASN1/include/asn1_global.h \
 		/usr/include/qt5/QtCore/QMetaObject \
 		/usr/include/qt5/QtCore/QMetaProperty \
 		/usr/include/qt5/QtCore/qmetaobject.h \
@@ -1183,8 +1209,7 @@ release/moc_associationInformation.cpp: ../ASN1/include/berIdentifier.h \
 		include/acse-asn1/associationInformation.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/acse-asn1/associationInformation.h -o release/moc_associationInformation.cpp
 
-release/moc_RLreApdu.cpp: ../ASN1/include/berIdentifier.h \
-		../ASN1/include/asn1_global.h \
+release/moc_RLreApdu.cpp: include/osistack_global.h \
 		/usr/include/qt5/QtCore/qglobal.h \
 		/usr/include/qt5/QtCore/qconfig.h \
 		/usr/include/qt5/QtCore/qfeatures.h \
@@ -1267,6 +1292,7 @@ release/moc_RLreApdu.cpp: ../ASN1/include/berIdentifier.h \
 		/usr/include/qt5/QtCore/QLinkedList \
 		/usr/include/qt5/QtCore/qlinkedlist.h \
 		/usr/include/qt5/QtCore/QVector \
+		/usr/include/qt5/QtCore/QDataStream \
 		/usr/include/qt5/QtCore/QScopedPointer \
 		/usr/include/qt5/QtCore/QSharedPointer \
 		/usr/include/qt5/QtCore/qsharedpointer.h \
@@ -1275,6 +1301,8 @@ release/moc_RLreApdu.cpp: ../ASN1/include/berIdentifier.h \
 		/usr/include/qt5/QtCore/QBitArray \
 		/usr/include/qt5/QtCore/qbitarray.h \
 		/usr/include/qt5/QtCore/qmath.h \
+		../ASN1/include/berIdentifier.h \
+		../ASN1/include/asn1_global.h \
 		/usr/include/qt5/QtCore/QMetaObject \
 		/usr/include/qt5/QtCore/QMetaProperty \
 		/usr/include/qt5/QtCore/qmetaobject.h \
@@ -1285,10 +1313,10 @@ release/moc_RLreApdu.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
+		../ASN1/include/storages/containerStorage.h \
 		../ASN1/include/berInteger.h \
 		../ASN1/include/storages/berIntegerStorage.h \
 		include/acse-asn1/associationInformation.h \
-		../ASN1/include/storages/containerStorage.h \
 		include/acse-asn1/externalLinkV1.h \
 		../ASN1/include/berAnyNoDecode.h \
 		../ASN1/include/berOctetString.h \
@@ -1298,8 +1326,7 @@ release/moc_RLreApdu.cpp: ../ASN1/include/berIdentifier.h \
 		include/acse-asn1/RLreApdu.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/acse-asn1/RLreApdu.h -o release/moc_RLreApdu.cpp
 
-release/moc_RLrqApdu.cpp: ../ASN1/include/berIdentifier.h \
-		../ASN1/include/asn1_global.h \
+release/moc_RLrqApdu.cpp: include/osistack_global.h \
 		/usr/include/qt5/QtCore/qglobal.h \
 		/usr/include/qt5/QtCore/qconfig.h \
 		/usr/include/qt5/QtCore/qfeatures.h \
@@ -1382,6 +1409,7 @@ release/moc_RLrqApdu.cpp: ../ASN1/include/berIdentifier.h \
 		/usr/include/qt5/QtCore/QLinkedList \
 		/usr/include/qt5/QtCore/qlinkedlist.h \
 		/usr/include/qt5/QtCore/QVector \
+		/usr/include/qt5/QtCore/QDataStream \
 		/usr/include/qt5/QtCore/QScopedPointer \
 		/usr/include/qt5/QtCore/QSharedPointer \
 		/usr/include/qt5/QtCore/qsharedpointer.h \
@@ -1390,6 +1418,8 @@ release/moc_RLrqApdu.cpp: ../ASN1/include/berIdentifier.h \
 		/usr/include/qt5/QtCore/QBitArray \
 		/usr/include/qt5/QtCore/qbitarray.h \
 		/usr/include/qt5/QtCore/qmath.h \
+		../ASN1/include/berIdentifier.h \
+		../ASN1/include/asn1_global.h \
 		/usr/include/qt5/QtCore/QMetaObject \
 		/usr/include/qt5/QtCore/QMetaProperty \
 		/usr/include/qt5/QtCore/qmetaobject.h \
@@ -1400,10 +1430,10 @@ release/moc_RLrqApdu.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
+		../ASN1/include/storages/containerStorage.h \
 		../ASN1/include/berInteger.h \
 		../ASN1/include/storages/berIntegerStorage.h \
 		include/acse-asn1/associationInformation.h \
-		../ASN1/include/storages/containerStorage.h \
 		include/acse-asn1/externalLinkV1.h \
 		../ASN1/include/berAnyNoDecode.h \
 		../ASN1/include/berOctetString.h \
@@ -1413,8 +1443,7 @@ release/moc_RLrqApdu.cpp: ../ASN1/include/berIdentifier.h \
 		include/acse-asn1/RLrqApdu.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/acse-asn1/RLrqApdu.h -o release/moc_RLrqApdu.cpp
 
-release/moc_AAreApdu.cpp: ../ASN1/include/berIdentifier.h \
-		../ASN1/include/asn1_global.h \
+release/moc_AAreApdu.cpp: include/osistack_global.h \
 		/usr/include/qt5/QtCore/qglobal.h \
 		/usr/include/qt5/QtCore/qconfig.h \
 		/usr/include/qt5/QtCore/qfeatures.h \
@@ -1497,6 +1526,7 @@ release/moc_AAreApdu.cpp: ../ASN1/include/berIdentifier.h \
 		/usr/include/qt5/QtCore/QLinkedList \
 		/usr/include/qt5/QtCore/qlinkedlist.h \
 		/usr/include/qt5/QtCore/QVector \
+		/usr/include/qt5/QtCore/QDataStream \
 		/usr/include/qt5/QtCore/QScopedPointer \
 		/usr/include/qt5/QtCore/QSharedPointer \
 		/usr/include/qt5/QtCore/qsharedpointer.h \
@@ -1505,6 +1535,8 @@ release/moc_AAreApdu.cpp: ../ASN1/include/berIdentifier.h \
 		/usr/include/qt5/QtCore/QBitArray \
 		/usr/include/qt5/QtCore/qbitarray.h \
 		/usr/include/qt5/QtCore/qmath.h \
+		../ASN1/include/berIdentifier.h \
+		../ASN1/include/asn1_global.h \
 		/usr/include/qt5/QtCore/QMetaObject \
 		/usr/include/qt5/QtCore/QMetaProperty \
 		/usr/include/qt5/QtCore/qmetaobject.h \
@@ -1515,6 +1547,7 @@ release/moc_AAreApdu.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
+		../ASN1/include/storages/containerStorage.h \
 		../ASN1/include/berInteger.h \
 		../ASN1/include/storages/berIntegerStorage.h \
 		../ASN1/include/berBitString.h \
@@ -1529,7 +1562,6 @@ release/moc_AAreApdu.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/berAny.h \
 		../ASN1/include/berOctetString.h \
 		include/acse-asn1/applicationContextNameList.h \
-		../ASN1/include/storages/containerStorage.h \
 		include/acse-asn1/associationInformation.h \
 		include/acse-asn1/externalLinkV1.h \
 		../ASN1/include/berAnyNoDecode.h \
@@ -1538,8 +1570,7 @@ release/moc_AAreApdu.cpp: ../ASN1/include/berIdentifier.h \
 		include/acse-asn1/AAreApdu.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/acse-asn1/AAreApdu.h -o release/moc_AAreApdu.cpp
 
-release/moc_AArqApdu.cpp: ../ASN1/include/berIdentifier.h \
-		../ASN1/include/asn1_global.h \
+release/moc_AArqApdu.cpp: include/osistack_global.h \
 		/usr/include/qt5/QtCore/qglobal.h \
 		/usr/include/qt5/QtCore/qconfig.h \
 		/usr/include/qt5/QtCore/qfeatures.h \
@@ -1622,6 +1653,7 @@ release/moc_AArqApdu.cpp: ../ASN1/include/berIdentifier.h \
 		/usr/include/qt5/QtCore/QLinkedList \
 		/usr/include/qt5/QtCore/qlinkedlist.h \
 		/usr/include/qt5/QtCore/QVector \
+		/usr/include/qt5/QtCore/QDataStream \
 		/usr/include/qt5/QtCore/QScopedPointer \
 		/usr/include/qt5/QtCore/QSharedPointer \
 		/usr/include/qt5/QtCore/qsharedpointer.h \
@@ -1630,6 +1662,8 @@ release/moc_AArqApdu.cpp: ../ASN1/include/berIdentifier.h \
 		/usr/include/qt5/QtCore/QBitArray \
 		/usr/include/qt5/QtCore/qbitarray.h \
 		/usr/include/qt5/QtCore/qmath.h \
+		../ASN1/include/berIdentifier.h \
+		../ASN1/include/asn1_global.h \
 		/usr/include/qt5/QtCore/QMetaObject \
 		/usr/include/qt5/QtCore/QMetaProperty \
 		/usr/include/qt5/QtCore/qmetaobject.h \
@@ -1640,6 +1674,7 @@ release/moc_AArqApdu.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
+		../ASN1/include/storages/containerStorage.h \
 		../ASN1/include/berInteger.h \
 		../ASN1/include/storages/berIntegerStorage.h \
 		../ASN1/include/berBitString.h \
@@ -1655,15 +1690,13 @@ release/moc_AArqApdu.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/berAny.h \
 		../ASN1/include/berOctetString.h \
 		include/acse-asn1/applicationContextNameList.h \
-		../ASN1/include/storages/containerStorage.h \
 		include/acse-asn1/associationInformation.h \
 		include/acse-asn1/externalLinkV1.h \
 		../ASN1/include/berAnyNoDecode.h \
 		include/acse-asn1/AArqApdu.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/acse-asn1/AArqApdu.h -o release/moc_AArqApdu.cpp
 
-release/moc_AcseApdu.cpp: ../ASN1/include/berIdentifier.h \
-		../ASN1/include/asn1_global.h \
+release/moc_AcseApdu.cpp: include/osistack_global.h \
 		/usr/include/qt5/QtCore/qglobal.h \
 		/usr/include/qt5/QtCore/qconfig.h \
 		/usr/include/qt5/QtCore/qfeatures.h \
@@ -1746,6 +1779,7 @@ release/moc_AcseApdu.cpp: ../ASN1/include/berIdentifier.h \
 		/usr/include/qt5/QtCore/QLinkedList \
 		/usr/include/qt5/QtCore/qlinkedlist.h \
 		/usr/include/qt5/QtCore/QVector \
+		/usr/include/qt5/QtCore/QDataStream \
 		/usr/include/qt5/QtCore/QScopedPointer \
 		/usr/include/qt5/QtCore/QSharedPointer \
 		/usr/include/qt5/QtCore/qsharedpointer.h \
@@ -1754,6 +1788,8 @@ release/moc_AcseApdu.cpp: ../ASN1/include/berIdentifier.h \
 		/usr/include/qt5/QtCore/QBitArray \
 		/usr/include/qt5/QtCore/qbitarray.h \
 		/usr/include/qt5/QtCore/qmath.h \
+		../ASN1/include/berIdentifier.h \
+		../ASN1/include/asn1_global.h \
 		/usr/include/qt5/QtCore/QMetaObject \
 		/usr/include/qt5/QtCore/QMetaProperty \
 		/usr/include/qt5/QtCore/qmetaobject.h \
@@ -1764,6 +1800,7 @@ release/moc_AcseApdu.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
+		../ASN1/include/storages/containerStorage.h \
 		include/acse-asn1/AArqApdu.h \
 		../ASN1/include/berInteger.h \
 		../ASN1/include/storages/berIntegerStorage.h \
@@ -1780,7 +1817,6 @@ release/moc_AcseApdu.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/berAny.h \
 		../ASN1/include/berOctetString.h \
 		include/acse-asn1/applicationContextNameList.h \
-		../ASN1/include/storages/containerStorage.h \
 		include/acse-asn1/associationInformation.h \
 		include/acse-asn1/externalLinkV1.h \
 		../ASN1/include/berAnyNoDecode.h \
@@ -1804,8 +1840,7 @@ compiler_clean: compiler_moc_header_clean
 ####### Compile
 
 build/release/initIdentifiers.o: src/acse-asn1/initIdentifiers.cpp include/acse-asn1/AAreApdu.h \
-		../ASN1/include/berIdentifier.h \
-		../ASN1/include/asn1_global.h \
+		include/osistack_global.h \
 		/usr/include/qt5/QtCore/qglobal.h \
 		/usr/include/qt5/QtCore/qconfig.h \
 		/usr/include/qt5/QtCore/qfeatures.h \
@@ -1888,6 +1923,7 @@ build/release/initIdentifiers.o: src/acse-asn1/initIdentifiers.cpp include/acse-
 		/usr/include/qt5/QtCore/QLinkedList \
 		/usr/include/qt5/QtCore/qlinkedlist.h \
 		/usr/include/qt5/QtCore/QVector \
+		/usr/include/qt5/QtCore/QDataStream \
 		/usr/include/qt5/QtCore/QScopedPointer \
 		/usr/include/qt5/QtCore/QSharedPointer \
 		/usr/include/qt5/QtCore/qsharedpointer.h \
@@ -1896,6 +1932,8 @@ build/release/initIdentifiers.o: src/acse-asn1/initIdentifiers.cpp include/acse-
 		/usr/include/qt5/QtCore/QBitArray \
 		/usr/include/qt5/QtCore/qbitarray.h \
 		/usr/include/qt5/QtCore/qmath.h \
+		../ASN1/include/berIdentifier.h \
+		../ASN1/include/asn1_global.h \
 		/usr/include/qt5/QtCore/QMetaObject \
 		/usr/include/qt5/QtCore/QMetaProperty \
 		/usr/include/qt5/QtCore/qmetaobject.h \
@@ -1906,6 +1944,7 @@ build/release/initIdentifiers.o: src/acse-asn1/initIdentifiers.cpp include/acse-
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
+		../ASN1/include/storages/containerStorage.h \
 		../ASN1/include/berInteger.h \
 		../ASN1/include/storages/berIntegerStorage.h \
 		../ASN1/include/berBitString.h \
@@ -1920,7 +1959,6 @@ build/release/initIdentifiers.o: src/acse-asn1/initIdentifiers.cpp include/acse-
 		../ASN1/include/berAny.h \
 		../ASN1/include/berOctetString.h \
 		include/acse-asn1/applicationContextNameList.h \
-		../ASN1/include/storages/containerStorage.h \
 		include/acse-asn1/associationInformation.h \
 		include/acse-asn1/externalLinkV1.h \
 		../ASN1/include/berAnyNoDecode.h \

@@ -118,10 +118,10 @@ public:
 	{
 		if (this == &rhs) return false;
 
-		if (*m_pAarqApdu != *rhs.m_pAarqApdu) return true;
-		if (*m_pAareApdu != *rhs.m_pAareApdu) return true;
-		if (*m_pRlrqApdu != *rhs.m_pRlrqApdu) return true;
-		if (*m_pRlreApdu != *rhs.m_pRlreApdu) return true;
+		if ( notEqualsPointersAndValues<CAArqApdu>(m_pAarqApdu, rhs.m_pAarqApdu) ) return true;
+		if ( notEqualsPointersAndValues<CAAreApdu>(m_pAareApdu, rhs.m_pAareApdu) ) return true;
+		if ( notEqualsPointersAndValues<CRLrqApdu>(m_pRlrqApdu, rhs.m_pRlrqApdu) ) return true;
+		if ( notEqualsPointersAndValues<CRLreApdu>(m_pRlreApdu, rhs.m_pRlreApdu) ) return true;
 
 		return false;
 	}

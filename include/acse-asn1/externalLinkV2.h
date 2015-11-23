@@ -102,9 +102,9 @@ public:
 	{
 		if (this == &rhs) return false;
 
-		if (*m_pAny != *rhs.m_pAny) return true;
-		if (*m_pOctetString != *rhs.m_pOctetString) return true;
-		if (*m_pBitString != *rhs.m_pBitString) return true;
+		if ( notEqualsPointersAndValues<CBerAny>(m_pAny, rhs.m_pAny) ) return true;
+		if ( notEqualsPointersAndValues<CBerOctetString>(m_pOctetString, rhs.m_pOctetString) ) return true;
+		if ( notEqualsPointersAndValues<CBerBitString>(m_pBitString, rhs.m_pBitString) ) return true;
 
 		return false;
 	}

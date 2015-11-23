@@ -71,7 +71,7 @@ public:
 	{
 		if (this == &rhs) return false;
 
-		if (*m_pAeTitleForm2 != *rhs.m_pAeTitleForm2) return true;
+		if ( notEqualsPointersAndValues<CBerObjectIdentifier>(m_pAeTitleForm2, rhs.m_pAeTitleForm2) ) return true;
 
 		return false;
 	}

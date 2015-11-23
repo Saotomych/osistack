@@ -93,8 +93,8 @@ public:
 	{
 		if (this == &rhs) return false;
 
-		if (*m_pAcseServiceUser != *rhs.m_pAcseServiceUser) return true;
-		if (*m_pAcseServiceProvider != *rhs.m_pAcseServiceProvider) return true;
+		if ( notEqualsPointersAndValues<CBerInteger>(m_pAcseServiceUser, rhs.m_pAcseServiceUser) ) return true;
+		if ( notEqualsPointersAndValues<CBerInteger>(m_pAcseServiceProvider, rhs.m_pAcseServiceProvider) ) return true;
 
 		return false;
 	}

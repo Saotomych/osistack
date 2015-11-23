@@ -234,22 +234,22 @@ public:
 	{
 		if (this == &rhs) return false;
 
-		if (*m_pProtocolVersion != *rhs.m_pProtocolVersion) return true;
-		if (*m_pApplicationContextName != *rhs.m_pApplicationContextName) return true;
-		if (*m_pCalledApTitle != *rhs.m_pCalledApTitle) return true;
-		if (*m_pCalledAeQualifier != *rhs.m_pCalledAeQualifier) return true;
-		if (*m_pCalledApInvocationIdentifier != *rhs.m_pCalledApInvocationIdentifier) return true;
-		if (*m_pCalledAeInvocationIdentifier != *rhs.m_pCalledAeInvocationIdentifier) return true;
-		if (*m_pCallingApTitle != *rhs.m_pCallingApTitle) return true;
-		if (*m_pCallingAeQualifier != *rhs.m_pCallingAeQualifier) return true;
-		if (*m_pCallingApInvocationIdentifier != *rhs.m_pCallingApInvocationIdentifier) return true;
-		if (*m_pCallingAeInvocationIdentifier != *rhs.m_pCallingAeInvocationIdentifier) return true;
-		if (*m_pSenderAcseRequerements != *rhs.m_pSenderAcseRequerements) return true;
-		if (*m_pMechanismName != *rhs.m_pMechanismName) return true;
-		if (*m_pCallingAuthenticationValue != *rhs.m_pCallingAuthenticationValue) return true;
-		if (*m_pApplicationContextNameList != *rhs.m_pApplicationContextNameList) return true;
-		if (*m_pImplementationInformation != *rhs.m_pImplementationInformation) return true;
-		if (*m_pUserInformation != *rhs.m_pUserInformation) return true;
+		if ( notEqualsPointersAndValues<CBerBitString>(m_pProtocolVersion, rhs.m_pProtocolVersion) ) return true;
+		if ( notEqualsPointersAndValues<CBerObjectIdentifier>(m_pApplicationContextName, rhs.m_pApplicationContextName) ) return true;
+		if ( notEqualsPointersAndValues<CApTitle>(m_pCalledApTitle, rhs.m_pCalledApTitle) ) return true;
+		if ( notEqualsPointersAndValues<CAeQualifier>(m_pCalledAeQualifier, rhs.m_pCalledAeQualifier) ) return true;
+		if ( notEqualsPointersAndValues<CBerInteger>(m_pCalledApInvocationIdentifier, rhs.m_pCalledApInvocationIdentifier) ) return true;
+		if ( notEqualsPointersAndValues<CBerInteger>(m_pCalledAeInvocationIdentifier, rhs.m_pCalledAeInvocationIdentifier) ) return true;
+		if ( notEqualsPointersAndValues<CApTitle>(m_pCallingApTitle, rhs.m_pCallingApTitle) ) return true;
+		if ( notEqualsPointersAndValues<CAeQualifier>(m_pCallingAeQualifier, rhs.m_pCallingAeQualifier) ) return true;
+		if ( notEqualsPointersAndValues<CBerInteger>(m_pCallingApInvocationIdentifier, rhs.m_pCallingApInvocationIdentifier) ) return true;
+		if ( notEqualsPointersAndValues<CBerInteger>(m_pCallingAeInvocationIdentifier, rhs.m_pCallingAeInvocationIdentifier) ) return true;
+		if ( notEqualsPointersAndValues<CBerBitString>(m_pSenderAcseRequerements, rhs.m_pSenderAcseRequerements) ) return true;
+		if ( notEqualsPointersAndValues<CBerObjectIdentifier>(m_pMechanismName, rhs.m_pMechanismName) ) return true;
+		if ( notEqualsPointersAndValues<CAuthenticationValue>(m_pCallingAuthenticationValue, rhs.m_pCallingAuthenticationValue) ) return true;
+		if ( notEqualsPointersAndValues<CApplicationContextNameList>(m_pApplicationContextNameList, rhs.m_pApplicationContextNameList) ) return true;
+		if ( notEqualsPointersAndValues<CBerGraphicString>(m_pImplementationInformation, rhs.m_pImplementationInformation) ) return true;
+		if ( notEqualsPointersAndValues<CAssociationInformation>(m_pUserInformation, rhs.m_pUserInformation) ) return true;
 
 		return false;
 	}

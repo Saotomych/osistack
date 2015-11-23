@@ -18,6 +18,9 @@ CONFIG += c++11
 
 DEFINES += OSISTACK_LIBRARY
 
+INCLUDEPATH += ../ositransport/include
+INCLUDEPATH += $(JENKINS_HOME)/jobs/ositransport/workspace/include
+
 INCLUDEPATH += ../ASN1/include
 INCLUDEPATH += $(JENKINS_HOME)/jobs/ASN1/workspace/include
 

@@ -33,4 +33,20 @@
 #  define OSISTACK_SHAREDEXPORT Q_DECL_IMPORT
 #endif
 
+/*
+ * equalsPointersAndValues
+ * @return: bool is true when both of input pointer is nullptr or both values equals
+ */
+template<class BerType>
+bool notEqualsPointersAndValues(BerType* lhs, BerType* rhs)
+{
+	bool nullLhs(lhs == nullptr);
+	bool nullRhs(rhs == nullptr);
+
+	if ( (nullLhs & nullRhs) == true) return false;
+	if ( (nullLhs ^ nullRhs) == true) return true;
+
+	return *lhs != *rhs;
+}
+
 #endif // OSITRANSPORT_GLOBAL_H

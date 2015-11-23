@@ -98,8 +98,8 @@ public:
 	{
 		if (this == &rhs) return false;
 
-		if (*m_pReason != *rhs.m_pReason) return true;
-		if (*m_pUserInformation != *rhs.m_pUserInformation) return true;
+		if ( notEqualsPointersAndValues<CBerInteger>(m_pReason, rhs.m_pReason) ) return true;
+		if ( notEqualsPointersAndValues<CAssociationInformation>(m_pUserInformation, rhs.m_pUserInformation) ) return true;
 
 		return false;
 	}

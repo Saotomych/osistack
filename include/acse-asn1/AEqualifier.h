@@ -71,7 +71,7 @@ public:
 	{
 		if (this == &rhs) return false;
 
-		if (*m_pInteger != *rhs.m_pInteger) return true;
+		if ( notEqualsPointersAndValues<CBerInteger>(m_pInteger, rhs.m_pInteger) ) return true;
 
 		return false;
 	}

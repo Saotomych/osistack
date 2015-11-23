@@ -104,9 +104,9 @@ public:
 	{
 		if (this == &rhs) return false;
 
-		if (*m_pGraphString != *rhs.m_pGraphString) return true;
-		if (*m_pExternalLink != *rhs.m_pExternalLink) return true;
-		if (*m_pBitString != *rhs.m_pBitString) return true;
+		if ( notEqualsPointersAndValues<CBerGraphicString>(m_pGraphString, rhs.m_pGraphString) ) return true;
+		if ( notEqualsPointersAndValues<CExternalLinkV2>(m_pExternalLink, rhs.m_pExternalLink) ) return true;
+		if ( notEqualsPointersAndValues<CBerBitString>(m_pBitString, rhs.m_pBitString) ) return true;
 
 		return false;
 	}

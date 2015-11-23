@@ -75,7 +75,7 @@ public:
 	{
 		if (this == &rhs) return false;
 
-		if (*m_pSeqOf != *rhs.m_pSeqOf) return true;
+		if ( notEqualsPointersAndValues<QList<CExternalLinkV1> >(m_pSeqOf, rhs.m_pSeqOf) ) return true;
 
 		return false;
 	}
