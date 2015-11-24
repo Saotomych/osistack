@@ -17,8 +17,8 @@ class OSISTACK_SHAREDEXPORT CRLrqApdu: public QObject, public IBerBaseType
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier* Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
-	Q_PROPERTY(IBerBaseType* ProtocolVersion READ getReason)
-	Q_PROPERTY(IBerBaseType* ProtocolVersion READ getUserInformation)
+	Q_PROPERTY(IBerBaseType* Reason READ getReason)
+	Q_PROPERTY(IBerBaseType* UserInformation READ getUserInformation)
 
 	bool is_copy;
 

@@ -19,6 +19,16 @@
 #include "authenticationValue.h"
 #include "externalLinkV1.h"
 #include "externalLinkV2.h"
+#include "ResultSubsequence.h"
+#include "ResultList.h"
+#include "PdvList.h"
+#include "fullyEncodedData.h"
+#include "userData.h"
+#include "CpaPpdu.h"
+#include "contextList.h"
+#include "defaultContextName.h"
+#include "CpType.h"
+#include "modeSelector.h"
 
 CBerIdentifier CAAreApdu::s_Identifier(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::CONSTRUCTED, 1);
 quint32 CAAreApdu::s_metaTypeIdentifier = qRegisterMetaType<CAAreApdu*>();
@@ -53,3 +63,34 @@ quint32 CAssociationInformation::s_metaTypeListId = qRegisterMetaType<QList<CExt
 quint32 CExternalLinkV1::s_metaTypeIdentifier = qRegisterMetaType<CExternalLinkV1*>();
 
 quint32 CExternalLinkV2::s_metaTypeIdentifier = qRegisterMetaType<CExternalLinkV2*>();
+
+CBerIdentifier CResultSubsequence::s_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16);
+quint32 CResultSubsequence::s_metaTypeIdentifier = qRegisterMetaType<CResultSubsequence*>();
+
+CBerIdentifier CResultList::s_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16);
+quint32 CResultList::s_metaTypeIdentifier =  qRegisterMetaType<CResultList*>();
+quint32 CResultList::s_metaTypeListId =  qRegisterMetaType<QList<CResultSubsequence>*>();
+
+CBerIdentifier CPdvList::s_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16);
+quint32 CPdvList::s_metaTypeIdentifier =  qRegisterMetaType<CPdvList*>();
+
+CBerIdentifier CFullyEncodedData::s_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16);
+quint32 CFullyEncodedData::s_metaTypeIdentifier =  qRegisterMetaType<CFullyEncodedData*>();
+quint32 CFullyEncodedData::s_metaTypeListId =  qRegisterMetaType<QList<CPdvList>*>();
+
+quint32 CUserData::s_metaTypeIdentifier =  qRegisterMetaType<CUserData*>();
+
+CBerIdentifier CCpaPpdu::s_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16);
+quint32 CCpaPpdu::s_metaTypeIdentifier = qRegisterMetaType<CCpaPpdu*>();
+
+CBerIdentifier CContextList::s_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16);
+quint32 CContextList::s_metaTypeIdentifier = qRegisterMetaType<CContextList*>();
+
+CBerIdentifier CDefaultContextName::s_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16);
+quint32 CDefaultContextName::s_metaTypeIdentifier = qRegisterMetaType<CDefaultContextName*>();
+
+CBerIdentifier CCpType::s_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16);
+quint32 CCpType::s_metaTypeIdentifier = qRegisterMetaType<CCpType*>();
+
+CBerIdentifier CModeSelector::s_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 17);
+quint32 CModeSelector::s_metaTypeIdentifier = qRegisterMetaType<CModeSelector*>();

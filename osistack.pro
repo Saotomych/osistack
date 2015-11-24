@@ -28,6 +28,8 @@ INCLUDEPATH += ./include
 INCLUDEPATH += $(JENKINS_HOME)/jobs/osistack/workspace/include
 INCLUDEPATH += ./include/acse-asn1
 INCLUDEPATH += $(JENKINS_HOME)/jobs/osistack/workspace/include/acse-asn1
+INCLUDEPATH += ./include/presentation-asn1
+INCLUDEPATH += $(JENKINS_HOME)/jobs/osistack/workspace/include/presentation-asn1
 
 SOURCES += src/acse-asn1/InitIdentifiers.cpp
 
@@ -46,7 +48,16 @@ HEADERS += include/osistack.h \
 		include/acse-asn1/RLrqApdu.h \
 		include/acse-asn1/AAreApdu.h \
 		include/acse-asn1/AArqApdu.h \
-		include/acse-asn1/AcseApdu.h 
+		include/acse-asn1/AcseApdu.h \
+		include/presentation-asn1/ResultSubsequence.h \
+		include/presentation-asn1/ResultList.h \
+		include/presentation-asn1/PdvList.h \
+		include/presentation-asn1/fullyEncodedData.h \
+		include/presentation-asn1/userData.h \
+		include/presentation-asn1/contextList.h \
+		include/presentation-asn1/defaultContextName.h \
+		include/presentation-asn1/CpType.h \
+		include/presentation-asn1/ModeSelector.h \
 		
 unix {
     CONFIG (debug, debug|release) {
