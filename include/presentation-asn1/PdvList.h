@@ -17,21 +17,26 @@ class OSISTACK_SHAREDEXPORT CPdvList: public QObject, public IBerBaseType
 {
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier* Identifier READ getIdentifier)
-	Q_PROPERTY(QByteArray* Code READ getCode)
-	Q_PROPERTY(IBerBaseType* Integer READ getInteger)
+	Q_PROPERTY(CBerObjectIdentifier* transferSyntaxName READ getTransferSyntaxName)
+	Q_PROPERTY(CBerInteger* presentationContextIdentifier READ getPresentationContextIdentifier)
+	Q_PROPERTY(IBerBaseType* Integer READ getSPDV)
 
 	bool is_copy;
 
 protected:
 
-	CBerIdentifier m_Identifier;
 	QByteArray m_Code;
 
+	CBerIdentifier m_Identifier;
+
+	CBerObjectIdentifier* m_transferSyntaxName;
+	CBerInteger* m_presentationContextIdentifier;
 	SubchoicePresentationDataValues* m_pSPDV;
 
-	QByteArray* getCode() { return &m_Code; }
 	CBerIdentifier* getIdentifier() { return &m_Identifier; }
-	IBerBaseType* getInteger() { return m_pSPDV; }
+	CBerObjectIdentifier* getTransferSyntaxName() { return m_transferSyntaxName; }
+	CBerInteger* getPresentationContextIdentifier() { return m_presentationContextIdentifier; }
+	IBerBaseType* getSPDV() { return m_pSPDV; }
 
 public:
 
@@ -40,11 +45,21 @@ public:
 	static CBerIdentifier s_Identifier;
 	static quint32 s_metaTypeIdentifier;
 
-	CPdvList(SubchoicePresentationDataValues* pSPDV):
+	CPdvList(CBerObjectIdentifier* transferSyntaxName,
+			CBerInteger* presentationContextIdentifier,
+			SubchoicePresentationDataValues* pSPDV):
 		is_copy(false),
 		m_Identifier(s_Identifier),
+		m_transferSyntaxName(transferSyntaxName),
+		m_presentationContextIdentifier(presentationContextIdentifier),
 		m_pSPDV(pSPDV)
 	{ }
+
+//	CPdvList(SubchoicePresentationDataValues* pSPDV):
+//		is_copy(false),
+//		m_Identifier(s_Identifier),
+//		m_pSPDV(pSPDV)
+//	{ }
 
 	CPdvList(const CPdvList& rhs): QObject()
 	{
@@ -53,6 +68,12 @@ public:
 
 		if (rhs.m_pSPDV != nullptr)
 				m_pSPDV = new SubchoicePresentationDataValues(*rhs.m_pSPDV);
+
+		if (rhs.m_presentationContextIdentifier != nullptr)
+			m_presentationContextIdentifier = new CBerInteger(*rhs.m_presentationContextIdentifier);
+
+		if (rhs.m_transferSyntaxName != nullptr)
+			m_transferSyntaxName = new CBerObjectIdentifier(*rhs.m_transferSyntaxName);
 
 		is_copy = true;
 	}

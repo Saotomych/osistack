@@ -85,7 +85,24 @@ QByteArray CAcseAssociation::decodePConResponse(QByteArray& ppdu)
 
 CUserData CAcseAssociation::getPresentationUserDataField( quint32 userDataLength )
 {
+	SubchoicePresentationDataValues presDataValues(
+			std::move(new CBerAnyNoDecode(userDataLength)),
+			(CBerOctetString*) nullptr,
+			(CBerBitString*) nullptr );
 
+	CPdvList pdvList(
+			(CBerObjectIdentifier*) nullptr,
+			&acsePresentationContextId,
+			&presDataValues);
+
+	QList<CPdvList> listPdvList;
+	listPdvList.push_back(pdvList);
+
+	CFullyEncodedData fullyEncodedData(&listPdvList);
+
+	CUserData userData( (CBerOctetString*) nullptr, &fullyEncodedData);
+
+	return userData;
 }
 
 void CAcseAssociation::accept(QByteArray payload)
