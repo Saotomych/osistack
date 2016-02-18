@@ -18,12 +18,10 @@ CONFIG += c++11
 
 DEFINES += OSISTACK_LIBRARY
 
-INCLUDEPATH += ../ositransport/include
-INCLUDEPATH += $(JENKINS_HOME)/jobs/ositransport/workspace/include
-
+INCLUDEPATH += ../ositransport
+INCLUDEPATH += $(JENKINS_HOME)/jobs/ositransport/workspace
 INCLUDEPATH += ../ASN1/include
 INCLUDEPATH += $(JENKINS_HOME)/jobs/ASN1/workspace/include
-
 INCLUDEPATH += ./include
 INCLUDEPATH += $(JENKINS_HOME)/jobs/osistack/workspace/include
 INCLUDEPATH += ./include/acse-asn1
@@ -31,9 +29,10 @@ INCLUDEPATH += $(JENKINS_HOME)/jobs/osistack/workspace/include/acse-asn1
 INCLUDEPATH += ./include/presentation-asn1
 INCLUDEPATH += $(JENKINS_HOME)/jobs/osistack/workspace/include/presentation-asn1
 
-SOURCES += src/acse-asn1/InitIdentifiers.cpp
+SOURCES += src/acse-asn1/InitIdentifiers.cpp \
+		src/AcseAssociation.cpp \
 
-HEADERS += include/osistack.h \
+HEADERS += \
 		include/osistack_global.h \
 		include/acse-asn1/APtitle.h \
 		include/acse-asn1/AEtitle.h \

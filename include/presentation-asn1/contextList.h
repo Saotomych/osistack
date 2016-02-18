@@ -80,6 +80,15 @@ public:
 		m_pTransferSyntaxNameList(pTransferSyntaxNameList)
 	{}
 
+	CContextList(QByteArray code):
+		is_copy(false),
+		m_Identifier(s_Identifier),
+		m_Code(code),
+		m_pPresentationContextIdentifier(nullptr),
+		m_pAbstractSyntaxName(nullptr),
+		m_pTransferSyntaxNameList(nullptr)
+	{}
+
 	CContextList(const CContextList& rhs): QObject()
 	{
 		create_objects(rhs);

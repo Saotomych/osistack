@@ -157,6 +157,25 @@ public:
 	static CBerIdentifier s_Identifier;
 	static quint32 s_metaTypeIdentifier;
 
+	CAAreApdu():
+			is_copy(false),
+			m_Identifier(s_Identifier),
+			m_pProtocolVersion(nullptr),
+			m_pApplicationContextName(nullptr),
+			m_pResult(nullptr),
+			m_pResultSourceDiagnostic(nullptr),
+			m_pApTitle(nullptr),
+			m_pRespondingAeQualifier(nullptr),
+			m_pRespondingApInvocationIdentifier(nullptr),
+			m_pRespondingAeInvocationIdentifier(nullptr),
+			m_pResponderAcseRequrements(nullptr),
+			m_pMechanismName(nullptr),
+			m_pRespondingAuthenticationValue(nullptr),
+			m_pApplicationContextNameList(nullptr),
+			m_pImplementationInformation(nullptr),
+			m_pUserInformation(nullptr)
+	{}
+
 	CAAreApdu(
 			CBerBitString* pProtocolVersion,
 			CBerObjectIdentifier* pApplicationContextName,

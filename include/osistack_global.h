@@ -21,7 +21,10 @@
 #include <limits>
 #include <memory>
 
+#include "berOctetString.h"
+#include "berInteger.h"
 #include "berIdentifier.h"
+#include "berObjectIdentifier.h"
 #include "berBase.h"
 #include "storages/berBaseType.h"
 #include "storages/decoder.h"

@@ -63,6 +63,13 @@ public:
 	static CBerIdentifier s_Identifier;
 	static quint32 s_metaTypeIdentifier;
 
+	CRLreApdu():
+		is_copy(false),
+		m_Identifier(s_Identifier),
+		m_pReason(nullptr),
+		m_pUserInformation(nullptr)
+	{}
+
 	CRLreApdu(CBerInteger* pReason, CAssociationInformation* pUserInformation):
 		is_copy(false),
 		m_Identifier(s_Identifier),

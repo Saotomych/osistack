@@ -77,7 +77,62 @@ public:
 
 	ASN1_CODEC(CBerBaseStorage)
 
+	// Alternative decoder by Identifier
+	quint32 decode(CBerByteArrayInputStream& iStream, CBerIdentifier* berIdentifier)
+	{
+		quint32 codeLength = 0;
+
+		CBerIdentifier* workIdentifier = berIdentifier;
+
+		if (berIdentifier == nullptr)
+		{
+			workIdentifier = new CBerIdentifier();
+			codeLength += workIdentifier->decode(iStream);
+		}
+
+		if (workIdentifier->equals(CAArqApdu::s_Identifier))
+		{
+			CAArqApdu AarqApdu;
+			codeLength += AarqApdu.decode(iStream, false);
+		}
+
+		if (workIdentifier->equals(CAAreApdu::s_Identifier))
+		{
+			CAAreApdu AareApdu;
+			codeLength += AareApdu.decode(iStream, false);
+		}
+
+		if (workIdentifier->equals(CRLrqApdu::s_Identifier))
+		{
+			CRLrqApdu RlrqApdu;
+			codeLength += RlrqApdu.decode(iStream, false);
+		}
+
+		if (workIdentifier->equals(CRLreApdu::s_Identifier))
+		{
+			CRLreApdu RlreApdu;
+			codeLength += RlreApdu.decode(iStream, false);
+		}
+
+		if (berIdentifier != nullptr)
+		{
+			return 0;
+		}
+
+		qDebug() << "Error decoding BerChoice: Identifier matches to no item";
+
+		return 0;
+	}
+
 	static quint32 s_metaTypeIdentifier;
+
+	CAcseApdu():
+		is_copy(false),
+		m_pAarqApdu(nullptr),
+		m_pAareApdu(nullptr),
+		m_pRlrqApdu(nullptr),
+		m_pRlreApdu(nullptr)
+	{}
 
 	CAcseApdu(
 		CAArqApdu* pAarqApdu,

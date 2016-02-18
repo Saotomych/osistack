@@ -95,6 +95,17 @@ public:
 	static CBerIdentifier s_Identifier;
 	static quint32 s_metaTypeIdentifier;
 
+	CCpaPpdu():
+		is_copy(false),
+		m_Identifier(s_Identifier),
+		m_pProtocolVersion(nullptr),
+		m_pRespondingPresentationSelector(nullptr),
+		m_pPresentationContextDefinitionResultList(nullptr),
+		m_pPresentationRequirements(nullptr),
+		m_pUserSessionRequirements(nullptr),
+		m_pUserData(nullptr)
+	{}
+
 	CCpaPpdu(
 			CBerBitString* pProtocolVersion,
 			CBerOctetString* pRespondingPresentationSelector,

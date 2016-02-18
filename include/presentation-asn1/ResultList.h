@@ -45,6 +45,14 @@ public:
 		m_pSeqOf(pResultSubsequenceList)
 	{}
 
+	explicit CResultList(QByteArray code):
+				is_copy(false),
+				m_Identifier(s_Identifier),
+				m_pSeqOf(nullptr)
+	{
+		m_Code = code;
+	}
+
 	CResultList(const CResultList& rhs): QObject()
 	{
 		m_Identifier = rhs.m_Identifier;

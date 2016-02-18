@@ -9,8 +9,8 @@
 #define INCLUDE_ACSE_ASN1_ASSOCIATESOURCEDIAGNOSTIC_H_
 
 #include "osistack_global.h"
-#include "berAny.h"
 #include "berInteger.h"
+#include "berAny.h"
 
 class OSISTACK_SHAREDEXPORT CAssociateSourceDiagnostic: public QObject, public IBerBaseType
 {
@@ -73,6 +73,14 @@ public:
 
 		m_Code = rhs.m_Code;
 		is_copy = true;
+	}
+
+	CAssociateSourceDiagnostic(QByteArray code):
+		is_copy(false),
+		m_pAcseServiceUser(nullptr),
+		m_pAcseServiceProvider(nullptr)
+	{
+		m_Code = code;
 	}
 
 	CAssociateSourceDiagnostic& operator=(const CAssociateSourceDiagnostic& rhs)
