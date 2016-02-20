@@ -6,6 +6,7 @@
  */
 
 #include "AcseAssociation.h"
+#include "presentation-asn1/CpaPpdu.h"
 
 namespace {
 	quint8 context_list_char[] = { 0x23, 0x30,
@@ -50,7 +51,7 @@ CAssociateSourceDiagnostic CAcseAssociation::associateSourceDiagnostic (
 		QByteArray ((char*)associateSourceDiagnostic_char, sizeof(associateSourceDiagnostic_char) ));
 
 // is always equal to 1.0.9506.2.3 (MMS)
-CBerObjectIdentifier CAcseAssociation::application_context_name (
+CBerObjectIdentifier CAcseAssociation::applicationContextName (
 		QByteArray ((char*)application_context_name_char, sizeof(application_context_name_char)  ));
 
 CBerObjectIdentifier CAcseAssociation::directReference (
@@ -60,7 +61,7 @@ CBerInteger CAcseAssociation::indirectReference = CBerInteger(
 		QByteArray ((char*) indirectReference_char, sizeof(indirectReference_char)));
 
 
-CBerObjectIdentifier CAcseAssociation::default_mechanism_name = CBerObjectIdentifier(
+CBerObjectIdentifier CAcseAssociation::defaultMechanismName = CBerObjectIdentifier(
 		QByteArray ((char*) default_mechanism_name_char, sizeof(default_mechanism_name_char)));
 
 
@@ -85,7 +86,7 @@ QByteArray CAcseAssociation::decodePConResponse(QByteArray& ppdu)
 
 CUserData CAcseAssociation::getPresentationUserDataField( quint32 userDataLength )
 {
-	SubchoicePresentationDataValues presDataValues(
+	NsPdvList::SubchoicePresentationDataValues presDataValues(
 			std::move(new CBerAnyNoDecode(userDataLength)),
 			(CBerOctetString*) nullptr,
 			(CBerBitString*) nullptr );
@@ -105,13 +106,122 @@ CUserData CAcseAssociation::getPresentationUserDataField( quint32 userDataLength
 	return userData;
 }
 
-void CAcseAssociation::accept(QByteArray payload)
+void CAcseAssociation::accept(CBerByteArrayOutputStream& payload)
 {
+	quint32 payloadLength = payload.size();
 
+	CBerAnyNoDecode berAny(payloadLength);
+	NsExternalLinkV1::SubChoiceEncoding subChEncoding( &berAny, (CBerOctetString*) nullptr, (CBerBitString*) nullptr );
+
+	CExternalLinkV1 external(&directReference, &indirectReference, &subChEncoding);
+
+	QList<CExternalLinkV1> listExternal;
+	listExternal.push_back(external);
+
+	CAssociationInformation userInformation(&listExternal);
+
+	CAAreApdu aare(nullptr, &applicationContextName, &aareAccepted, &associateSourceDiagnostic, nullptr,
+			nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, &userInformation);
+	CAcseApdu acse(nullptr, &aare, nullptr, nullptr);
+	CBerByteArrayOutputStream berOStream(100, true);
+	acse.encode(berOStream, true);
+	quint32 acseHeaderLength = berOStream.size() - berOStream.index() + 1;
+
+	CUserData userData = getPresentationUserDataField(acseHeaderLength + payloadLength);
+
+	NsCpaPpdu::CSubSecNormalModeParameters normalModeParameters(nullptr, m_pSelLocalBerOctetString, &presentationResultList,
+			(CBerBitString*) nullptr, (CBerBitString*) nullptr, &userData);
+
+	CCpaPpdu cpaPpdu(&normalModeSelector, &normalModeParameters);
+
+	cpaPpdu.encode(berOStream, true);
+
+	QLinkedList<QByteArray> ssduList;
+	QLinkedList<quint32> ssduOffsets;
+	QLinkedList<quint32> ssduLengths;
+
+	ssduList.push_back(berOStream.getByteArray());
+	ssduOffsets.push_back(berOStream.index() + 1);
+	ssduLengths.push_back(berOStream.size() - berOStream.index() + 1);
+
+	ssduList.push_back(payload.getByteArray());
+	ssduOffsets.push_back(payload.index() + 1);
+	ssduLengths.push_back(payload.size() - payload.index() + 1);
+
+	writeSessionAccept(ssduList, ssduOffsets, ssduLengths);
 }
 
-void CAcseAssociation::writeSessionAccept(QList<QByteArray> ssdu, QList<quint32> ssduOffsets, QList<quint32> ssduLengths)
+void CAcseAssociation::writeSessionAccept(QLinkedList<QByteArray>& ssdu, QLinkedList<quint32>& ssduOffsets, QLinkedList<quint32>& ssduLengths)
 {
+	QByteArray sduAcceptHeader(20, 0);
+	quint32 idx = 0;
+
+	quint32 ssduLength = 0;
+	for (quint32 ssduElementLength : ssduLengths) {
+		ssduLength += ssduElementLength;
+	}
+
+	// write ISO 8327-1 Header
+	// SPDU Type: ACCEPT (14)
+	sduAcceptHeader[idx++] = 0x0e;
+	// Length: length of session user data + 22 ( header data after length
+	// field )
+	sduAcceptHeader[idx++] = (quint8) ((ssduLength + 18) & 0xff);
+
+	// -- start Connect Accept Item
+	// Parameter type: Connect Accept Item (5)
+	sduAcceptHeader[idx++] = 0x05;
+	// Parameter length
+	sduAcceptHeader[idx++] = 0x06;
+
+	// Protocol options:
+	// Parameter Type: Protocol Options (19)
+	sduAcceptHeader[idx++] = 0x13;
+	// Parameter length
+	sduAcceptHeader[idx++] = 0x01;
+	// flags: (.... ...0 = Able to receive extended concatenated SPDU:
+	// False)
+	sduAcceptHeader[idx++] = 0x00;
+
+	// Version number:
+	// Parameter type: Version Number (22)
+	sduAcceptHeader[idx++] = 0x16;
+	// Parameter length
+	sduAcceptHeader[idx++] = 0x01;
+	// flags: (.... ..1. = Protocol Version 2: True)
+	sduAcceptHeader[idx++] = 0x02;
+	// -- end Connect Accept Item
+
+	// Session Requirement
+	// Parameter type: Session Requirement (20)
+	sduAcceptHeader[idx++] = 0x14;
+	// Parameter length
+	sduAcceptHeader[idx++] = 0x02;
+	// flags: (.... .... .... ..1. = Duplex functional unit: True)
+	sduAcceptHeader[idx++] = 0x00;
+	sduAcceptHeader[idx++] = 0x02;
+
+	// Called Session Selector
+	// Parameter type: Called Session Selector (52)
+	sduAcceptHeader[idx++] = 0x34;
+	// Parameter length
+	sduAcceptHeader[idx++] = 0x02;
+	// Called Session Selector
+	sduAcceptHeader[idx++] = 0x00;
+	sduAcceptHeader[idx++] = 0x01;
+
+	// Session user data
+	// Parameter type: Session user data (193)
+	sduAcceptHeader[idx++] = (quint8) 0xc1;
+
+	// Parameter length
+	sduAcceptHeader[idx++] = (quint8) ssduLength;
+
+	ssdu.push_front(sduAcceptHeader);
+	ssduOffsets.push_front(0);
+	ssduLengths.push_front(sduAcceptHeader.size());
+
+	m_tConnection->send(ssdu, ssduOffsets, ssduLengths);
 
 }
 

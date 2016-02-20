@@ -94,24 +94,28 @@ public:
 		{
 			CAArqApdu AarqApdu;
 			codeLength += AarqApdu.decode(iStream, false);
+			return codeLength;
 		}
 
 		if (workIdentifier->equals(CAAreApdu::s_Identifier))
 		{
 			CAAreApdu AareApdu;
 			codeLength += AareApdu.decode(iStream, false);
+			return codeLength;
 		}
 
 		if (workIdentifier->equals(CRLrqApdu::s_Identifier))
 		{
 			CRLrqApdu RlrqApdu;
 			codeLength += RlrqApdu.decode(iStream, false);
+			return codeLength;
 		}
 
 		if (workIdentifier->equals(CRLreApdu::s_Identifier))
 		{
 			CRLreApdu RlreApdu;
 			codeLength += RlreApdu.decode(iStream, false);
+			return codeLength;
 		}
 
 		if (berIdentifier != nullptr)
@@ -119,7 +123,7 @@ public:
 			return 0;
 		}
 
-		qDebug() << "Error decoding BerChoice: Identifier matches to no item";
+		qDebug() << "CAcseApdu decode: Error decoding BerChoice: Identifier matches to no item";
 
 		return 0;
 	}
