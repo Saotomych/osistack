@@ -251,7 +251,7 @@ void CAcseAssociation::startAssociation(
 {
 	if ( m_connected )
 	{
-		qDebug() << "CAcseAssociation::startAssociation connected alredy";
+		qDebug() << "CAcseAssociation::startAssociation connected already";
 		return;
 	}
 
@@ -333,10 +333,274 @@ QByteArray CAcseAssociation::startSConnection(
 		QByteArray& sSelLocal)
 {
 
+	if ( m_connected )
+	{
+		qDebug() << "CAcseAssociation::startAssociation connected already";
+		QByteArray ret;
+		return ret;
+	}
+
+	QByteArray spduHeader(24, 0);
+
+	quint32 ssduLength=0;
+	for (auto v: ssduLengths)
+		ssduLength += v;
+
+	// write ISO 8327-1 Header
+	// SPDU Type: CONNECT (13)
+	spduHeader[0] = 0x0d;
+	// Length: length of session user data + 22 ( header data after
+	// length field )
+	spduHeader[1] = (quint8) ((ssduLength + 22) & 0xff);
+
+	// -- start Connect Accept Item
+	// Parameter type: Connect Accept Item (5)
+	spduHeader[2] = 0x05;
+	// Parameter length
+	spduHeader[3] = 0x06;
+
+	// Protocol options:
+	// Parameter Type: Protocol Options (19)
+	spduHeader[4] = 0x13;
+	// Parameter length
+	spduHeader[5] = 0x01;
+	// flags: (.... ...0 = Able to receive extended concatenated SPDU:
+	// False)
+	spduHeader[6] = 0x00;
+
+	// Version number:
+	// Parameter type: Version Number (22)
+	spduHeader[7] = 0x16;
+	// Parameter length
+	spduHeader[8] = 0x01;
+	// flags: (.... ..1. = Protocol Version 2: True)
+	spduHeader[9] = 0x02;
+	// -- end Connect Accept Item
+
+	// Session Requirement
+	// Parameter type: Session Requirement (20)
+	spduHeader[10] = 0x14;
+	// Parameter length
+	spduHeader[11] = 0x02;
+	// flags: (.... .... .... ..1. = Duplex functional unit: True)
+	spduHeader[12] = 0x00;
+	spduHeader[13] = 0x02;
+
+	// Calling Session Selector
+	// Parameter type: Calling Session Selector (51)
+	spduHeader[14] = 0x33;
+	// Parameter length
+	spduHeader[15] = 0x02;
+	// Calling Session Selector
+	spduHeader[16] = sSelRemote[0];
+	spduHeader[17] = sSelRemote[1];
+
+	// Called Session Selector
+	// Parameter type: Called Session Selector (52)
+	spduHeader[18] = 0x34;
+	// Parameter length
+	spduHeader[19] = 0x02;
+	// Called Session Selector
+	spduHeader[20] = sSelLocal[0];
+	spduHeader[21] = sSelLocal[1];
+
+	// Session user data
+	// Parameter type: Session user data (193)
+	spduHeader[22] = (quint8) 0xc1;
+	// Parameter length
+	spduHeader[23] = (quint8) (ssduLength & 0xff);
+	// write session user data
+
+	ssduList.push_front(spduHeader);
+	ssduOffsets.push_front(0);
+	ssduLengths.push_front(spduHeader.size());
+
+	m_tConnection = tSAP.createConnection(address, port, localAddr, localPort);
+
+	m_tConnection->send(ssduList, ssduOffsets, ssduLengths);
+
+	// TODO asynchronous receive must be in the future
+	QByteArray pduBuffer;
+	if (m_tConnection->receive(pduBuffer) == false)
+	{
+		qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. ResponseTimeout waiting for connection response.";
+		QByteArray ret;
+		return ret;
+	}
+
+	// read ISO 8327-1 Header
+	// SPDU Type: ACCEPT (14)
+	if (pduBuffer[0] != 0x0e)
+	{
+		qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. ISO 8327-1 header wrong SPDU type, expected ACCEPT (14), got "
+				<< getSPDUTypeString(pduBuffer[0]) << " (" << pduBuffer[0] << ")";
+
+		QByteArray ret;
+		return ret;
+	}
+
+	// not used
+	// quint8 length = pduBuffer[1];
+	quint32 i = 2;
+	for (; i < pduBuffer.size(); i)
+	{
+		// read parameter type
+		quint32 parameterType = pduBuffer[i++] & 0xff;
+		// read parameter length
+		quint32 parameterLength = pduBuffer[i++] & 0xff;
+
+		switch (parameterType) {
+		// Connect Accept Item (5)
+		case 0x05:
+			{
+				quint32 bytesToRead = parameterLength;
+
+				while (bytesToRead > 0)
+				{
+					// read parameter type
+					int ca_parameterType = pduBuffer[i++];
+					bytesToRead -= 2;
+
+					switch (ca_parameterType & 0xff)
+					{
+
+					// Protocol Options (19)
+					case 0x13:
+						// flags: .... ...0 = Able to receive extended
+						// concatenated SPDU: False
+						{
+							quint8 protocolOptions = pduBuffer[i++];
+							if (protocolOptions != 0x00)
+							{
+								qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. SPDU Connect Accept Item/Protocol Options is "
+										<< protocolOptions << ", expected 0";
+
+								QByteArray ret;
+								return ret;
+							}
+
+							bytesToRead--;
+							break;
+						}
+					// Version Number
+					case 0x16:
+						// flags .... ..1. = Protocol Version 2: True
+						{
+							quint8 versionNumber = pduBuffer[i++];
+							if (versionNumber != 0x02)
+							{
+								qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. SPDU Connect Accept Item/Version Number is "
+										<< versionNumber << ", expected 2";
+							}
+
+							bytesToRead--;
+							break;
+						}
+
+					default:
+						{
+							qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. SPDU Connect Accept Item: parameter not implemented: "
+								<< ca_parameterType;
+							QByteArray ret;
+							return ret;
+						}
+
+					}
+				}
+			}
+			break;
+
+		// Session Requirement (20)
+		case 0x14:
+			// flags: (.... .... .... ..1. = Duplex functional unit: True)
+			{
+				QByteArray val(parameterLength, &pduBuffer[i++]);
+				quint64 sessionRequirement = extractInteger(val, parameterLength);
+
+				if (sessionRequirement != 0x02) {
+					qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. SPDU header parameter 'Session Requirement (20)' is "
+							<< sessionRequirement << ", expected 2";
+					QByteArray ret;
+					return ret;
+				}
+			}
+			break;
+
+		// Calling Session Selector (51)
+		case 0x33:
+			{
+				QByteArray val(parameterLength, &pduBuffer[i++]);
+				quint64 css = extractInteger(val, parameterLength);
+
+				if (css != 0x01) {
+					qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. SPDU header parameter 'Calling Session Selector (51)' is "
+							<< css << ", expected 1";
+				}
+			}
+			break;
+
+		// Called Session Selector (52)
+		case 0x34:
+			{
+				QByteArray val(parameterLength, &pduBuffer[i++]);
+				quint64 calledSessionSelector = extractInteger(val, parameterLength);
+
+				if (calledSessionSelector != 0x01) {
+					qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. SPDU header parameter 'Called Session Selector (52)' is "
+							<< calledSessionSelector << ", expected 1";
+				}
+			}
+			break;
+
+		// Session user data (193)
+		case 0xc1:
+
+			break;
+
+		default:
+			{
+				qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. SPDU header parameter type "
+				<< parameterType << " not implemented.";
+
+				QByteArray ret;
+				return ret;
+			}
+		}
+	}
+
+	m_connected = true;
+
+	return &pduBuffer[i];
 }
 
-void CAcseAssociation::send(QByteArray payload)
+void CAcseAssociation::send(CBerByteArrayOutputStream& payload)
 {
+	NsPdvList::SubchoicePresentationDataValues spdv( &CBerAnyNoDecode(payload.size() - payload.index()),
+			(CBerOctetString*) nullptr, (CBerBitString*) nullptr);
+	CPdvList pdvList( (CBerObjectIdentifier*) nullptr, &CBerInteger(31), &spdv);
+
+	QLinkedList<CPdvList> listPdvList;
+	listPdvList.push_back(pdvList);
+
+	CFullyEncodedData fullyEncodedData(&listPdvList);
+	CUserData userData( nullptr, &fullyEncodedData );
+
+	CBerByteArrayOutputStream berOStream(200,true);
+	userData.encode(berOStream, true);
+
+	QLinkedList<QByteArray> ssduList;
+	QLinkedList<quint32> ssduOffsets;
+	QLinkedList<quint32> ssduLengths;
+
+	ssduList.push_back(berOStream.getByteArray());
+	ssduOffsets.push_back(berOStream.index() + 1);
+	ssduLengths.push_back(berOStream.getByteArray().size() - berOStream.index() + 1);
+
+	ssduList.push_back(payload.getByteArray());
+	ssduOffsets.push_back(payload.index());
+	ssduLengths.push_back(payload.size() - payload.index());
+
+	sendSessionLayer(ssduList, ssduOffsets, ssduLengths);
 
 }
 
@@ -379,10 +643,26 @@ void CAcseAssociation::setMessageTimeout(quint32 tout)
 }
 
 void CAcseAssociation::sendSessionLayer(
-		QList<QByteArray> ssduList,
-		QList<quint32> ssduOffsets,
-		QList<quint32> ssduLengths)
+		QLinkedList<QByteArray>& ssduList,
+		QLinkedList<quint32>& ssduOffsets,
+		QLinkedList<quint32>& ssduLengths)
 {
+	QByteArray spduHeader(4, 0);
+
+	// --write iso 8327-1 Header--
+	// write SPDU Type: give tokens PDU
+	spduHeader[0] = 0x01;
+	// length 0
+	spduHeader[1] = 0;
+	// write SPDU Type: DATA TRANSFER (DT)
+	spduHeader[2] = 0x01;
+	// length 0
+	spduHeader[3] = 0;
+
+	ssduList.push_front(spduHeader);
+	ssduOffsets.push_front(0);
+	ssduLengths.push_front(spduHeader.size());
+	m_tConnection->send(ssduList, ssduOffsets, ssduLengths);
 
 }
 

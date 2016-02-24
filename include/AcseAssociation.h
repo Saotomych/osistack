@@ -115,7 +115,7 @@ public:
 			QByteArray& sSelRemote,
 			QByteArray& sSelLocal);
 
-	void send(QByteArray payload);
+	void send(CBerByteArrayOutputStream& payload);
 
 	/**
 	 * Listens for a new PDU and writes it into the given buffer. Decodes all ACSE and lower layer headers. The
@@ -151,9 +151,9 @@ public:
 private:
 
 	void sendSessionLayer(
-			QList<QByteArray> ssduList,
-			QList<quint32> ssduOffsets,
-			QList<quint32> ssduLengths);
+			QLinkedList<QByteArray>& ssduList,
+			QLinkedList<quint32>& ssduOffsets,
+			QLinkedList<quint32>& ssduLengths);
 
 	quint64 extractInteger(QByteArray buffer, quint32 size);
 
