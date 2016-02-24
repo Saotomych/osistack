@@ -14,6 +14,7 @@
 #include <connection.h>
 #include <clienttsap.h>
 
+#include <berGraphicString.h>
 #include "presentation-asn1/contextList.h"
 #include "acse-asn1/associateSourceDiagnostic.h"
 #include "presentation-asn1/modeSelector.h"
@@ -21,6 +22,7 @@
 #include "presentation-asn1/userData.h"
 #include "presentation-asn1/CpaPpdu.h"
 #include "acse-asn1/AcseApdu.h"
+#include "acse-asn1/APtitle.h"
 #include "presentation-asn1/PdvList.h"
 
 class CAcseAssociation: public QObject
@@ -80,18 +82,18 @@ public:
 	 * @throws IOException
 	 */
 	void startAssociation(
-			QByteArray payload,
+			CBerByteArrayOutputStream& payload,
 			QHostAddress address,
 			quint16 port,
 			QHostAddress localAddr,
 			quint16 localPort,
-			QString authenticationParameter,
-			QByteArray sSelRemote,
-			QByteArray sSelLocal,
-			QByteArray pSelRemote,
-			CClientTSAP tSAP,
-			QVector<quint32> apTitleCalled,
-			QVector<quint32> apTitleCalling,
+			QString& authenticationParameter,
+			QByteArray& sSelRemote,
+			QByteArray& sSelLocal,
+			QByteArray& pSelRemote,
+			CClientTSAP& tSAP,
+			QVector<quint32>& apTitleCalled,
+			QVector<quint32>& apTitleCalling,
 			quint32 aeQualifierCalled,
 			quint32 aeQualifierCalling);
 
@@ -102,16 +104,16 @@ public:
 	 * @throws IOException
 	 */
 	QByteArray startSConnection(
-			QList<QByteArray> ssduList,
-			QList<quint32> ssduOffsets,
-			QList<quint32> ssduLengths,
+			QLinkedList<QByteArray>& ssduList,
+			QLinkedList<quint32>& ssduOffsets,
+			QLinkedList<quint32>& ssduLengths,
 			QHostAddress address,
-			quint32 port,
+			quint16 port,
 			QHostAddress localAddr,
-			quint32 localPort,
-			CClientTSAP tSAP,
-			QByteArray sSelRemote,
-			QByteArray sSelLocal);
+			quint16 localPort,
+			CClientTSAP& tSAP,
+			QByteArray& sSelRemote,
+			QByteArray& sSelLocal);
 
 	void send(QByteArray payload);
 

@@ -6,7 +6,6 @@
  */
 
 #include "AcseAssociation.h"
-#include "presentation-asn1/CpaPpdu.h"
 
 namespace {
 	quint8 context_list_char[] = { 0x23, 0x30,
@@ -32,6 +31,8 @@ namespace {
 	quint8 indirectReference_char[] = { 0x01, 0x03 };
 
 	quint8 default_mechanism_name_char[] = { 0x03, 0x52, 0x03, 0x01 };
+
+	quint8 sender_acse_requirements_char[] = { 0x02, 0x07, 0x80 };
 
 };
 
@@ -233,35 +234,103 @@ QByteArray CAcseAssociation::getAssociateResponseAPdu()
 }
 
 void CAcseAssociation::startAssociation(
-		QByteArray payload,
+		CBerByteArrayOutputStream& payload,
 		QHostAddress address,
 		quint16 port,
 		QHostAddress localAddr,
 		quint16 localPort,
-		QString authenticationParameter,
-		QByteArray sSelRemote,
-		QByteArray sSelLocal,
-		QByteArray pSelRemote,
-		CClientTSAP tSAP,
-		QVector<quint32> apTitleCalled,
-		QVector<quint32> apTitleCalling,
+		QString& authenticationParameter,
+		QByteArray& sSelRemote,
+		QByteArray& sSelLocal,
+		QByteArray& pSelRemote,
+		CClientTSAP& tSAP,
+		QVector<quint32>& apTitleCalled,
+		QVector<quint32>& apTitleCalling,
 		quint32 aeQualifierCalled,
 		quint32 aeQualifierCalling)
 {
+	if ( m_connected )
+	{
+		qDebug() << "CAcseAssociation::startAssociation connected alredy";
+		return;
+	}
+
+	quint32 payloadLength = payload.getByteArray() - payload.index();
+
+	CBerObjectIdentifier calledId(apTitleCalled);
+	CApTitle calledApTitle( &calledId );
+	CBerObjectIdentifier callingId(apTitleCalling);
+	CApTitle callingApTitle( &callingId );
+
+	CBerAnyNoDecode noDecode( payloadLength );
+	NsExternalLinkV1::SubChoiceEncoding encoding( &noDecode, nullptr, nullptr );
+
+	CExternalLinkV1 externalLink( &directReference, &indirectReference, &encoding);
+
+	QLinkedList<CExternalLinkV1> externalList;
+	externalList.push_back(externalLink);
+
+	CAssociationInformation userInformation( &externalList );
+
+	CBerBitString senderAcseRequirements;
+	CBerObjectIdentifier mechanismName;
+	CAuthenticationValue authenticationValue;
+
+	if (authenticationParameter.size() != 0)
+	{
+		{
+			QByteArray code(sender_acse_requirements_char, sizeof(sender_acse_requirements_char)/sizeof(sender_acse_requirements_char[0]));
+			CBerBitString tmp(code);
+			senderAcseRequirements = tmp;
+		}
+
+		mechanismName = defaultMechanismName;
+
+		{
+			CBerGraphicString auString(authenticationParameter.data());
+			CAuthenticationValue tmp( &auString, nullptr, nullptr);
+			authenticationValue = tmp;
+		}
+	}
+
+	CAArqApdu aarq( nullptr, &applicationContextName, &calledApTitle, aeQualifierCalled, nullptr, nullptr,
+			&callingApTitle, aeQualifierCalling, nullptr, nullptr, &senderAcseRequirements, &mechanismName,
+			&authenticationValue, nullptr, nullptr, &userInformation);
+
+	CAcseApdu acse( &aarq, nullptr, nullptr, nullptr );
+
+	// Serialize
+	CBerByteArrayOutputStream berOStream(200, true);
+	acse.encode(berOStream, true);
+
+	QLinkedList<QByteArray> ssduList;
+	QLinkedList<quint32> ssduOffsets;
+	QLinkedList<quint32> ssduLengths;
+
+	ssduList.push_back(berOStream.getByteArray());
+	ssduOffsets.push_back(berOStream.index() + 1);
+	ssduLengths.push_back(payloadLength);
+
+	QByteArray res = startSConnection( ssduList, ssduOffsets, ssduLengths,
+			address, port,
+			localAddr, localPort,
+			tSAP, sSelRemote, sSelLocal);
+
+	m_associateResponseAPDU = decodePConResponse(res);
 
 }
 
 QByteArray CAcseAssociation::startSConnection(
-		QList<QByteArray> ssduList,
-		QList<quint32> ssduOffsets,
-		QList<quint32> ssduLengths,
+		QLinkedList<QByteArray>& ssduList,
+		QLinkedList<quint32>& ssduOffsets,
+		QLinkedList<quint32>& ssduLengths,
 		QHostAddress address,
-		quint32 port,
+		quint16 port,
 		QHostAddress localAddr,
-		quint32 localPort,
-		CClientTSAP tSAP,
-		QByteArray sSelRemote,
-		QByteArray sSelLocal)
+		quint16 localPort,
+		CClientTSAP& tSAP,
+		QByteArray& sSelRemote,
+		QByteArray& sSelLocal)
 {
 
 }
