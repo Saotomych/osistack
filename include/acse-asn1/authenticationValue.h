@@ -60,14 +60,21 @@ protected:
 	QByteArray m_Code;
 
 	CBerGraphicString* m_pGraphString;
-	CBerBitString* m_pBitString;
 	CExternalLinkV2* m_pExternalLink;
+	CBerBitString* m_pBitString;
 
 public:
 
 	ASN1_CODEC(CBerBaseStorage)
 
 	static quint32 s_metaTypeIdentifier;
+
+	CAuthenticationValue():
+		is_copy(false),
+		m_pGraphString(nullptr),
+		m_pExternalLink(nullptr),
+		m_pBitString(nullptr)
+	{}
 
 	CAuthenticationValue(CBerGraphicString* pGraphString, CExternalLinkV2* pExternalLink, CBerBitString* pBitString)
 	{

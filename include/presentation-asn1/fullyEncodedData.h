@@ -16,7 +16,7 @@ class OSISTACK_SHAREDEXPORT CFullyEncodedData: public QObject, public IBerBaseTy
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier* Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
-	Q_PROPERTY(QList<CPdvList>* seqof READ getSeqOf)
+	Q_PROPERTY(QLinkedList<CPdvList>* seqof READ getSeqOf)
 
 	bool is_copy;
 
@@ -24,22 +24,22 @@ protected:
 	CBerIdentifier m_Identifier;
 	QByteArray m_Code;
 
-	QList<CPdvList>* m_pSeqOf;
+	QLinkedList<CPdvList>* m_pSeqOf;
 
 	QByteArray* getCode() { return &m_Code; }
 	CBerIdentifier* getIdentifier() { return &m_Identifier; }
-	QList<CPdvList>* getSeqOf() { return m_pSeqOf; }
+	QLinkedList<CPdvList>* getSeqOf() { return m_pSeqOf; }
 
 public:
 
-	typedef CContainerStorage<QList<CPdvList>, CPdvList> LocalStorage;
+	typedef CContainerStorage<QLinkedList<CPdvList>, CPdvList> LocalStorage;
 	ASN1_CODEC( LocalStorage )
 
 	static CBerIdentifier s_Identifier;
 	static quint32 s_metaTypeIdentifier;
 	static quint32 s_metaTypeListId;
 
-	CFullyEncodedData(QList<CPdvList>* pExternalListV1):
+	CFullyEncodedData(QLinkedList<CPdvList>* pExternalListV1):
 		is_copy(false),
 		m_Identifier(s_Identifier),
 		m_pSeqOf(pExternalListV1)
@@ -51,7 +51,7 @@ public:
 		m_Code = rhs.m_Code;
 
 		if (rhs.m_pSeqOf != nullptr)
-			m_pSeqOf = new QList<CPdvList>(*rhs.m_pSeqOf);
+			m_pSeqOf = new QLinkedList<CPdvList>(*rhs.m_pSeqOf);
 
 		is_copy = true;
 	}
@@ -64,7 +64,7 @@ public:
 		m_Code = rhs.m_Code;
 
 		if (rhs.m_pSeqOf != nullptr)
-			m_pSeqOf = new QList<CPdvList>(*rhs.m_pSeqOf);
+			m_pSeqOf = new QLinkedList<CPdvList>(*rhs.m_pSeqOf);
 
 		is_copy = true;
 
@@ -75,7 +75,7 @@ public:
 	{
 		if (this == &rhs) return false;
 
-		if ( notEqualsPointersAndValues<QList<CPdvList> >(m_pSeqOf, rhs.m_pSeqOf) ) return true;
+		if ( notEqualsPointersAndValues<QLinkedList<CPdvList> >(m_pSeqOf, rhs.m_pSeqOf) ) return true;
 
 		return false;
 	}
@@ -89,6 +89,6 @@ public:
 };
 
 Q_DECLARE_METATYPE(CFullyEncodedData*)
-Q_DECLARE_METATYPE(QList<CPdvList>*)
+Q_DECLARE_METATYPE(QLinkedList<CPdvList>*)
 
 #endif /* INCLUDE_PRESENTATION_ASN1_FULLYENCODEDDATA_H_ */

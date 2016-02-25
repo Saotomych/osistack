@@ -16,7 +16,7 @@ class OSISTACK_SHAREDEXPORT CApplicationContextNameList: public QObject, public 
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier* Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
-	Q_PROPERTY(QList<CBerObjectIdentifier>* OI READ getObjectIdentifierList)
+	Q_PROPERTY(QLinkedList<CBerObjectIdentifier>* OI READ getObjectIdentifierList)
 
 	bool is_copy;
 
@@ -24,22 +24,22 @@ protected:
 	CBerIdentifier m_Identifier;
 	QByteArray m_Code;
 
-	QList<CBerObjectIdentifier>* m_pSeqOf;
+	QLinkedList<CBerObjectIdentifier>* m_pSeqOf;
 
 	QByteArray* getCode() { return &m_Code; }
 	CBerIdentifier* getIdentifier() { return &m_Identifier; }
-	QList<CBerObjectIdentifier>* getObjectIdentifierList() { return m_pSeqOf; }
+	QLinkedList<CBerObjectIdentifier>* getObjectIdentifierList() { return m_pSeqOf; }
 
 public:
 
-	typedef CContainerStorage< QList<CBerObjectIdentifier>, CBerObjectIdentifier > TLocalStorage;
+	typedef CContainerStorage< QLinkedList<CBerObjectIdentifier>, CBerObjectIdentifier > TLocalStorage;
 	ASN1_CODEC( TLocalStorage )
 
 	static CBerIdentifier s_Identifier;
 	static quint32 s_metaTypeIdentifier;
 	static quint32 s_metaTypeListId;
 
-	explicit CApplicationContextNameList(QList<CBerObjectIdentifier>* pObjectIdentifierList):
+	explicit CApplicationContextNameList(QLinkedList<CBerObjectIdentifier>* pObjectIdentifierList):
 		is_copy(false),
 		m_Identifier(s_Identifier),
 		m_pSeqOf(pObjectIdentifierList)
@@ -51,7 +51,7 @@ public:
 		m_Code = rhs.m_Code;
 
 		if (rhs.m_pSeqOf != nullptr)
-			m_pSeqOf = new QList<CBerObjectIdentifier>(*rhs.m_pSeqOf);
+			m_pSeqOf = new QLinkedList<CBerObjectIdentifier>(*rhs.m_pSeqOf);
 
 		is_copy = true;
 	}
@@ -64,7 +64,7 @@ public:
 		m_Code = rhs.m_Code;
 
 		if (rhs.m_pSeqOf != nullptr)
-			m_pSeqOf = new QList<CBerObjectIdentifier>(*rhs.m_pSeqOf);
+			m_pSeqOf = new QLinkedList<CBerObjectIdentifier>(*rhs.m_pSeqOf);
 
 		is_copy = true;
 
@@ -75,7 +75,7 @@ public:
 	{
 		if (this == &rhs) return false;
 
-		if ( notEqualsPointersAndValues<QList<CBerObjectIdentifier> >(m_pSeqOf, rhs.m_pSeqOf) ) return true;
+		if ( notEqualsPointersAndValues<QLinkedList<CBerObjectIdentifier> >(m_pSeqOf, rhs.m_pSeqOf) ) return true;
 
 		return false;
 	}
@@ -89,6 +89,6 @@ public:
 };
 
 Q_DECLARE_METATYPE(CApplicationContextNameList*)
-Q_DECLARE_METATYPE(QList<CBerObjectIdentifier>*)
+Q_DECLARE_METATYPE(QLinkedList<CBerObjectIdentifier>*)
 
 #endif /* INCLUDE_ACSE_ASN1_APPLICATIONCONTEXTNAMELIST_H_ */

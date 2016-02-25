@@ -16,7 +16,7 @@ class OSISTACK_SHAREDEXPORT CResultList: public QObject, public IBerBaseType
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier* Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
-	Q_PROPERTY(QList<CResultSubsequence>* OI READ getObjectIdentifierList)
+	Q_PROPERTY(QLinkedList<CResultSubsequence>* OI READ getObjectIdentifierList)
 
 	bool is_copy;
 
@@ -24,22 +24,22 @@ protected:
 	CBerIdentifier m_Identifier;
 	QByteArray m_Code;
 
-	QList<CResultSubsequence>* m_pSeqOf;
+	QLinkedList<CResultSubsequence>* m_pSeqOf;
 
 	QByteArray* getCode() { return &m_Code; }
 	CBerIdentifier* getIdentifier() { return &m_Identifier; }
-	QList<CResultSubsequence>* getObjectIdentifierList() { return m_pSeqOf; }
+	QLinkedList<CResultSubsequence>* getObjectIdentifierList() { return m_pSeqOf; }
 
 public:
 
-	typedef CContainerStorage< QList<CResultSubsequence>, CResultSubsequence > TLocalStorage;
+	typedef CContainerStorage< QLinkedList<CResultSubsequence>, CResultSubsequence > TLocalStorage;
 	ASN1_CODEC( TLocalStorage )
 
 	static CBerIdentifier s_Identifier;
 	static quint32 s_metaTypeIdentifier;
 	static quint32 s_metaTypeListId;
 
-	explicit CResultList(QList<CResultSubsequence>* pResultSubsequenceList):
+	explicit CResultList(QLinkedList<CResultSubsequence>* pResultSubsequenceList):
 		is_copy(false),
 		m_Identifier(s_Identifier),
 		m_pSeqOf(pResultSubsequenceList)
@@ -59,7 +59,7 @@ public:
 		m_Code = rhs.m_Code;
 
 		if (rhs.m_pSeqOf != nullptr)
-			m_pSeqOf = new QList<CResultSubsequence>(*rhs.m_pSeqOf);
+			m_pSeqOf = new QLinkedList<CResultSubsequence>(*rhs.m_pSeqOf);
 
 		is_copy = true;
 	}
@@ -72,7 +72,7 @@ public:
 		m_Code = rhs.m_Code;
 
 		if (rhs.m_pSeqOf != nullptr)
-			m_pSeqOf = new QList<CResultSubsequence>(*rhs.m_pSeqOf);
+			m_pSeqOf = new QLinkedList<CResultSubsequence>(*rhs.m_pSeqOf);
 
 		is_copy = true;
 
@@ -83,7 +83,7 @@ public:
 	{
 		if (this == &rhs) return false;
 
-		if ( notEqualsPointersAndValues<QList<CResultSubsequence> >(m_pSeqOf, rhs.m_pSeqOf) ) return true;
+		if ( notEqualsPointersAndValues<QLinkedList<CResultSubsequence> >(m_pSeqOf, rhs.m_pSeqOf) ) return true;
 
 		return false;
 	}
@@ -97,6 +97,6 @@ public:
 };
 
 Q_DECLARE_METATYPE(CResultList*)
-Q_DECLARE_METATYPE(QList<CResultSubsequence>*)
+Q_DECLARE_METATYPE(QLinkedList<CResultSubsequence>*)
 
 #endif /* SRC_PRESENTATION_ASN1_RESULTLIST_H_ */

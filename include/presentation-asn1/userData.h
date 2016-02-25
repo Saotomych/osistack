@@ -62,6 +62,12 @@ public:
 
 	static quint32 s_metaTypeIdentifier;
 
+	CUserData():
+		is_copy(false),
+		m_pSimpleEncodedData(nullptr),
+		m_pFullyEncodedData(nullptr)
+	{}
+
 	CUserData(CBerOctetString* pReason, CFullyEncodedData* pUserInformation):
 		is_copy(false),
 		m_pSimpleEncodedData(pReason),

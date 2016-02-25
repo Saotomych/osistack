@@ -15,8 +15,12 @@
 #include "userData.h"
 #include "contextList.h"
 #include "defaultContextName.h"
+#include "presentation-asn1/modeSelector.h"
 
-class OSISTACK_SHAREDEXPORT CCpType: public QObject, public IBerBaseType
+namespace NsCpType
+{
+
+class OSISTACK_SHAREDEXPORT CSubSeqNormalModeParameters: public QObject, public IBerBaseType
 {
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier* Identifier READ getIdentifier)
@@ -46,7 +50,7 @@ protected:
 	IBerBaseType* getUserSessionRequirements() {return m_pUserSessionRequirements;}
 	IBerBaseType* getUserData() {return m_pUserData;}
 
-	void create_objects(const CCpType& rhs)
+	void create_objects(const CSubSeqNormalModeParameters& rhs)
 	{
 		std::unique_ptr<CBerBitString> p1
 				( (rhs.m_pProtocolVersion != nullptr) ? new CBerBitString(*rhs.m_pProtocolVersion): nullptr );
@@ -112,7 +116,7 @@ public:
 	static CBerIdentifier s_Identifier;
 	static quint32 s_metaTypeIdentifier;
 
-	CCpType(
+	CSubSeqNormalModeParameters(
 		CBerBitString* pProtocolVersion,
 		CBerOctetString* pCallingPresentationSelector,
 		CBerOctetString* pCalledPresentationSelector,
@@ -134,7 +138,7 @@ public:
 		m_pUserData(pUserData)
 	{}
 
-	CCpType(const CCpType& rhs): QObject()
+	CSubSeqNormalModeParameters(const CSubSeqNormalModeParameters& rhs): QObject()
 	{
 		create_objects(rhs);
 
@@ -143,7 +147,7 @@ public:
 		is_copy = true;
 	}
 
-	CCpType& operator=(const CCpType& rhs)
+	CSubSeqNormalModeParameters& operator=(const CSubSeqNormalModeParameters& rhs)
 	{
 		if (this == &rhs) return *this;
 
@@ -158,7 +162,7 @@ public:
 		return *this;
 	}
 
-	bool operator!=(const CCpType& rhs)
+	bool operator!=(const CSubSeqNormalModeParameters& rhs)
 	{
 		if (this == &rhs) return false;
 
@@ -174,13 +178,129 @@ public:
 		return false;
 	}
 
-	virtual ~CCpType()
+	virtual ~CSubSeqNormalModeParameters()
 	{
 		delete_all_objects();
 	}
 
 };
 
-Q_DECLARE_METATYPE(CCpType*)
+}
+
+class OSISTACK_SHAREDEXPORT CCpType: public QObject, public IBerBaseType
+{
+	Q_OBJECT
+	Q_PROPERTY(CBerIdentifier* Identifier READ getIdentifier)
+	Q_PROPERTY(IBerBaseType* modeSelector READ getModeSelector)
+	Q_PROPERTY(IBerBaseType* normalModeParameters READ getNMP)
+
+	bool is_copy;
+
+protected:
+
+	QByteArray m_Code;
+
+	CBerIdentifier m_Identifier;
+
+	CModeSelector* m_pModeSelector;
+	NsCpType::CSubSeqNormalModeParameters* m_pNMP;
+
+	CBerIdentifier* getIdentifier() { return &m_Identifier; }
+	IBerBaseType* getModeSelector() { return m_pModeSelector; }
+	IBerBaseType* getNMP() { return m_pNMP; }
+
+public:
+
+	ASN1_CODEC(CBerBaseStorage)
+
+	static CBerIdentifier s_Identifier;
+	static quint32 s_metaTypeIdentifier;
+
+	CCpType():
+		is_copy(false),
+		m_Identifier(s_Identifier),
+		m_pModeSelector(nullptr),
+		m_pNMP(nullptr)
+	{ }
+
+	CCpType(CModeSelector* pModeSelector,
+			NsCpType::CSubSeqNormalModeParameters* pNMP):
+		is_copy(false),
+		m_Identifier(s_Identifier),
+		m_pModeSelector(pModeSelector),
+		m_pNMP(pNMP)
+	{ }
+
+	CCpType(const CCpType& rhs): QObject()
+	{
+		m_Identifier = s_Identifier;
+		m_Code = rhs.m_Code;
+
+		std::unique_ptr<NsCpType::CSubSeqNormalModeParameters> p1
+				( (rhs.m_pNMP != nullptr) ?
+						new NsCpType::CSubSeqNormalModeParameters(*rhs.m_pNMP): nullptr );
+
+		std::unique_ptr<CModeSelector> p2
+				( (rhs.m_pModeSelector != nullptr) ? new CModeSelector(*rhs.m_pModeSelector): nullptr );
+
+		m_pNMP = p1.release();
+		m_pModeSelector = p2.release();
+
+		is_copy = true;
+	}
+
+	CCpType& operator=(const CCpType& rhs)
+	{
+		if (this == &rhs) return *this;
+
+		m_Identifier = s_Identifier;
+		m_Code = rhs.m_Code;
+
+		std::unique_ptr<NsCpType::CSubSeqNormalModeParameters> p1
+				( (rhs.m_pNMP != nullptr) ?
+						new NsCpType::CSubSeqNormalModeParameters(*rhs.m_pNMP): nullptr );
+
+		std::unique_ptr<CModeSelector> p2
+				( (rhs.m_pModeSelector != nullptr) ? new CModeSelector(*rhs.m_pModeSelector): nullptr );
+
+		m_pNMP = p1.release();
+		m_pModeSelector = p2.release();
+
+		is_copy = true;
+
+		return *this;
+	}
+
+	bool operator!=(const CCpType& rhs)
+	{
+		if (this == &rhs) return false;
+
+		if ( notEqualsPointersAndValues<NsCpType::CSubSeqNormalModeParameters>(m_pNMP, rhs.m_pNMP) ) return true;
+		if ( notEqualsPointersAndValues<CModeSelector>(m_pModeSelector, rhs.m_pModeSelector) ) return true;
+
+		return false;
+	}
+
+	bool operator==(const CCpType& rhs)
+	{
+		if (this == &rhs) return true;
+
+		if ( *this != rhs ) return false;
+		else return true;
+	}
+
+	virtual ~CCpType()
+	{
+		if (is_copy)
+		{
+			delete m_pNMP;
+			delete m_pModeSelector;
+		}
+	}
+
+};
+
+Q_DECLARE_METATYPE(NsCpType::CSubSeqNormalModeParameters*)
+Q_DECLARE_METATYPE(CCpType)
 
 #endif /* INCLUDE_PRESENTATION_ASN1_CPTYPE_H_ */

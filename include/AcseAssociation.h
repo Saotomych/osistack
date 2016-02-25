@@ -24,6 +24,7 @@
 #include "acse-asn1/AcseApdu.h"
 #include "acse-asn1/APtitle.h"
 #include "presentation-asn1/PdvList.h"
+#include "presentation-asn1/CpType.h"
 
 class CAcseAssociation: public QObject
 {
@@ -92,10 +93,12 @@ public:
 			QByteArray& sSelLocal,
 			QByteArray& pSelRemote,
 			CClientTSAP& tSAP,
-			QVector<quint32>& apTitleCalled,
-			QVector<quint32>& apTitleCalling,
+			QVector<qint32>& apTitleCalled,
+			QVector<qint32>& apTitleCalling,
 			quint32 aeQualifierCalled,
 			quint32 aeQualifierCalling);
+
+	quint32 receiveDataParser(QByteArray& pduBuffer, quint32 offset);
 
 	/**
 	 * Starts a session layer connection, sends a CONNECT (CN), waits for a ACCEPT (AC) and throws an IOException if not
@@ -131,7 +134,7 @@ public:
 	 * @throws TimeoutException
 	 *             if a timeout occurs
 	 */
-	void receive(QByteArray pduBuffer);
+	void receive(QByteArray& pduBuffer);
 
 	/**
 	 * Disconnects by sending a disconnect request at the Transport Layer and then closing the socket.
@@ -143,7 +146,7 @@ public:
 	 */
 	void close();
 
-	void listenForCn(QByteArray pduBuffer);
+	void listenForCn(QByteArray& pduBuffer);
 	quint32 getMessageTimeout();
 	void setMessageTimeout(quint32 tout);
 

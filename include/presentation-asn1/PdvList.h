@@ -334,7 +334,11 @@ public:
 	virtual ~CPdvList()
 	{
 		if (is_copy)
+		{
 			delete m_pSPDV;
+			delete m_presentationContextIdentifier;
+			delete m_transferSyntaxName;
+		}
 	}
 
 };

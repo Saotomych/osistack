@@ -97,7 +97,7 @@ CUserData CAcseAssociation::getPresentationUserDataField( quint32 userDataLength
 			&acsePresentationContextId,
 			&presDataValues);
 
-	QList<CPdvList> listPdvList;
+	QLinkedList<CPdvList> listPdvList;
 	listPdvList.push_back(pdvList);
 
 	CFullyEncodedData fullyEncodedData(&listPdvList);
@@ -116,7 +116,7 @@ void CAcseAssociation::accept(CBerByteArrayOutputStream& payload)
 
 	CExternalLinkV1 external(&directReference, &indirectReference, &subChEncoding);
 
-	QList<CExternalLinkV1> listExternal;
+	QLinkedList<CExternalLinkV1> listExternal;
 	listExternal.push_back(external);
 
 	CAssociationInformation userInformation(&listExternal);
@@ -244,8 +244,8 @@ void CAcseAssociation::startAssociation(
 		QByteArray& sSelLocal,
 		QByteArray& pSelRemote,
 		CClientTSAP& tSAP,
-		QVector<quint32>& apTitleCalled,
-		QVector<quint32>& apTitleCalling,
+		QVector<qint32>& apTitleCalled,
+		QVector<qint32>& apTitleCalling,
 		quint32 aeQualifierCalled,
 		quint32 aeQualifierCalling)
 {
@@ -255,7 +255,7 @@ void CAcseAssociation::startAssociation(
 		return;
 	}
 
-	quint32 payloadLength = payload.getByteArray() - payload.index();
+	quint32 payloadLength = payload.size() - payload.index();
 
 	CBerObjectIdentifier calledId(apTitleCalled);
 	CApTitle calledApTitle( &calledId );
@@ -279,7 +279,7 @@ void CAcseAssociation::startAssociation(
 	if (authenticationParameter.size() != 0)
 	{
 		{
-			QByteArray code(sender_acse_requirements_char, sizeof(sender_acse_requirements_char)/sizeof(sender_acse_requirements_char[0]));
+			QByteArray code( (const char*) sender_acse_requirements_char, (int) (sizeof(sender_acse_requirements_char)/sizeof(sender_acse_requirements_char[0])) );
 			CBerBitString tmp(code);
 			senderAcseRequirements = tmp;
 		}
@@ -287,15 +287,25 @@ void CAcseAssociation::startAssociation(
 		mechanismName = defaultMechanismName;
 
 		{
-			CBerGraphicString auString(authenticationParameter.data());
+			QByteArray auth(authenticationParameter.toUtf8());
+			CBerGraphicString auString( auth );
 			CAuthenticationValue tmp( &auString, nullptr, nullptr);
 			authenticationValue = tmp;
 		}
 	}
 
-	CAArqApdu aarq( nullptr, &applicationContextName, &calledApTitle, aeQualifierCalled, nullptr, nullptr,
-			&callingApTitle, aeQualifierCalling, nullptr, nullptr, &senderAcseRequirements, &mechanismName,
-			&authenticationValue, nullptr, nullptr, &userInformation);
+	CBerInteger aeIntCalled(aeQualifierCalled);
+	CAeQualifier aeQaCalled(&aeIntCalled);
+	CBerInteger aeIntCalling(aeQualifierCalling);
+	CAeQualifier aeQaCalling(&aeIntCalling);
+	CAArqApdu aarq(
+			(CBerBitString*)nullptr,
+			&applicationContextName,
+			&calledApTitle, &aeQaCalled, (CBerInteger*) nullptr, (CBerInteger*) nullptr,
+			&callingApTitle, &aeQaCalling, (CBerInteger*) nullptr, (CBerInteger*) nullptr,
+			&senderAcseRequirements, &mechanismName,
+			&authenticationValue, (CApplicationContextNameList*) nullptr,
+			(CBerGraphicString*) nullptr, &userInformation);
 
 	CAcseApdu acse( &aarq, nullptr, nullptr, nullptr );
 
@@ -318,6 +328,153 @@ void CAcseAssociation::startAssociation(
 
 	m_associateResponseAPDU = decodePConResponse(res);
 
+}
+
+quint32 CAcseAssociation::receiveDataParser(QByteArray& pduBuffer, quint32 offset)
+{
+	qint32 i = (qint32) offset;
+	for (; i < pduBuffer.size(); i++)
+	{
+		// read parameter type
+		quint32 parameterType = pduBuffer[i++] & 0xff;
+		// read parameter length
+		quint32 parameterLength = pduBuffer[i++] & 0xff;
+
+		switch (parameterType) {
+		// Connect Accept Item (5)
+		case 0x05:
+			{
+				quint32 bytesToRead = parameterLength;
+
+				while (bytesToRead > 0)
+				{
+					// read parameter type
+					int ca_parameterType = pduBuffer[i++];
+					bytesToRead -= 2;
+
+					switch (ca_parameterType & 0xff)
+					{
+
+					// Protocol Options (19)
+					case 0x13:
+						// flags: .... ...0 = Able to receive extended
+						// concatenated SPDU: False
+						{
+							quint8 protocolOptions = pduBuffer[i++];
+							if (protocolOptions != 0x00)
+							{
+								qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. SPDU Connect Accept Item/Protocol Options is "
+										<< protocolOptions << ", expected 0";
+
+								pduBuffer.clear();
+								return 0;
+							}
+
+							bytesToRead--;
+							break;
+						}
+					// Version Number
+					case 0x16:
+						// flags .... ..1. = Protocol Version 2: True
+						{
+							quint8 versionNumber = pduBuffer[i++];
+							if (versionNumber != 0x02)
+							{
+								qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. SPDU Connect Accept Item/Version Number is "
+										<< versionNumber << ", expected 2";
+
+								pduBuffer.clear();
+								return 0;
+							}
+
+							bytesToRead--;
+							break;
+						}
+
+					default:
+						{
+							qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. SPDU Connect Accept Item: parameter not implemented: "
+								<< ca_parameterType;
+
+							pduBuffer.clear();
+							return 0;
+
+						}
+
+					}
+				}
+
+				i--;
+
+			}
+			break;
+
+		// Session Requirement (20)
+		case 0x14:
+			// flags: (.... .... .... ..1. = Duplex functional unit: True)
+			{
+				QByteArray val(&pduBuffer.data()[i], parameterLength);
+				quint64 sessionRequirement = extractInteger(val, parameterLength);
+
+				if (sessionRequirement != 0x02) {
+					qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. SPDU header parameter 'Session Requirement (20)' is "
+							<< sessionRequirement << ", expected 2";
+
+					pduBuffer.clear();
+					return 0;
+				}
+			}
+			break;
+
+		// Calling Session Selector (51)
+		case 0x33:
+			{
+				QByteArray val(&pduBuffer.data()[i], parameterLength);
+				quint64 css = extractInteger(val, parameterLength);
+
+				if (css != 0x01) {
+					qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. SPDU header parameter 'Calling Session Selector (51)' is "
+							<< css << ", expected 1";
+
+					pduBuffer.clear();
+					return 0;
+				}
+			}
+			break;
+
+		// Called Session Selector (52)
+		case 0x34:
+			{
+				QByteArray val(&pduBuffer.data()[i], parameterLength);
+				quint64 calledSessionSelector = extractInteger(val, parameterLength);
+
+				if (calledSessionSelector != 0x01) {
+					qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. SPDU header parameter 'Called Session Selector (52)' is "
+							<< calledSessionSelector << ", expected 1";
+
+					pduBuffer.clear();
+					return 0;
+				}
+			}
+			break;
+
+		// Session user data (193)
+		case 0xc1:
+
+			break;
+
+		default:
+			{
+				qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. SPDU header parameter type "
+				<< parameterType << " not implemented.";
+
+				pduBuffer.clear();
+				return 0;
+			}
+		}
+	}
+
+	return i;
 }
 
 QByteArray CAcseAssociation::startSConnection(
@@ -430,7 +587,7 @@ QByteArray CAcseAssociation::startSConnection(
 
 	// read ISO 8327-1 Header
 	// SPDU Type: ACCEPT (14)
-	if (pduBuffer[0] != 0x0e)
+	if ( (quint8)pduBuffer[0] != (quint8) 0x0e)
 	{
 		qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. ISO 8327-1 header wrong SPDU type, expected ACCEPT (14), got "
 				<< getSPDUTypeString(pduBuffer[0]) << " (" << pduBuffer[0] << ")";
@@ -439,145 +596,20 @@ QByteArray CAcseAssociation::startSConnection(
 		return ret;
 	}
 
-	// not used
-	// quint8 length = pduBuffer[1];
-	quint32 i = 2;
-	for (; i < pduBuffer.size(); i)
-	{
-		// read parameter type
-		quint32 parameterType = pduBuffer[i++] & 0xff;
-		// read parameter length
-		quint32 parameterLength = pduBuffer[i++] & 0xff;
-
-		switch (parameterType) {
-		// Connect Accept Item (5)
-		case 0x05:
-			{
-				quint32 bytesToRead = parameterLength;
-
-				while (bytesToRead > 0)
-				{
-					// read parameter type
-					int ca_parameterType = pduBuffer[i++];
-					bytesToRead -= 2;
-
-					switch (ca_parameterType & 0xff)
-					{
-
-					// Protocol Options (19)
-					case 0x13:
-						// flags: .... ...0 = Able to receive extended
-						// concatenated SPDU: False
-						{
-							quint8 protocolOptions = pduBuffer[i++];
-							if (protocolOptions != 0x00)
-							{
-								qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. SPDU Connect Accept Item/Protocol Options is "
-										<< protocolOptions << ", expected 0";
-
-								QByteArray ret;
-								return ret;
-							}
-
-							bytesToRead--;
-							break;
-						}
-					// Version Number
-					case 0x16:
-						// flags .... ..1. = Protocol Version 2: True
-						{
-							quint8 versionNumber = pduBuffer[i++];
-							if (versionNumber != 0x02)
-							{
-								qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. SPDU Connect Accept Item/Version Number is "
-										<< versionNumber << ", expected 2";
-							}
-
-							bytesToRead--;
-							break;
-						}
-
-					default:
-						{
-							qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. SPDU Connect Accept Item: parameter not implemented: "
-								<< ca_parameterType;
-							QByteArray ret;
-							return ret;
-						}
-
-					}
-				}
-			}
-			break;
-
-		// Session Requirement (20)
-		case 0x14:
-			// flags: (.... .... .... ..1. = Duplex functional unit: True)
-			{
-				QByteArray val(parameterLength, &pduBuffer[i++]);
-				quint64 sessionRequirement = extractInteger(val, parameterLength);
-
-				if (sessionRequirement != 0x02) {
-					qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. SPDU header parameter 'Session Requirement (20)' is "
-							<< sessionRequirement << ", expected 2";
-					QByteArray ret;
-					return ret;
-				}
-			}
-			break;
-
-		// Calling Session Selector (51)
-		case 0x33:
-			{
-				QByteArray val(parameterLength, &pduBuffer[i++]);
-				quint64 css = extractInteger(val, parameterLength);
-
-				if (css != 0x01) {
-					qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. SPDU header parameter 'Calling Session Selector (51)' is "
-							<< css << ", expected 1";
-				}
-			}
-			break;
-
-		// Called Session Selector (52)
-		case 0x34:
-			{
-				QByteArray val(parameterLength, &pduBuffer[i++]);
-				quint64 calledSessionSelector = extractInteger(val, parameterLength);
-
-				if (calledSessionSelector != 0x01) {
-					qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. SPDU header parameter 'Called Session Selector (52)' is "
-							<< calledSessionSelector << ", expected 1";
-				}
-			}
-			break;
-
-		// Session user data (193)
-		case 0xc1:
-
-			break;
-
-		default:
-			{
-				qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. SPDU header parameter type "
-				<< parameterType << " not implemented.";
-
-				QByteArray ret;
-				return ret;
-			}
-		}
-	}
+	quint32 i = receiveDataParser(pduBuffer, 2);
 
 	m_connected = true;
 
-	return &pduBuffer[i];
+	return &pduBuffer.data()[i];
 }
 
 void CAcseAssociation::send(CBerByteArrayOutputStream& payload)
 {
-	NsPdvList::SubchoicePresentationDataValues spdv( &CBerAnyNoDecode(payload.size() - payload.index()),
+	CBerAnyNoDecode noDecode(payload.size() - payload.index());
+	NsPdvList::SubchoicePresentationDataValues spdv( &noDecode,
 			(CBerOctetString*) nullptr, (CBerBitString*) nullptr);
-	CPdvList pdvList( (CBerObjectIdentifier*) nullptr, &CBerInteger(31), &spdv);
+	CBerInteger int31(31);
+	CPdvList pdvList( (CBerObjectIdentifier*) nullptr, &int31, &spdv);
 
 	QLinkedList<CPdvList> listPdvList;
 	listPdvList.push_back(pdvList);
@@ -604,8 +636,60 @@ void CAcseAssociation::send(CBerByteArrayOutputStream& payload)
 
 }
 
-void CAcseAssociation::receive(QByteArray pduBuffer)
+void CAcseAssociation::receive(QByteArray& pduBuffer)
 {
+	if ( m_connected )
+	{
+		qDebug() << "CAcseAssociation::receive not connected.";
+		return;
+	}
+
+	QByteArray localBuffer;
+	m_tConnection->receive(localBuffer);
+
+	quint8 firstByte = localBuffer[0];
+
+	if (firstByte == 25) {
+		// got an ABORT SPDU
+		qDebug() <<  "CAcseAssociation::receive: Received an ABORT SPDU";
+		return;
+	}
+
+	// -- read ISO 8327-1 header
+	// SPDU type: Give tokens PDU (1)
+	if (firstByte != 0x01) {
+		qDebug() <<  "CAcseAssociation::receive: SPDU header syntax error: first SPDU type not 1";
+		return;
+	}
+	// length
+	if ( (quint8) localBuffer[1] != (quint8) 0) {
+		qDebug() <<  "CAcseAssociation::receive: SPDU header syntax error: first SPDU type length not 0";
+		return;
+	}
+	// SPDU Type: DATA TRANSFER (DT) SPDU (1)
+	if ( (quint8) localBuffer[2] != (quint8) 0x01) {
+		qDebug() <<  "CAcseAssociation::receive: SPDU header syntax error: second SPDU type not 1";
+		return;
+	}
+	// length
+	if ( (quint8) localBuffer[3] != (quint8) 0) {
+		qDebug() <<  "CAcseAssociation::receive: SPDU header syntax error: second SPDU type length not 0";
+		return;
+	}
+
+	// decode PPDU header
+	CUserData user_data;
+
+	CBerByteArrayInputStream iStream( localBuffer, 4);
+	if (user_data.decode( iStream, false) == 0)
+	{
+		qDebug() <<  "CAcseAssociation::receive: error decoding PPDU header";
+		return;
+	}
+
+	qint32 startingIndex = localBuffer.size() - iStream.available();
+
+	iStream.read( pduBuffer, startingIndex, iStream.available());
 
 }
 
@@ -627,8 +711,33 @@ void CAcseAssociation::close()
 	}
 }
 
-void CAcseAssociation::listenForCn(QByteArray pduBuffer)
+void CAcseAssociation::listenForCn(QByteArray& pduBuffer)
 {
+	if (m_connected)
+	{
+		qDebug() << "CAcseAssociation::listenForCn: connected already.";
+		return;
+	}
+
+	QByteArray localPduBuffer;
+	m_tConnection->receive(localPduBuffer);
+
+	quint8 spduType = localPduBuffer[0];
+	if (spduType != 0x0d)
+	{
+		qDebug() << "CAcseAssociation::listenForCn: ISO 8327-1 header wrong SPDU type, expected CONNECT (13), got "
+				<< getSPDUTypeString(spduType) << " (" << spduType << ")";
+		return;
+	}
+
+	quint32 i = receiveDataParser(pduBuffer, 2);
+
+	CCpType cpType;
+	CBerByteArrayInputStream iStream( localPduBuffer, i );
+	cpType.decode(iStream, true);
+
+	CAcseApdu acseApdu;
+	acseApdu.decode(iStream, (CBerIdentifier*) nullptr);
 
 }
 
