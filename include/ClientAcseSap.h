@@ -1,5 +1,5 @@
 /*
- * ClientAcseSap.h
+ * CClientAcseSap.h
  *
  *  Created on: 12 февр. 2016 г.
  *      Author: alex
@@ -11,8 +11,10 @@
 #include "osistack_global.h"
 #include <clienttsap.h>
 
-class ClientAcseSap: public QObject
+class CClientAcseSap: public QObject
 {
+
+	Q_OBJECT
 
 private:
 
@@ -23,7 +25,7 @@ private:
 
 public:
 
-	CClientTSAP* m_pTSap;
+	CClientTSAP* m_pClientTSap;
 
 	static quint8 P_SEL_DEFAULT[]; // = { 0, 0, 0, 1 };
 	static quint8 S_SEL_DEFAULT[]; // = { 0, 1 };
@@ -37,11 +39,11 @@ public:
 	 * Use this constructor to create a client ACSE Service Access Point (SAP) that will start connections to remote
 	 * ACSE SAPs. Once constructed the AcseSAP contains a public TSAP that can be accessed to set its configuration.
 	 */
-	ClientAcseSap():
+	CClientAcseSap():
 		m_aeQualifierCalled(12),
 		m_aeQualifierCalling(12)
 	{
-		m_pTSap = new CClientTSAP();
+		m_pClientTSap = new CClientTSAP();
 
 		m_PSelRemote.push_back((quint8) 0);
 		m_PSelRemote.push_back((quint8) 0);
@@ -54,11 +56,11 @@ public:
 		m_SSelLocal = m_SSelRemote;
 	}
 
-	ClientAcseSap(CSocketFactory socketFactory):
+	CClientAcseSap(CSocketFactory socketFactory):
 		m_aeQualifierCalled(12),
 		m_aeQualifierCalling(12)
 	{
-		m_pTSap = new CClientTSAP(socketFactory);
+		m_pClientTSap = new CClientTSAP(socketFactory);
 
 		m_PSelRemote.push_back((quint8) 0);
 		m_PSelRemote.push_back((quint8) 0);
@@ -71,9 +73,9 @@ public:
 		m_SSelLocal = m_SSelRemote;
 	}
 
-	~ClientAcseSap()
+	~CClientAcseSap()
 	{
-		delete m_pTSap;
+		delete m_pClientTSap;
 	}
 
 	void setApTitleCalled(QVector<qint32>& title) {
@@ -114,20 +116,28 @@ public:
 	CAcseAssociation associate(QHostAddress address, quint16 port, QHostAddress localAddr, quint16 localPort,
 			QString authenticationParameter, CBerByteArrayOutputStream& apdu)
 	{
-		if ( !m_pTSap )
+		if ( !m_pClientTSap )
 		{
 			CAcseAssociation acseAssociation(nullptr, nullptr);
+			emit signalIllegalClassMember("CAcseAssociation::associate: m_pClientTSap is NULL!");
+
 			return acseAssociation;
 		}
 
 		CAcseAssociation acseAssociation(nullptr, &m_PSelLocal);
 
 		acseAssociation.startAssociation(apdu, address, port, localAddr, localPort, authenticationParameter,
-					m_SSelRemote, m_SSelLocal, m_PSelRemote, *m_pTSap, m_ApTitleCalled, m_ApTitleCalling,
+					m_SSelRemote, m_SSelLocal, m_PSelRemote, *m_pClientTSap, m_ApTitleCalled, m_ApTitleCalling,
 					m_aeQualifierCalled, m_aeQualifierCalling);
 
 		return acseAssociation;
 	}
+
+signals:
+
+	// Error signals
+	void signalConnectError(QString strErr);
+	void signalIllegalClassMember(QString strErr);
 
 };
 

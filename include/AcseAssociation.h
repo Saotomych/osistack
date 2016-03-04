@@ -28,6 +28,8 @@
 
 class CAcseAssociation: public QObject
 {
+	Q_OBJECT
+
 public:
 
 	bool m_connected;
@@ -170,6 +172,16 @@ private: /*statics */
 	static QByteArray decodePConResponse(QByteArray& ppdu);
 
 	static CUserData getPresentationUserDataField( quint32 userDataLength );
+
+signals:
+
+	// work signals
+	void signalAcseAssociationReady(const CAcseAssociation* that);
+	void signalAcseAssociationClosed(const CAcseAssociation* that);
+	void signalAcseCnReady(const CAcseAssociation* that);
+
+	// Error signals
+	void signalAcseIOError(QString strErr);
 
 
 };
