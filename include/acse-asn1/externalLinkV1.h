@@ -73,7 +73,7 @@ namespace NsExternalLinkV1
 
 	public:
 
-		virtual quint32 encode(CBerByteArrayOutputStream& berOStream, bool explct)
+		virtual quint32 encode(CBerByteArrayOutputStream& berOStream, bool)
 		{
 			if (m_Code.size())
 			{
@@ -116,7 +116,7 @@ namespace NsExternalLinkV1
 			return 0;
 		}
 
-		virtual quint32 decode(CBerByteArrayInputStream& iStream, bool explct)
+		virtual quint32 decode(CBerByteArrayInputStream&, bool)
 		{
 			return 0;
 		}

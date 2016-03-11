@@ -7,64 +7,12 @@
 
 #include "AcseAssociation.h"
 
-namespace {
-	quint8 context_list_char[] = { 0x23, 0x30,
-				0x0f, 0x02, 0x01, 0x01, 0x06, 0x04, 0x52, 0x01,
-				0x00, 0x01, 0x30, 0x04, 0x06, 0x02, 0x51, 0x01,
-				0x30, 0x10, 0x02, 0x01, 0x03, 0x06, 0x05, 0x28,
-				0xca, 0x22, 0x02, 0x01, 0x30, 0x04, 0x06, 0x02,
-				0x51, 0x01 };
-
-	quint8 acsePresentationContextId_char[] = { 0x01, 0x01 };
-
-	quint8 presentationResultList_char[] = { 0x12, 0x30, 0x07, 0x80, 0x01, 0x00, 0x81, 0x02, 0x51, 0x01,
-			  0x30, 0x07, 0x80, 0x01, 0x00, 0x81, 0x02, 0x51, 0x01 };
-
-	quint8 aareAccepted_char[] = { 0x01, 0x00 };
-
-	quint8 associateSourceDiagnostic_char[] = { 0xa1, 0x03, 0x02, 0x01, 0x00 };
-
-	quint8 application_context_name_char[] = { 0x05, 0x28, 0xca, 0x22, 0x02, 0x03 };
-
-	quint8 directReference_char[] = { 0x02,	0x51, 0x01 };
-
-	quint8 indirectReference_char[] = { 0x01, 0x03 };
-
-	quint8 default_mechanism_name_char[] = { 0x03, 0x52, 0x03, 0x01 };
+namespace
+{
 
 	quint8 sender_acse_requirements_char[] = { 0x02, 0x07, 0x80 };
 
-};
-
-CContextList CAcseAssociation::context_list ( QByteArray ( (char*) context_list_char, sizeof(context_list_char)));
-
-CBerInteger CAcseAssociation::acsePresentationContextId (
-		QByteArray ((char*)acsePresentationContextId_char, sizeof(acsePresentationContextId_char) ) );
-
-CModeSelector CAcseAssociation::normalModeSelector = CModeSelector( new CBerInteger(1) );
-
-CResultList CAcseAssociation::presentationResultList = CResultList(
-		QByteArray ((char*)presentationResultList_char, sizeof(presentationResultList_char) ) );
-
-CBerInteger CAcseAssociation::aareAccepted ( QByteArray ((char*) aareAccepted_char, sizeof(aareAccepted_char) ) );
-
-CAssociateSourceDiagnostic CAcseAssociation::associateSourceDiagnostic (
-		QByteArray ((char*)associateSourceDiagnostic_char, sizeof(associateSourceDiagnostic_char) ));
-
-// is always equal to 1.0.9506.2.3 (MMS)
-CBerObjectIdentifier CAcseAssociation::applicationContextName (
-		QByteArray ((char*)application_context_name_char, sizeof(application_context_name_char)  ));
-
-CBerObjectIdentifier CAcseAssociation::directReference (
-		QByteArray ((char*) directReference_char, sizeof(directReference_char) ));
-
-CBerInteger CAcseAssociation::indirectReference = CBerInteger(
-		QByteArray ((char*) indirectReference_char, sizeof(indirectReference_char)));
-
-
-CBerObjectIdentifier CAcseAssociation::defaultMechanismName = CBerObjectIdentifier(
-		QByteArray ((char*) default_mechanism_name_char, sizeof(default_mechanism_name_char)));
-
+}
 
 CAcseAssociation::CAcseAssociation(CConnection* tConnection, CBerOctetString* pSelLocalBerOctetString):
 		m_connected(false),
@@ -235,15 +183,10 @@ QByteArray CAcseAssociation::getAssociateResponseAPdu()
 
 void CAcseAssociation::startAssociation(
 		CBerByteArrayOutputStream& payload,
-		QHostAddress address,
-		quint16 port,
-		QHostAddress localAddr,
-		quint16 localPort,
 		QString& authenticationParameter,
 		QByteArray& sSelRemote,
 		QByteArray& sSelLocal,
 		QByteArray& pSelRemote,
-		CClientTSAP& tSAP,
 		QVector<qint32>& apTitleCalled,
 		QVector<qint32>& apTitleCalling,
 		quint32 aeQualifierCalled,
@@ -321,10 +264,7 @@ void CAcseAssociation::startAssociation(
 	ssduOffsets.push_back(berOStream.index() + 1);
 	ssduLengths.push_back(payloadLength);
 
-	QByteArray res = startSConnection( ssduList, ssduOffsets, ssduLengths,
-			address, port,
-			localAddr, localPort,
-			tSAP, sSelRemote, sSelLocal);
+	QByteArray res = startSConnection( ssduList, ssduOffsets, ssduLengths, sSelRemote, sSelLocal);
 
 	m_associateResponseAPDU = decodePConResponse(res);
 
@@ -347,6 +287,8 @@ quint32 CAcseAssociation::receiveDataParser(QByteArray& pduBuffer, quint32 offse
 		case 0x05:
 			{
 				quint32 bytesToRead = parameterLength;
+				//	m_tConnection = tSAP.createConnection(address, port, localAddr, localPort);
+
 
 				while (bytesToRead > 0)
 				{
@@ -483,11 +425,6 @@ QByteArray CAcseAssociation::startSConnection(
 		QLinkedList<QByteArray>& ssduList,
 		QLinkedList<quint32>& ssduOffsets,
 		QLinkedList<quint32>& ssduLengths,
-		QHostAddress address,
-		quint16 port,
-		QHostAddress localAddr,
-		quint16 localPort,
-		CClientTSAP& tSAP,
 		QByteArray& sSelRemote,
 		QByteArray& sSelLocal)
 {
@@ -573,8 +510,6 @@ QByteArray CAcseAssociation::startSConnection(
 	ssduList.push_front(spduHeader);
 	ssduOffsets.push_front(0);
 	ssduLengths.push_front(spduHeader.size());
-
-	m_tConnection = tSAP.createConnection(address, port, localAddr, localPort);
 
 	m_tConnection->send(ssduList, ssduOffsets, ssduLengths);
 
@@ -867,5 +802,25 @@ QString CAcseAssociation::getSPDUTypeString(qint8 spduType)
 	default:
 		return "<unknown SPDU type>";
 	}
+}
+
+/*** Slot Section ***/
+void CAcseAssociation::slotAcseConnectionClosed(const CConnection* pconn)
+{
+	qDebug() << "CAcseAssociation::slotServerConnectionClosed";
+
+	Q_CHECK_PTR(pconn);
+
+	emit signalAcseAssociationClosed(this);
+
+}
+
+void CAcseAssociation::slotAcseTSduReady(const CConnection* pconn)
+{
+	qDebug() << "CAcseAssociation::slotServerConnectionClosed";
+
+	Q_CHECK_PTR(pconn);
+
+	emit signalAcseTSduReady(this);
 }
 

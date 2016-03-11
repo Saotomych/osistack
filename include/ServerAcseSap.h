@@ -10,9 +10,12 @@
 
 #include "osistack_global.h"
 #include <connection.h>
+#include <connectionlistener.h>
+#include <servertsap.h>
 #include "AcseAssociationListener.h"
 #include "AcseAssociation.h"
 #include "ClientAcseSap.h"
+#include "berOctetString.h"
 
 /**
  * This class implements the server Service Access Point (SAP) for the Application Control Service Element (ACSE)
@@ -21,8 +24,10 @@
  * and the ISO Session Layer as defined by 8327/ITU X.225.
  *
  */
-class CServerAcseSap: public QObject
+class OSISTACK_SHAREDEXPORT CServerAcseSap: public QObject
 {
+
+	Q_OBJECT
 
 private:
 
@@ -33,7 +38,7 @@ public:
 
 	CServerTSAP* m_pServerTSAP;
 
-	QByteArray m_pSelLocal; // = ClientAcseSap.P_SEL_DEFAULT;
+	QByteArray m_pSelLocal; // = CClientAcseSap::P_SEL_DEFAULT;
 
 	/**
 	 * Use this constructor to create a server ACSE SAP that listens on a fixed port.
@@ -48,21 +53,7 @@ public:
 	 *            the AssociationListener that will be notified when remote clients have associated. Once constructed
 	 *            the AcseSAP contains a public TSAP that can be accessed to set its configuration.
 	 */
-	CServerAcseSap(quint16 port, quint32 backlog, QHostAddress bindAddr, CAcseAssociationListener* associationListener):
-		m_pConnectionListener(nullptr),
-		m_pServerTSAP(nullptr)
-	{
-		m_pAssociationListener = associationListener;
-
-		m_pServerTSAP = new CServerTSAP(port, backlog, bindAddr);
-
-		// TODO: Подписка на события от ConnectionListener
-
-
-		// Пока непонятно зачем нужен CAcseAssociationListener
-		// Он передает события аксеприложению
-
-	}
+	CServerAcseSap(quint16 port, quint32 backlog, QHostAddress bindAddr, CAcseAssociationListener* associationListener);
 
 	/**
 	 * Use this constructor to create a server ACSE SAP that listens on a fixed port. The server socket is created with
@@ -80,20 +71,9 @@ public:
 	 * @param serverSocketFactory
 	 *            the server socket factory to create the socket
 	 */
-	CServerAcseSap(quint16 port, quint32 backlog, QHostAddress bindAddr, CAcseAssociationListener* associationListener,
-			CSocketFactory serverSocketFactory):
-				m_pConnectionListener(nullptr),
-				m_pServerTSAP(nullptr)
-	{
-
-		m_pAssociationListener = associationListener;
-
-		m_pServerTSAP = new CServerTSAP(port, backlog, bindAddr, serverSocketFactory);
-
-		// TODO: Подписка на события от ConnectionListener
-		// Пока непонятно зачем нужен CAcseAssociationListener
-
-	}
+	CServerAcseSap(quint16 port, quint32 backlog, QHostAddress bindAddr,
+			CAcseAssociationListener* associationListener,
+			CSocketFactory* serverSocketFactory);
 
 	/**
 	 * Start listening for incoming connections. Only for server SAPs.
@@ -101,39 +81,23 @@ public:
 	 * @throws IOException
 	 *             if an error occures starting to listen
 	 */
-	void startListening()
-	{
+	void startListening();
+	void stopListening();
+	void setMessageTimeout(quint32 messageTimeout);
+	void setMessageFragmentTimeout(quint32 messageFragmentTimeout);
 
-		if (m_pAssociationListener == nullptr || m_pServerTSAP == nullptr) {
-//			throw new IllegalStateException("AcseSAP is unable to listen because it was not initialized.");
-			return;
-		}
+private:
 
-		m_pServerTSAP->startListening();
-	}
+	CAcseAssociation* createNewAcseAssociation(CConnection* pconn);
 
-	void stopListening()
-	{
-		m_pServerTSAP->stopListening();
-	}
-
-protected:
-	/**
-	 * This function is internal and should not be called by users of this class.
-	 */
-//	void serverStoppedListeningIndication(IOException e) {
-//		m_pAssociationListener->serverStoppedListeningIndication(e);
-//	}
-
-	CAcseAssociation* CServerAcseSap::createNewAcseAssociation(CConnection* pconn);
-
-private slots:
+public slots:
 	void slotServerAcseAcceptConnection(const CConnection* that);
-	void slotServerAcseConnectionClosed(const CAcseAssociation* that);
 
 signals:
-	void signalAcseClientConnected(const CAcseAssociation* that);
-	void signalAcseClientDisconnected(const CAcseAssociation* that);
+	void signalAcseClientConnected(CAcseAssociation* that);
+
+	// Error signals
+	void signalIllegalClassMember(QString strErr);
 
 };
 

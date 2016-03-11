@@ -10,20 +10,21 @@
 CAcseAssociationListener::CAcseAssociationListener(QObject *parent) :
     QObject(parent)
 {
+	qDebug() << "CAcseAssociationListener constructor";
 }
 
-void CAcseAssociationListener::slotAcseTSduReady(const CConnection* that)
+void CAcseAssociationListener::slotAcseTSduReady(CAcseAssociation* that)
 {
 	qDebug() << "CAcseAssociationListener::slotTSduReady";
 
 	emit signalAcseTSduReady(that);
 }
 
-void CAcseAssociationListener::slotAcseCRReady(const CConnection* that)
+void CAcseAssociationListener::slotAcseCnReady(CAcseAssociation* that)
 {
 	qDebug() << "CAcseAssociationListener::slotCRReady";
 
-	emit signalAcseCRReady(that);
+	emit signalAcseCnReady(that);
 }
 
 void CAcseAssociationListener::slotAcseIOError(QString strErr)
@@ -33,14 +34,14 @@ void CAcseAssociationListener::slotAcseIOError(QString strErr)
 	emit signalAcseIOError(strErr);
 }
 
-void CAcseAssociationListener::slotAcseClientConnected(const CConnection* that)
+void CAcseAssociationListener::slotAcseClientConnected(CAcseAssociation* that)
 {
 	qDebug() << "CAcseAssociationListener::slotClientConnected";
 
 	emit signalAcseConnected(that);
 }
 
-void CAcseAssociationListener::slotAcseClientDisconnected(const CConnection* that)
+void CAcseAssociationListener::slotAcseClientDisconnected(CAcseAssociation* that)
 {
 	qDebug() << "CAcseAssociationListener::slotClientDisconnected";
 

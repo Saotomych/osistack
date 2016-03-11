@@ -65,10 +65,23 @@ public:
 		is_copy(false),
 		m_pAcseServiceUser(pAcseServiceUser),
 		m_pAcseServiceProvider(pAcseServiceProvider)
-	{ }
+	{
+		qDebug() << "CAssociateSourceDiagnostic common constructor";
+	}
+
+	CAssociateSourceDiagnostic(QByteArray& code):
+		is_copy(false),
+		m_pAcseServiceUser(nullptr),
+		m_pAcseServiceProvider(nullptr)
+	{
+		qDebug() << "CAssociateSourceDiagnostic code constructor";
+		m_Code = code;
+	}
 
 	CAssociateSourceDiagnostic(const CAssociateSourceDiagnostic& rhs): QObject()
 	{
+		qDebug() << "CAssociateSourceDiagnostic copy constructor";
+
 		create_objects(rhs);
 
 		m_Code = rhs.m_Code;

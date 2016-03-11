@@ -26,7 +26,7 @@
 #include "presentation-asn1/PdvList.h"
 #include "presentation-asn1/CpType.h"
 
-class CAcseAssociation: public QObject
+class OSISTACK_SHAREDEXPORT CAcseAssociation: public QObject
 {
 	Q_OBJECT
 
@@ -86,15 +86,10 @@ public:
 	 */
 	void startAssociation(
 			CBerByteArrayOutputStream& payload,
-			QHostAddress address,
-			quint16 port,
-			QHostAddress localAddr,
-			quint16 localPort,
 			QString& authenticationParameter,
 			QByteArray& sSelRemote,
 			QByteArray& sSelLocal,
 			QByteArray& pSelRemote,
-			CClientTSAP& tSAP,
 			QVector<qint32>& apTitleCalled,
 			QVector<qint32>& apTitleCalling,
 			quint32 aeQualifierCalled,
@@ -112,11 +107,6 @@ public:
 			QLinkedList<QByteArray>& ssduList,
 			QLinkedList<quint32>& ssduOffsets,
 			QLinkedList<quint32>& ssduLengths,
-			QHostAddress address,
-			quint16 port,
-			QHostAddress localAddr,
-			quint16 localPort,
-			CClientTSAP& tSAP,
 			QByteArray& sSelRemote,
 			QByteArray& sSelLocal);
 
@@ -173,16 +163,20 @@ private: /*statics */
 
 	static CUserData getPresentationUserDataField( quint32 userDataLength );
 
+public slots:
+	void slotAcseConnectionClosed(const CConnection* pconn);
+	void slotAcseTSduReady(const CConnection* pconn);
+
 signals:
 
 	// work signals
-	void signalAcseAssociationReady(const CAcseAssociation* that);
-	void signalAcseAssociationClosed(const CAcseAssociation* that);
-	void signalAcseCnReady(const CAcseAssociation* that);
+	void signalAcseAssociationReady(CAcseAssociation* that);	// for client only
+	void signalAcseAssociationClosed(CAcseAssociation* that);	// for all
+	void signalAcseCnReady(CAcseAssociation* that);				// for listener only
+	void signalAcseTSduReady(CAcseAssociation* that);			// for all
 
 	// Error signals
 	void signalAcseIOError(QString strErr);
-
 
 };
 

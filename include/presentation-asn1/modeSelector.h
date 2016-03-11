@@ -42,7 +42,14 @@ public:
 	CModeSelector(CBerInteger* pModeValue):
 		is_copy(false),
 		m_pModeValue(pModeValue)
-	{ }
+	{}
+
+	CModeSelector(QByteArray& code):
+		is_copy(false),
+		m_pModeValue(nullptr)
+	{
+		m_Code = code;
+	}
 
 	CModeSelector(const CModeSelector& rhs): QObject()
 	{

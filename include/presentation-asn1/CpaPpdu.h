@@ -179,7 +179,6 @@ class CCpaPpdu: public QObject, public IBerBaseType
 {
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier* Identifier READ getIdentifier)
-	Q_PROPERTY(CBerObjectIdentifier* transferSyntaxName READ getTransferSyntaxName)
 	Q_PROPERTY(CModeSelector* presentationContextIdentifier READ getPresentationContextIdentifier)
 	Q_PROPERTY(IBerBaseType* Integer READ getSPDV)
 

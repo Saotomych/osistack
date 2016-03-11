@@ -9,8 +9,9 @@
 #define INCLUDE_ACSEASSOCIATIONLISTENER_H_
 
 #include "osistack_global.h"
+#include "AcseAssociation.h"
 
-class CAcseAssociationListener: public QObject
+class OSISTACK_SHAREDEXPORT CAcseAssociationListener: public QObject
 {
 	Q_OBJECT
 
@@ -18,17 +19,17 @@ public:
     explicit CAcseAssociationListener(QObject *parent = 0);
 
 signals:
-	void signalAcseConnected(const CConnection* that);
-	void signalAcseDisconnected(const CConnection* that);
-	void signalAcseTSduReady(const CConnection* that);
-	void signalAcseCRReady(const CConnection* that);
+	void signalAcseConnected(CAcseAssociation* that);
+	void signalAcseDisconnected(CAcseAssociation* that);
+	void signalAcseTSduReady(CAcseAssociation* that);
+	void signalAcseCnReady(CAcseAssociation* that);
 	void signalAcseIOError(QString str);
 
-private slots:
-	void slotAcseClientConnected(const CConnection* that);
-	void slotAcseClientDisconnected(const CConnection* that);
-	void slotAcseTSduReady(const CConnection* that);
-	void slotAcseCRReady(const CConnection* that);
+public slots:
+	void slotAcseClientConnected(CAcseAssociation* that);
+	void slotAcseClientDisconnected(CAcseAssociation* that);
+	void slotAcseTSduReady(CAcseAssociation* that);
+	void slotAcseCnReady(CAcseAssociation* that);
 	void slotAcseIOError(QString strErr);
 
 };
