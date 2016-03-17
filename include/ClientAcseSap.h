@@ -30,6 +30,8 @@ public:
 
 	static const quint8 P_SEL_DEFAULT[4]; // = { 0, 0, 0, 1 };
 	static const quint8 S_SEL_DEFAULT[2]; // = { 0, 1 };
+	static const qint32 s_titleCalled[5];
+	static const qint32 s_titleCalling[4];
 
 	QByteArray m_PSelRemote; // P_SEL_DEFAULT;
 	QByteArray m_PSelLocal; // P_SEL_DEFAULT;

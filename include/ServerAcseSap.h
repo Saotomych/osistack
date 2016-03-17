@@ -86,6 +86,8 @@ public:
 	void setMessageTimeout(quint32 messageTimeout);
 	void setMessageFragmentTimeout(quint32 messageFragmentTimeout);
 
+	CConnectionListener* getConnectionListener();
+
 private:
 
 	CAcseAssociation* createNewAcseAssociation(CConnection* pconn);

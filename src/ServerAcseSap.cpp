@@ -132,11 +132,16 @@ void CServerAcseSap::setMessageFragmentTimeout(quint32 messageFragmentTimeout)
 	m_pServerTSAP->setMessageFragmentTimeout(messageFragmentTimeout);
 }
 
+CConnectionListener* CServerAcseSap::getConnectionListener()
+{
+	return m_pConnectionListener;
+}
+
 // *** slot section
 
 void CServerAcseSap::slotServerAcseAcceptConnection(const CConnection* pconn)
 {
-	qDebug() << "CAcseAssociation::slotServerAcceptConnection";
+	qDebug() << "CAcseAssociation::slotServerAcseAcceptConnection";
 
 	Q_CHECK_PTR(pconn);
 

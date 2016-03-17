@@ -817,7 +817,7 @@ void CAcseAssociation::slotAcseConnectionClosed(const CConnection* pconn)
 
 void CAcseAssociation::slotAcseTSduReady(const CConnection* pconn)
 {
-	qDebug() << "CAcseAssociation::slotServerConnectionClosed";
+	qDebug() << "CAcseAssociation::slotAcseTSduReady";
 
 	Q_CHECK_PTR(pconn);
 

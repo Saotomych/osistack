@@ -9,6 +9,8 @@
 
 const quint8 CClientAcseSap::P_SEL_DEFAULT[] = { 0, 0, 0, 1 };
 const quint8 CClientAcseSap::S_SEL_DEFAULT[] = { 0, 1 };
+const qint32 CClientAcseSap::s_titleCalled[] = { 1, 1, 999, 1, 1 };
+const qint32 CClientAcseSap::s_titleCalling[] = { 1, 1, 999, 1 };
 
 
 CClientAcseSap::CClientAcseSap(CSocketFactory* socketFactory):
@@ -31,6 +33,18 @@ CClientAcseSap::CClientAcseSap(CSocketFactory* socketFactory):
 			m_SSelRemote.push_back(CClientAcseSap::S_SEL_DEFAULT[i]);
 
 		m_SSelLocal = m_SSelRemote;
+	}
+
+	{
+		quint32 size = sizeof(CClientAcseSap::s_titleCalled) / sizeof(CClientAcseSap::s_titleCalled[0]);
+		for (quint32 i=0; i < size; ++i)
+			m_ApTitleCalled.push_back(CClientAcseSap::s_titleCalled[i]);
+	}
+
+	{
+		quint32 size = sizeof(CClientAcseSap::s_titleCalling) / sizeof(CClientAcseSap::s_titleCalling[0]);
+		for (quint32 i=0; i < size; ++i)
+			m_ApTitleCalling.push_back(CClientAcseSap::s_titleCalling[i]);
 	}
 }
 
