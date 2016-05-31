@@ -26,8 +26,8 @@ signals:
 	void signalAcseIOError(QString str);
 
 public slots:
-	void slotAcseClientConnected(CAcseAssociation* that);
-	void slotAcseClientDisconnected(CAcseAssociation* that);
+	void slotAcseAssociationOpen(CAcseAssociation* that);
+	void slotAcseAssociationClosed(CAcseAssociation* that);
 	void slotAcseTSduReady(CAcseAssociation* that);
 	void slotAcseCnReady(CAcseAssociation* that);
 	void slotAcseIOError(QString strErr);

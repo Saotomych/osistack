@@ -34,14 +34,14 @@ void CAcseAssociationListener::slotAcseIOError(QString strErr)
 	emit signalAcseIOError(strErr);
 }
 
-void CAcseAssociationListener::slotAcseClientConnected(CAcseAssociation* that)
+void CAcseAssociationListener::slotAcseAssociationOpen(CAcseAssociation* that)
 {
 	qDebug() << "CAcseAssociationListener::slotClientConnected";
 
 	emit signalAcseConnected(that);
 }
 
-void CAcseAssociationListener::slotAcseClientDisconnected(CAcseAssociation* that)
+void CAcseAssociationListener::slotAcseAssociationClosed(CAcseAssociation* that)
 {
 	qDebug() << "CAcseAssociationListener::slotClientDisconnected";
 

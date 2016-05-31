@@ -55,12 +55,11 @@ CAcseAssociation* CServerAcseSap::createNewAcseAssociation(CConnection* pconn)
 		CBerOctetString berStr(m_pSelLocal);
 		CAcseAssociation* acseAssoc = new CAcseAssociation(pconn, &berStr);
 
-		QByteArray pduBuffer;
-		acseAssoc->listenForCn(pduBuffer);
-
-		CBerByteArrayOutputStream acceptData(pduBuffer, 0);
-		acseAssoc->accept(acceptData);
-
+//		QByteArray pduBuffer;
+//
+//		CBerByteArrayOutputStream acceptData(pduBuffer, 0);
+//		acseAssoc->accept(acceptData);
+//
 		// signals from Connection to CAcseAssociation
 		connect(pconn, SIGNAL(signalConnectionClosed(const CConnection*)),
 				acseAssoc, SLOT(slotAcseConnectionClosed(const CConnection*)));
@@ -74,8 +73,8 @@ CAcseAssociation* CServerAcseSap::createNewAcseAssociation(CConnection* pconn)
 				m_pAssociationListener, SLOT(slotAcseCnReady(CAcseAssociation*)) );
 		connect( acseAssoc, SIGNAL(signalAcseTSduReady(CAcseAssociation*)),
 				m_pAssociationListener, SLOT(slotAcseTSduReady(CAcseAssociation*)) );
-		connect( acseAssoc, SIGNAL(signalAcseIOError(QString strErr)),
-				m_pAssociationListener, SLOT(slotAcseIOError(QString strErr)) );
+		connect( acseAssoc, SIGNAL(signalAcseIOError(QString)),
+				m_pAssociationListener, SLOT(slotAcseIOError(QString)) );
 
 		return acseAssoc;
 	}
@@ -148,5 +147,7 @@ void CServerAcseSap::slotServerAcseAcceptConnection(const CConnection* pconn)
 	CAcseAssociation* assoc = createNewAcseAssociation( const_cast<CConnection*> (pconn) );
 
 	emit signalAcseClientConnected(assoc);
+
+	assoc->listenForCn();
 }
 

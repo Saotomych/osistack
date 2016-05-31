@@ -95,7 +95,7 @@ public:
 			quint32 aeQualifierCalled,
 			quint32 aeQualifierCalling);
 
-	quint32 receiveDataParser(QByteArray& pduBuffer, quint32 offset);
+	quint32 receiveDataParser(QScopedPointer<QDataStream>& iStream);
 
 	/**
 	 * Starts a session layer connection, sends a CONNECT (CN), waits for a ACCEPT (AC) and throws an IOException if not
@@ -103,7 +103,7 @@ public:
 	 *
 	 * @throws IOException
 	 */
-	QByteArray startSConnection(
+	QScopedPointer<QDataStream>& startSConnection(
 			QLinkedList<QByteArray>& ssduList,
 			QLinkedList<quint32>& ssduOffsets,
 			QLinkedList<quint32>& ssduLengths,
@@ -138,7 +138,7 @@ public:
 	 */
 	void close();
 
-	void listenForCn(QByteArray& pduBuffer);
+	void listenForCn();
 	quint32 getMessageTimeout();
 	void setMessageTimeout(quint32 tout);
 
@@ -150,7 +150,7 @@ private:
 			QLinkedList<quint32>& ssduOffsets,
 			QLinkedList<quint32>& ssduLengths);
 
-	quint64 extractInteger(QByteArray buffer, quint32 size);
+//	quint64 extractInteger(QByteArray buffer, quint32 size);
 
 	/* Statics */
 public:
@@ -159,7 +159,7 @@ public:
 
 private: /*statics */
 
-	static QByteArray decodePConResponse(QByteArray& ppdu);
+	static QDataStream& decodePConResponse(QDataStream& ppdu);
 
 	static CUserData getPresentationUserDataField( quint32 userDataLength );
 
