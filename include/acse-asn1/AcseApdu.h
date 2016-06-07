@@ -123,7 +123,7 @@ public:
 			return 0;
 		}
 
-		qDebug() << "CAcseApdu decode: Error decoding BerChoice: Identifier matches to no item";
+		qDebug() << "CAcseApdu decode: Error decoding CAcseApdu: Identifier matches to no item";
 
 		return 0;
 	}
