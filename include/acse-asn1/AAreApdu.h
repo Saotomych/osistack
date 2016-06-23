@@ -23,7 +23,7 @@
 class OSISTACK_SHAREDEXPORT CAAreApdu: public QObject, public IBerBaseType
 {
 	Q_OBJECT
-	Q_PROPERTY(CBerIdentifier* Identifier READ getIdentifier)
+	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
 	Q_PROPERTY(IBerBaseType* ProtocolVersion READ getProtocolVersion)
 	Q_PROPERTY(IBerBaseType* ApplicationContextName READ getApplicationContextName)
@@ -42,10 +42,10 @@ class OSISTACK_SHAREDEXPORT CAAreApdu: public QObject, public IBerBaseType
 
 	bool is_copy;
 
-protected:
+public:
 
 	QByteArray* getCode() { return &m_Code; }
-	CBerIdentifier* getIdentifier() { return &m_Identifier; }
+	CBerIdentifier getIdentifier() { return c_Identifier; }
 	IBerBaseType* getProtocolVersion() {return m_pProtocolVersion;}
 	IBerBaseType* getApplicationContextName() {return m_pApplicationContextName;}
 	IBerBaseType* getResult() {return m_pResult;}
@@ -61,12 +61,14 @@ protected:
 	IBerBaseType* getImplementationInformation() {return m_pImplementationInformation;}
 	IBerBaseType* getUserInformation() {return m_pUserInformation;}
 
+protected:
+
 	void create_objects(const CAAreApdu& rhs)
 	{
 		std::unique_ptr<CBerBitString> p1
 				( (rhs.m_pProtocolVersion != nullptr) ? new CBerBitString(*rhs.m_pProtocolVersion): nullptr );
-		std::unique_ptr<CBerObjectIdentifier> p2
-				( (rhs.m_pApplicationContextName != nullptr) ? new CBerObjectIdentifier(*rhs.m_pApplicationContextName): nullptr );
+		std::unique_ptr<CApplicationContextName> p2
+				( (rhs.m_pApplicationContextName != nullptr) ? new CApplicationContextName(*rhs.m_pApplicationContextName): nullptr );
 		std::unique_ptr<CBerInteger> p3
 				( (rhs.m_pResult != nullptr) ? new CBerInteger(*rhs.m_pResult): nullptr );
 		std::unique_ptr<CAssociateSourceDiagnostic> p4
@@ -132,11 +134,12 @@ protected:
 
 protected:
 
-	CBerIdentifier m_Identifier;
+	const CBerIdentifier c_Identifier;
+
 	QByteArray m_Code;
 
 	CBerBitString* m_pProtocolVersion;
-	CBerObjectIdentifier* m_pApplicationContextName;
+	CApplicationContextName* m_pApplicationContextName;
 	CBerInteger* m_pResult;
 	CAssociateSourceDiagnostic* m_pResultSourceDiagnostic;
 	CApTitle* m_pApTitle;
@@ -154,12 +157,11 @@ public:
 
 	ASN1_CODEC(CBerBaseStorage)
 
-	static CBerIdentifier s_Identifier;
 	static quint32 s_metaTypeIdentifier;
 
 	CAAreApdu():
 			is_copy(false),
-			m_Identifier(s_Identifier),
+			c_Identifier(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::CONSTRUCTED, 1),
 			m_pProtocolVersion(nullptr),
 			m_pApplicationContextName(nullptr),
 			m_pResult(nullptr),
@@ -178,7 +180,7 @@ public:
 
 	CAAreApdu(
 			CBerBitString* pProtocolVersion,
-			CBerObjectIdentifier* pApplicationContextName,
+			CApplicationContextName* pApplicationContextName,
 			CBerInteger* pResult,
 			CAssociateSourceDiagnostic* pResultSourceDiagnostic,
 			CApTitle* pApTitle,
@@ -193,7 +195,7 @@ public:
 			CAssociationInformation* pUserInformation
 		):
 			is_copy(false),
-			m_Identifier(s_Identifier),
+			c_Identifier(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::CONSTRUCTED, 1),
 			m_pProtocolVersion(pProtocolVersion),
 			m_pApplicationContextName(pApplicationContextName),
 			m_pResult(pResult),
@@ -210,11 +212,11 @@ public:
 			m_pUserInformation(pUserInformation)
 	{}
 
-	CAAreApdu(const CAAreApdu& rhs): QObject()
+	CAAreApdu(const CAAreApdu& rhs): QObject(),
+		c_Identifier(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::CONSTRUCTED, 1)
 	{
 		create_objects(rhs);
 
-		m_Identifier = rhs.m_Identifier;
 		m_Code = rhs.m_Code;
 		is_copy = true;
 	}
@@ -227,7 +229,6 @@ public:
 
 		create_objects(rhs);
 
-		m_Identifier = rhs.m_Identifier;
 		m_Code = rhs.m_Code;
 		is_copy = true;
 
@@ -239,7 +240,7 @@ public:
 		if (this == &rhs) return false;
 
 		if ( notEqualsPointersAndValues<CBerBitString>(m_pProtocolVersion, rhs.m_pProtocolVersion) ) return true;
-		if ( notEqualsPointersAndValues<CBerObjectIdentifier>(m_pApplicationContextName, rhs.m_pApplicationContextName) ) return true;
+		if ( notEqualsPointersAndValues<CApplicationContextName>(m_pApplicationContextName, rhs.m_pApplicationContextName) ) return true;
 		if ( notEqualsPointersAndValues<CBerInteger>(m_pResult, rhs.m_pResult) ) return true;
 		if ( notEqualsPointersAndValues<CAssociateSourceDiagnostic>(m_pResultSourceDiagnostic, rhs.m_pResultSourceDiagnostic) ) return true;
 		if ( notEqualsPointersAndValues<CApTitle>(m_pApTitle, rhs.m_pApTitle) ) return true;

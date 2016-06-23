@@ -22,7 +22,7 @@ namespace NsExternalLinkV1
 	class SubChoiceEncoding: public QObject, public IBerBaseType
 	{
 		Q_OBJECT
-		Q_PROPERTY(CBerIdentifier* Identifier READ getIdentifier)
+		Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 		Q_PROPERTY(QByteArray* Code READ getCode)
 		Q_PROPERTY(IBerBaseType* any READ getAny)
 		Q_PROPERTY(IBerBaseType* octstr READ getOctetString)
@@ -30,13 +30,19 @@ namespace NsExternalLinkV1
 
 		bool is_copy;
 
-		protected:
+	protected:
+
+		const CBerIdentifier c_Identifier;
+
+	public:
 
 		QByteArray* getCode() { return &m_Code; }
-		CBerIdentifier* getIdentifier() { return nullptr; }
+		CBerIdentifier getIdentifier() { return c_Identifier; }
 		IBerBaseType* getAny() { return m_pSingleAsn1Type; }
 		IBerBaseType* getOctetString() { return m_pOctetAligned; }
 		IBerBaseType* getBitString() { return m_pArbitrary; }
+
+	protected:
 
 		void create_objects(const SubChoiceEncoding& rhs)
 		{
@@ -168,12 +174,14 @@ namespace NsExternalLinkV1
 
 		SubChoiceEncoding(CBerAnyNoDecode* pSingleAsn1Type, CBerOctetString* pOctetAligned, CBerBitString* pArbitrary):
 			is_copy(false),
+			c_Identifier(),
 			m_pSingleAsn1Type(pSingleAsn1Type),
 			m_pOctetAligned(pOctetAligned),
 			m_pArbitrary(pArbitrary)
 		{}
 
-		SubChoiceEncoding(const SubChoiceEncoding& rhs): QObject()
+		SubChoiceEncoding(const SubChoiceEncoding& rhs): QObject(),
+			c_Identifier()
 		{
 			create_objects(rhs);
 
@@ -227,7 +235,7 @@ class OSISTACK_SHAREDEXPORT CExternalLinkV1: public QObject, public IBerBaseType
 private:
 
 	Q_OBJECT
-	Q_PROPERTY(CBerIdentifier* Identifier READ getIdentifier)
+	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
 	Q_PROPERTY(IBerBaseType* any READ getDirectReference)
 	Q_PROPERTY(IBerBaseType* octstr READ getIndirectReference)
@@ -235,13 +243,15 @@ private:
 
 	bool is_copy;
 
-protected:
+public:
 
 	QByteArray* getCode() { return &m_Code; }
-	CBerIdentifier* getIdentifier() { return nullptr; }
+	CBerIdentifier getIdentifier() { return c_Identifier; }
 	IBerBaseType* getDirectReference() { return m_pDirectReference; }
 	IBerBaseType* getIndirectReference() { return m_pIndirectReference; }
 	IBerBaseType* getEncoding() { return m_pEncoding; }
+
+protected:
 
 	void create_objects(const CExternalLinkV1& rhs)
 	{
@@ -268,6 +278,9 @@ protected:
 	}
 
 protected:
+
+	const CBerIdentifier c_Identifier;
+
 	QByteArray m_Code;
 
 	CBerObjectIdentifier* m_pDirectReference;
@@ -282,12 +295,14 @@ public:
 
 	CExternalLinkV1(CBerObjectIdentifier* pDirectReference, CBerInteger* pIndirectReference, NsExternalLinkV1::SubChoiceEncoding* pEncoding):
 		is_copy(false),
+		c_Identifier(),
 		m_pDirectReference(pDirectReference),
 		m_pIndirectReference(pIndirectReference),
 		m_pEncoding(pEncoding)
 	{}
 
-	CExternalLinkV1(const CExternalLinkV1& rhs): QObject()
+	CExternalLinkV1(const CExternalLinkV1& rhs): QObject(),
+		c_Identifier()
 	{
 		create_objects(rhs);
 

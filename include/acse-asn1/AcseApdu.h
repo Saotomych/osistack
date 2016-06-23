@@ -17,7 +17,7 @@
 class OSISTACK_SHAREDEXPORT CAcseApdu: public QObject, public IBerBaseType
 {
 	Q_OBJECT
-	Q_PROPERTY(CBerIdentifier* Identifier READ getIdentifier)
+	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
 	Q_PROPERTY(IBerBaseType* AarqApdu READ getAarqApdu)
 	Q_PROPERTY(IBerBaseType* AareApdu READ getAareApdu)
@@ -28,13 +28,18 @@ class OSISTACK_SHAREDEXPORT CAcseApdu: public QObject, public IBerBaseType
 
 protected:
 
+	const CBerIdentifier c_Identifier;
+
+public:
+
 	QByteArray* getCode() { return &m_Code; }
-	CBerIdentifier* getIdentifier() { return nullptr; }
 
 	IBerBaseType* getAarqApdu() {return m_pAarqApdu;}
 	IBerBaseType* getAareApdu() {return m_pAareApdu;}
 	IBerBaseType* getRlrqApdu() {return m_pRlrqApdu;}
 	IBerBaseType* getRlreApdu() {return m_pRlreApdu;}
+
+protected:
 
 	void create_objects(const CAcseApdu& rhs)
 	{
@@ -77,43 +82,47 @@ public:
 
 	ASN1_CODEC(CBerBaseStorage)
 
+	CBerIdentifier getIdentifier() { return c_Identifier; }
+
 	// Alternative decoder by Identifier
 	quint32 decode(CBerByteArrayInputStream& iStream, CBerIdentifier* berIdentifier)
 	{
 		quint32 codeLength = 0;
 
+		CBerIdentifier defaultId;
+
 		CBerIdentifier* workIdentifier = berIdentifier;
 
 		if (berIdentifier == nullptr)
 		{
-			workIdentifier = new CBerIdentifier();
+			workIdentifier = &defaultId;
 			codeLength += workIdentifier->decode(iStream);
 		}
 
-		if (workIdentifier->equals(CAArqApdu::s_Identifier))
+		CAArqApdu AarqApdu;
+		if (*workIdentifier == AarqApdu.getIdentifier())
 		{
-			CAArqApdu AarqApdu;
 			codeLength += AarqApdu.decode(iStream, false);
 			return codeLength;
 		}
 
-		if (workIdentifier->equals(CAAreApdu::s_Identifier))
+		CAAreApdu AareApdu;
+		if (*workIdentifier == AareApdu.getIdentifier())
 		{
-			CAAreApdu AareApdu;
 			codeLength += AareApdu.decode(iStream, false);
 			return codeLength;
 		}
 
-		if (workIdentifier->equals(CRLrqApdu::s_Identifier))
+		CRLrqApdu RlrqApdu;
+		if (*workIdentifier == RlrqApdu.getIdentifier())
 		{
-			CRLrqApdu RlrqApdu;
 			codeLength += RlrqApdu.decode(iStream, false);
 			return codeLength;
 		}
 
-		if (workIdentifier->equals(CRLreApdu::s_Identifier))
+		CRLreApdu RlreApdu;
+		if (*workIdentifier == RlreApdu.getIdentifier())
 		{
-			CRLreApdu RlreApdu;
 			codeLength += RlreApdu.decode(iStream, false);
 			return codeLength;
 		}
@@ -132,6 +141,7 @@ public:
 
 	CAcseApdu():
 		is_copy(false),
+		c_Identifier(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 0),
 		m_pAarqApdu(nullptr),
 		m_pAareApdu(nullptr),
 		m_pRlrqApdu(nullptr),
@@ -145,13 +155,15 @@ public:
 		CRLreApdu* pRlreApdu
 	):
 		is_copy(false),
+		c_Identifier(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 0),
 		m_pAarqApdu(pAarqApdu),
 		m_pAareApdu(pAareApdu),
 		m_pRlrqApdu(pRlrqApdu),
 		m_pRlreApdu(pRlreApdu)
 	{}
 
-	CAcseApdu(const CAcseApdu& rhs): QObject()
+	CAcseApdu(const CAcseApdu& rhs): QObject(),
+		c_Identifier(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 0)
 	{
 		create_objects(rhs);
 

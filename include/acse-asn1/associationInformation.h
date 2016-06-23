@@ -14,40 +14,39 @@
 class OSISTACK_SHAREDEXPORT CAssociationInformation: public QObject, public IBerBaseType
 {
 	Q_OBJECT
-	Q_PROPERTY(CBerIdentifier* Identifier READ getIdentifier)
+	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
 	Q_PROPERTY(QLinkedList<CExternalLinkV1>* seqof READ getSeqOf)
 
 	bool is_copy;
 
 protected:
-	CBerIdentifier m_Identifier;
+	const CBerIdentifier c_Identifier;
 	QByteArray m_Code;
 
 	QLinkedList<CExternalLinkV1>* m_pSeqOf;
 
-	QByteArray* getCode() { return &m_Code; }
-	CBerIdentifier* getIdentifier() { return &m_Identifier; }
-	QLinkedList<CExternalLinkV1>* getSeqOf() { return m_pSeqOf; }
-
 public:
+
+	QByteArray* getCode() { return &m_Code; }
+	CBerIdentifier getIdentifier() { return c_Identifier; }
+	QLinkedList<CExternalLinkV1>* getSeqOf() { return m_pSeqOf; }
 
 	typedef CContainerStorage<QLinkedList<CExternalLinkV1>, CExternalLinkV1> LocalStorage;
 	ASN1_CODEC( LocalStorage )
 
-	static CBerIdentifier s_Identifier;
 	static quint32 s_metaTypeIdentifier;
 	static quint32 s_metaTypeListId;
 
 	CAssociationInformation(QLinkedList<CExternalLinkV1>* pExternalListV1):
 		is_copy(false),
-		m_Identifier(s_Identifier),
+		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
 		m_pSeqOf(pExternalListV1)
 	{}
 
-	CAssociationInformation(const CAssociationInformation& rhs): QObject()
+	CAssociationInformation(const CAssociationInformation& rhs): QObject(),
+		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16)
 	{
-		m_Identifier = rhs.m_Identifier;
 		m_Code = rhs.m_Code;
 
 		if (rhs.m_pSeqOf != nullptr)
@@ -60,7 +59,6 @@ public:
 	{
 		if (this == &rhs) return *this;
 
-		m_Identifier = rhs.m_Identifier;
 		m_Code = rhs.m_Code;
 
 		if (rhs.m_pSeqOf != nullptr)

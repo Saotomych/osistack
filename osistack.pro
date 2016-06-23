@@ -93,6 +93,7 @@ HEADERS += \
 		include/AcseAssociationListener.h \
 		include/ClientAcseSap.h \
 		include/ServerAcseSap.h \
+		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
 		../ASN1/include/berIdentifier.h \

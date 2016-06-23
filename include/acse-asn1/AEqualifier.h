@@ -14,7 +14,7 @@
 class OSISTACK_SHAREDEXPORT CAeQualifier: public QObject, public IBerBaseType
 {
 	Q_OBJECT
-	Q_PROPERTY(CBerIdentifier* Identifier READ getIdentifier)
+	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
 	Q_PROPERTY(IBerBaseType* Integer READ getInteger)
 
@@ -25,11 +25,13 @@ protected:
 
 	CBerInteger* m_pInteger;
 
-	QByteArray* getCode() { return &m_Code; }
-	CBerIdentifier* getIdentifier() { return nullptr; }
-	IBerBaseType* getInteger() { return m_pInteger; }
+	const CBerIdentifier c_Identifier;
 
 public:
+
+	QByteArray* getCode() { return &m_Code; }
+	CBerIdentifier getIdentifier() { return c_Identifier; }
+	IBerBaseType* getInteger() { return m_pInteger; }
 
 	ASN1_CODEC(CBerBaseStorage)
 
@@ -37,10 +39,12 @@ public:
 
 	CAeQualifier(CBerInteger* pInteger):
 		is_copy(false),
-		m_pInteger(pInteger)
+		m_pInteger(pInteger),
+		c_Identifier()
 	{ }
 
-	CAeQualifier(const CAeQualifier& rhs): QObject()
+	CAeQualifier(const CAeQualifier& rhs): QObject(),
+		c_Identifier()
 	{
 			m_Code = rhs.m_Code;
 

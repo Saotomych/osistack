@@ -92,14 +92,15 @@ CAcseAssociation* CClientAcseSap::createAssociate(CConnection* tConnection)
 {
 	if ( !m_pClientTSap )
 	{
-		CAcseAssociation acseAssociation(nullptr, nullptr);
 		emit signalIllegalClassMember("CClientAcseSap::associate: m_pClientTSap is NULL!");
 
 		return nullptr;
 	}
 
-	CBerOctetString str(m_PSelLocal);
-	CAcseAssociation* pAssoc = new CAcseAssociation(tConnection, &str);
+	char local[4] = {1, 1, 1, 1};
+	QByteArray SelLocal(local, 4);
+	CBerOctetString str(SelLocal);
+	CAcseAssociation* pAssoc = new CAcseAssociation(tConnection, str);
 
 	return pAssoc;
 }
@@ -118,8 +119,8 @@ void CClientAcseSap::setMaxTPDUSizeParam(quint32 maxTPduSizeParam)
 {
 	if ( !m_pClientTSap )
 	{
-		CAcseAssociation acseAssociation(nullptr, nullptr);
 		emit signalIllegalClassMember("CClientAcseSap::associate: m_pClientTSap is NULL!");
+		return;
 	}
 
 	m_pClientTSap->setMaxTPDUSizeParam(maxTPduSizeParam);
@@ -129,8 +130,8 @@ void CClientAcseSap::setMessageTimeout(quint32 messageTimeout)
 {
 	if ( !m_pClientTSap )
 	{
-		CAcseAssociation acseAssociation(nullptr, nullptr);
 		emit signalIllegalClassMember("CAcseAssociation::associate: m_pClientTSap is NULL!");
+		return;
 	}
 
 	m_pClientTSap->setMessageTimeout(messageTimeout);
@@ -140,8 +141,8 @@ void CClientAcseSap::setMessageFragmentTimeout(quint32 messageFragmentTimeout)
 {
 	if ( !m_pClientTSap )
 	{
-		CAcseAssociation acseAssociation(nullptr, nullptr);
 		emit signalIllegalClassMember("CAcseAssociation::associate: m_pClientTSap is NULL!");
+		return;
 	}
 
 	m_pClientTSap->setMessageFragmentTimeout(messageFragmentTimeout);

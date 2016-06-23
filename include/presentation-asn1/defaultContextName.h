@@ -14,7 +14,7 @@
 class CDefaultContextName: public QObject, public IBerBaseType
 {
 	Q_OBJECT
-	Q_PROPERTY(CBerIdentifier* Identifier READ getIdentifier)
+	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
 	Q_PROPERTY(IBerBaseType* AbstractSyntaxName READ getAbstractSyntaxName)
 	Q_PROPERTY(IBerBaseType* TransferSyntaxName READ getTransferSyntaxName)
@@ -24,7 +24,7 @@ class CDefaultContextName: public QObject, public IBerBaseType
 protected:
 
 	QByteArray* getCode() { return &m_Code; }
-	CBerIdentifier* getIdentifier() { return &m_Identifier; }
+	CBerIdentifier getIdentifier() { return c_Identifier; }
 	IBerBaseType* getAbstractSyntaxName() { return m_pAbstractSyntaxName; }
 	IBerBaseType* getTransferSyntaxName() { return m_pTransferSyntaxName; }
 
@@ -49,7 +49,7 @@ protected:
 	}
 
 protected:
-	CBerIdentifier m_Identifier;
+	const CBerIdentifier c_Identifier;
 	QByteArray m_Code;
 
 	CBerObjectIdentifier* m_pAbstractSyntaxName;
@@ -59,21 +59,20 @@ public:
 
 	ASN1_CODEC(CBerBaseStorage)
 
-	static CBerIdentifier s_Identifier;
 	static quint32 s_metaTypeIdentifier;
 
 	CDefaultContextName(CBerObjectIdentifier* pAbstractSyntaxName, CBerObjectIdentifier* pTransferSyntaxName):
 		is_copy(false),
-		m_Identifier(s_Identifier),
+		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
 		m_pAbstractSyntaxName(pAbstractSyntaxName),
 		m_pTransferSyntaxName(pTransferSyntaxName)
 	{}
 
-	CDefaultContextName(const CDefaultContextName& rhs):QObject()
+	CDefaultContextName(const CDefaultContextName& rhs):QObject(),
+		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16)
 	{
 		create_objects(rhs);
 
-		m_Identifier = rhs.m_Identifier;
 		m_Code = rhs.m_Code;
 		is_copy = true;
 	}
@@ -86,7 +85,6 @@ public:
 
 		create_objects(rhs);
 
-		m_Identifier = rhs.m_Identifier;
 		m_Code = rhs.m_Code;
 		is_copy = true;
 

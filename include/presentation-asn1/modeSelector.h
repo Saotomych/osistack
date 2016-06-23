@@ -15,48 +15,60 @@
 class OSISTACK_SHAREDEXPORT CModeSelector: public QObject, public IBerBaseType
 {
 	Q_OBJECT
-	Q_PROPERTY(CBerIdentifier* Identifier READ getIdentifier)
+	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
+	Q_PROPERTY(CBerIdentifier Identifier READ getIdModeValue)
 	Q_PROPERTY(IBerBaseType* OI READ getModeValue)
 
 	bool is_copy;
 
 protected:
 
-	CBerIdentifier m_Identifier;
 	QByteArray m_Code;
 
 	CBerInteger* m_pModeValue;
 
+	const CBerIdentifier c_Identifier;
+	const CBerIdentifier c_IdModValue;
+
+	CBerIdentifier getIdentifier() { return c_Identifier; }
 	QByteArray* getCode() { return &m_Code; }
-	CBerIdentifier* getIdentifier() { return &m_Identifier; }
+	CBerIdentifier getIdModeValue() { return c_IdModValue; }
 	IBerBaseType* getModeValue() { return m_pModeValue; }
 
 public:
 
 	ASN1_CODEC(CBerBaseStorage)
 
-	static CBerIdentifier s_Identifier;
 	static quint32 s_metaTypeIdentifier;
 
 	CModeSelector(CBerInteger* pModeValue):
 		is_copy(false),
-		m_pModeValue(pModeValue)
-	{}
+		m_pModeValue(pModeValue),
+		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 17),
+		c_IdModValue(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0)
+	{
+	}
 
 	CModeSelector(QByteArray& code):
 		is_copy(false),
-		m_pModeValue(nullptr)
+		m_pModeValue(nullptr),
+		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 17),
+		c_IdModValue(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0)
 	{
 		m_Code = code;
 	}
 
-	CModeSelector(const CModeSelector& rhs): QObject()
+	CModeSelector(const CModeSelector& rhs): QObject(),
+		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 17),
+		c_IdModValue(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0)
 	{
 		m_Code = rhs.m_Code;
 
 		if (rhs.m_pModeValue != nullptr)
+		{
 			m_pModeValue = new CBerInteger(*rhs.m_pModeValue);
+		}
 
 		is_copy = true;
 	}
@@ -71,7 +83,9 @@ public:
 			delete m_pModeValue;
 
 		if (rhs.m_pModeValue != nullptr)
+		{
 			m_pModeValue = new CBerInteger(*rhs.m_pModeValue);
+		}
 
 		is_copy = true;
 

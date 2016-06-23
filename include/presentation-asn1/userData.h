@@ -16,7 +16,7 @@
 class CUserData: public QObject, public IBerBaseType
 {
 	Q_OBJECT
-	Q_PROPERTY(CBerIdentifier* Identifier READ getIdentifier)
+	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
 	Q_PROPERTY(IBerBaseType* SimpleEncodedData READ getSimpleEncodedData)
 	Q_PROPERTY(IBerBaseType* FullyEncodedData READ getFullyEncodedData)
@@ -25,8 +25,10 @@ class CUserData: public QObject, public IBerBaseType
 
 protected:
 
+	const CBerIdentifier c_Identifier;
+
 	QByteArray* getCode() { return &m_Code; }
-	CBerIdentifier* getIdentifier() { return nullptr; }
+	CBerIdentifier getIdentifier() { return c_Identifier; }
 	IBerBaseType* getSimpleEncodedData() { return m_pSimpleEncodedData; }
 	IBerBaseType* getFullyEncodedData() { return m_pFullyEncodedData; }
 
@@ -64,12 +66,14 @@ public:
 
 	CUserData():
 		is_copy(false),
+		c_Identifier(),
 		m_pSimpleEncodedData(nullptr),
 		m_pFullyEncodedData(nullptr)
 	{}
 
 	CUserData(CBerOctetString* pReason, CFullyEncodedData* pUserInformation):
 		is_copy(false),
+		c_Identifier(),
 		m_pSimpleEncodedData(pReason),
 		m_pFullyEncodedData(pUserInformation)
 	{}

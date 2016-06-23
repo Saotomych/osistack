@@ -53,7 +53,7 @@ CAcseAssociation* CServerAcseSap::createNewAcseAssociation(CConnection* pconn)
 	try
 	{
 		CBerOctetString berStr(m_pSelLocal);
-		CAcseAssociation* acseAssoc = new CAcseAssociation(pconn, &berStr);
+		CAcseAssociation* acseAssoc = new CAcseAssociation(pconn, berStr);
 
 //		QByteArray pduBuffer;
 //

@@ -15,7 +15,7 @@
 class OSISTACK_SHAREDEXPORT CResultSubsequence: public QObject, public IBerBaseType
 {
 	Q_OBJECT
-	Q_PROPERTY(CBerIdentifier* Identifier READ getIdentifier)
+	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
 	Q_PROPERTY(IBerBaseType* result READ getResult)
 	Q_PROPERTY(IBerBaseType* transferSyntaxName READ getTransferSyntaxName)
@@ -26,7 +26,7 @@ class OSISTACK_SHAREDEXPORT CResultSubsequence: public QObject, public IBerBaseT
 protected:
 
 	QByteArray* getCode() { return &m_Code; }
-	CBerIdentifier* getIdentifier() { return &m_Identifier; }
+	CBerIdentifier getIdentifier() { return c_Identifier; }
 	IBerBaseType* getResult() { return m_pResult; }
 	IBerBaseType* getTransferSyntaxName() { return m_pTransferSyntaxName; }
 	IBerBaseType* getProviderReason() { return m_pProviderReason; }
@@ -56,7 +56,7 @@ protected:
 	}
 
 protected:
-	CBerIdentifier m_Identifier;
+	const CBerIdentifier c_Identifier;
 	QByteArray m_Code;
 
 	CBerInteger* m_pResult;
@@ -72,17 +72,17 @@ public:
 
 	CResultSubsequence(CBerInteger* pResult, CBerObjectIdentifier* pTransferSyntaxName, CBerInteger* pProviderReason):
 		is_copy(false),
-		m_Identifier(s_Identifier),
+		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
 		m_pResult(pResult),
 		m_pTransferSyntaxName(pTransferSyntaxName),
 		m_pProviderReason(pProviderReason)
 	{}
 
-	CResultSubsequence(const CResultSubsequence& rhs): QObject()
+	CResultSubsequence(const CResultSubsequence& rhs): QObject(),
+		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16)
 	{
 		create_objects(rhs);
 
-		m_Identifier = rhs.m_Identifier;
 		m_Code = rhs.m_Code;
 		is_copy = true;
 	}
@@ -95,7 +95,6 @@ public:
 
 		create_objects(rhs);
 
-		m_Identifier = rhs.m_Identifier;
 		m_Code = rhs.m_Code;
 		is_copy = true;
 

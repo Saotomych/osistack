@@ -14,11 +14,11 @@ namespace
 
 }
 
-CAcseAssociation::CAcseAssociation(CConnection* tConnection, CBerOctetString* pSelLocalBerOctetString):
+CAcseAssociation::CAcseAssociation(CConnection* tConnection, CBerOctetString& SelLocalBerOctetString):
 		m_connected(false),
 		m_tConnection(tConnection),
 		m_currentCallingSessionSelector(0),
-		m_pSelLocalBerOctetString(pSelLocalBerOctetString)
+		PSelLocal(SelLocalBerOctetString)
 	{	}
 
 QDataStream& CAcseAssociation::decodePConResponse(QDataStream& ppdu)
@@ -35,8 +35,10 @@ QDataStream& CAcseAssociation::decodePConResponse(QDataStream& ppdu)
 
 CUserData CAcseAssociation::getPresentationUserDataField( quint32 userDataLength )
 {
+	CBerAnyNoDecode band(userDataLength);
+
 	NsPdvList::SubchoicePresentationDataValues presDataValues(
-			std::move(new CBerAnyNoDecode(userDataLength)),
+			&band,
 			(CBerOctetString*) nullptr,
 			(CBerBitString*) nullptr );
 
@@ -69,7 +71,8 @@ void CAcseAssociation::accept(CBerByteArrayOutputStream& payload)
 
 	CAssociationInformation userInformation(&listExternal);
 
-	CAAreApdu aare(nullptr, &applicationContextName, &aareAccepted, &associateSourceDiagnostic, nullptr,
+	CApplicationContextName acn(&applicationContextName);
+	CAAreApdu aare(nullptr, &acn, &aareAccepted, &associateSourceDiagnostic, nullptr,
 			nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, &userInformation);
 	CAcseApdu acse(nullptr, &aare, nullptr, nullptr);
 	CBerByteArrayOutputStream berOStream(100, true);
@@ -78,7 +81,7 @@ void CAcseAssociation::accept(CBerByteArrayOutputStream& payload)
 
 	CUserData userData = getPresentationUserDataField(acseHeaderLength + payloadLength);
 
-	NsCpaPpdu::CSubSecNormalModeParameters normalModeParameters(nullptr, m_pSelLocalBerOctetString, &presentationResultList,
+	NsCpaPpdu::CSubSecNormalModeParameters normalModeParameters(nullptr, &PSelLocal, &presentationResultList,
 			(CBerBitString*) nullptr, (CBerBitString*) nullptr, &userData);
 
 	CCpaPpdu cpaPpdu(&normalModeSelector, &normalModeParameters);
@@ -241,44 +244,139 @@ void CAcseAssociation::startAssociation(
 	CAeQualifier aeQaCalled(&aeIntCalled);
 	CBerInteger aeIntCalling(aeQualifierCalling);
 	CAeQualifier aeQaCalling(&aeIntCalling);
+
+	CApplicationContextName acn(&applicationContextName);
+
+//	CAArqApdu aarq(
+//			(CBerBitString*)nullptr,
+//			&acn,
+//			&calledApTitle,
+//			&aeQaCalled,
+//			(CBerInteger*) nullptr,
+//			(CBerInteger*) nullptr,
+//			&callingApTitle,
+//			&aeQaCalling,
+//			(CBerInteger*) nullptr,
+//			(CBerInteger*) nullptr,
+//			pSenderAcseRequirements,
+//			pMechanismName,
+//			pAuthenticationValue,
+//			(CApplicationContextNameList*) nullptr,
+//			(CBerGraphicString*) nullptr,
+//			&userInformation);
+
 	CAArqApdu aarq(
-			(CBerBitString*)nullptr,
-			&applicationContextName,
-			&calledApTitle, &aeQaCalled, (CBerInteger*) nullptr, (CBerInteger*) nullptr,
-			&callingApTitle, &aeQaCalling, (CBerInteger*) nullptr, (CBerInteger*) nullptr,
-			pSenderAcseRequirements, pMechanismName,
-			pAuthenticationValue, (CApplicationContextNameList*) nullptr,
-			(CBerGraphicString*) nullptr, &userInformation);
+			(CBerBitString*) nullptr,
+			&acn,
+			&calledApTitle,
+			&aeQaCalled,
+			(CBerInteger*) nullptr,
+			(CBerInteger*) nullptr,
+			&callingApTitle,
+			&aeQaCalling,
+			(CBerInteger*) nullptr,
+			(CBerInteger*) nullptr,
+			pSenderAcseRequirements,
+			pMechanismName,
+			pAuthenticationValue,
+			(CApplicationContextNameList*) nullptr,
+			(CBerGraphicString*) nullptr,
+			&userInformation);
 
 	CAcseApdu acse( &aarq, nullptr, nullptr, nullptr );
 
 	// Serialize
 	CBerByteArrayOutputStream berOStream(200, true);
-	acse.encode(berOStream, true);
+//	acse.encode(berOStream, true);
+	userInformation.encode(berOStream, true);
 
-	QLinkedList<QByteArray> ssduList;
-	QLinkedList<quint32> ssduOffsets;
-	QLinkedList<quint32> ssduLengths;
+	quint32 acseHeaderLength = berOStream.getByteArray().size();
 
-	ssduList.push_back(berOStream.getByteArray());
-	ssduOffsets.push_back(berOStream.index() + 1);
-	ssduLengths.push_back(payloadLength);
+// ------------------------------------------------------------------------
+//	getPresentationUserDataField
+//	------------------------------------------------------------------------
+	CBerAnyNoDecode band(acseHeaderLength + payloadLength);
 
-	QScopedPointer<QDataStream>& iStream = startSConnection( ssduList, ssduOffsets, ssduLengths, sSelRemote, sSelLocal);
+	NsPdvList::SubchoicePresentationDataValues presDataValues(
+			&band,
+			(CBerOctetString*) nullptr,
+			(CBerBitString*) nullptr );
 
-//	decodePConResponse(*iStream);
+//	presDataValues.encode(berOStream, true);
+
+	CPdvList pdvList(
+			(CBerObjectIdentifier*) nullptr,
+			&acsePresentationContextId,
+			&presDataValues);
+
+	QLinkedList<CPdvList> listPdvList;
+	listPdvList.push_back(pdvList);
+
+	CFullyEncodedData fullyEncodedData(&listPdvList);
+
+	CUserData userData( (CBerOctetString*) nullptr, &fullyEncodedData);
+
+// ------------------------------------------------------------------------
+
+	CBerOctetString SelRemoteBerOctetString(pSelRemote);
+
+	NsCpType::CSubSeqNormalModeParameters normalModeParameter(
+			nullptr,
+			&PSelLocal,
+			&SelRemoteBerOctetString,
+			&context_list,
+			nullptr,
+			nullptr,
+			nullptr,
+			&userData
+			);
+
+	CCpType cpType( &normalModeSelector, &normalModeParameter);
+
+//	cpType.encode(berOStream, true);
+
+	QByteArray outarr = berOStream.getByteArray();
+	qDebug () << outarr.toHex();
+
+//	QLinkedList<QByteArray> ssduList;
+//	QLinkedList<quint32> ssduOffsets;
+//	QLinkedList<quint32> ssduLengths;
 //
-//	quint8 data;
-//	m_associateResponseAPDU.clear();
-//	m_associateResponseAPDU.reserve(8192);
+//	ssduList.push_back(berOStream.getByteArray());
+//	ssduOffsets.push_back(berOStream.index() + 1);
+//	ssduLengths.push_back(payloadLength);
+//
+//	QScopedPointer<QDataStream>& iStream = startSConnection( ssduList, ssduOffsets, ssduLengths, sSelRemote, sSelLocal);
+//
+////	decodePConResponse(*iStream);
+////
+////	quint8 data;
+////	m_associateResponseAPDU.clear();
+////	m_associateResponseAPDU.reserve(8192);
 //	while(iStream->atEnd() == false)
 //	{
 //		*iStream >> data;
 //		m_associateResponseAPDU.push_back(data);
 //	}
-//
-	emit signalAcseAssociationReady(this);
+////
+//	emit signalAcseAssociationReady(this);
 
+}
+
+CUserData CAcseAssociation::getPresentationUserDataField(qint32 userDataLength)
+{
+
+	CBerAnyNoDecode berNoDec(userDataLength);
+	NsPdvList::SubchoicePresentationDataValues presDataValues( &berNoDec , nullptr, nullptr);
+
+	CPdvList pdvList(nullptr, &acsePresentationContextId, &presDataValues);
+	QLinkedList<CPdvList> pdvListList;
+	pdvListList.push_back(pdvList);
+
+	CFullyEncodedData fullyEncodedData( &pdvListList );
+	CUserData userData(nullptr, &fullyEncodedData);
+
+	return userData;
 }
 
 quint32 CAcseAssociation::receiveDataParser(QScopedPointer<QDataStream>& iStream)

@@ -16,7 +16,7 @@
 class OSISTACK_SHAREDEXPORT CContextList: public QObject, public IBerBaseType
 {
 	Q_OBJECT
-	Q_PROPERTY(CBerIdentifier* Identifier READ getIdentifier)
+	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
 	Q_PROPERTY(IBerBaseType* PresentationContextIdentifier READ getPresentationContextIdentifier)
 	Q_PROPERTY(IBerBaseType* AbstractSyntaxName READ getAbstractSyntaxName)
@@ -24,13 +24,15 @@ class OSISTACK_SHAREDEXPORT CContextList: public QObject, public IBerBaseType
 
 	bool is_copy;
 
-protected:
+public:
 
 	QByteArray* getCode() { return &m_Code; }
-	CBerIdentifier* getIdentifier() { return nullptr; }
+	CBerIdentifier getIdentifier() { return c_Identifier; }
 	IBerBaseType* getPresentationContextIdentifier() { return m_pPresentationContextIdentifier; }
 	IBerBaseType* getAbstractSyntaxName() { return m_pAbstractSyntaxName; }
 	IBerBaseType* getTransferSyntaxNameList() { return m_pTransferSyntaxNameList; }
+
+protected:
 
 	void create_objects(const CContextList& rhs)
 	{
@@ -58,7 +60,7 @@ protected:
 
 protected:
 
-	CBerIdentifier m_Identifier;
+	const CBerIdentifier c_Identifier;
 	QByteArray m_Code;
 
 	CBerInteger* m_pPresentationContextIdentifier;
@@ -69,12 +71,11 @@ public:
 
 	ASN1_CODEC(CBerBaseStorage)
 
-	static CBerIdentifier s_Identifier;
 	static quint32 s_metaTypeIdentifier;
 
 	CContextList(CBerInteger* pPresentationContextIdentifier, CBerObjectIdentifier* pAbstractSyntaxName, CApplicationContextNameList* pTransferSyntaxNameList):
 		is_copy(false),
-		m_Identifier(s_Identifier),
+		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
 		m_pPresentationContextIdentifier(pPresentationContextIdentifier),
 		m_pAbstractSyntaxName(pAbstractSyntaxName),
 		m_pTransferSyntaxNameList(pTransferSyntaxNameList)
@@ -82,18 +83,18 @@ public:
 
 	CContextList(QByteArray code):
 		is_copy(false),
-		m_Identifier(s_Identifier),
+		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
 		m_Code(code),
 		m_pPresentationContextIdentifier(nullptr),
 		m_pAbstractSyntaxName(nullptr),
 		m_pTransferSyntaxNameList(nullptr)
 	{}
 
-	CContextList(const CContextList& rhs): QObject()
+	CContextList(const CContextList& rhs): QObject(),
+		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16)
 	{
 		create_objects(rhs);
 
-		m_Identifier = s_Identifier;
 		m_Code = rhs.m_Code;
 		is_copy = true;
 	}
@@ -106,7 +107,6 @@ public:
 
 		create_objects(rhs);
 
-		m_Identifier = s_Identifier;
 		m_Code = rhs.m_Code;
 		is_copy = true;
 

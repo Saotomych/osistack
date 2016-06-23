@@ -22,31 +22,64 @@
 class OSISTACK_SHAREDEXPORT CAArqApdu: public QObject, public IBerBaseType
 {
 	Q_OBJECT
-	Q_PROPERTY(CBerIdentifier* Identifier READ getIdentifier)
+	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
+	Q_PROPERTY(CBerIdentifier IdProtocolVersion READ getIdProtocolVersion)
 	Q_PROPERTY(IBerBaseType* ProtocolVersion READ getProtocolVersion)
+	Q_PROPERTY(CBerIdentifier IdApplicationContextName READ getIdApplicationContextName)
 	Q_PROPERTY(IBerBaseType* ApplicationContextName READ getApplicationContextName)
+	Q_PROPERTY(CBerIdentifier IdCalledApTitle READ getIdCalledApTitle)
 	Q_PROPERTY(IBerBaseType* CalledApTitle READ getCalledApTitle)
+	Q_PROPERTY(CBerIdentifier IdCalledAeQualifier READ getIdCalledAeQualifier)
 	Q_PROPERTY(IBerBaseType* CalledAeQualifier READ getCalledAeQualifier)
+	Q_PROPERTY(CBerIdentifier IdCalledApInvocationIdentifier READ getIdCalledApInvocationIdentifier)
 	Q_PROPERTY(IBerBaseType* CalledApInvocationIdentifier READ getCalledApInvocationIdentifier)
+	Q_PROPERTY(CBerIdentifier IdCalledAeInvocationIdentifier READ getIdCalledAeInvocationIdentifier)
 	Q_PROPERTY(IBerBaseType* CalledAeInvocationIdentifier READ getCalledAeInvocationIdentifier)
+	Q_PROPERTY(CBerIdentifier IdCallingApTitle READ getIdCallingApTitle)
 	Q_PROPERTY(IBerBaseType* CallingApTitle READ getCallingApTitle)
+	Q_PROPERTY(CBerIdentifier IdCallingAeQualifier READ getIdCallingAeQualifier)
 	Q_PROPERTY(IBerBaseType* CallingAeQualifier READ getCallingAeQualifier)
+	Q_PROPERTY(CBerIdentifier IdCallingApInvocationIdentifier READ getIdCallingApInvocationIdentifier)
 	Q_PROPERTY(IBerBaseType* CallingApInvocationIdentifier READ getCallingApInvocationIdentifier)
+	Q_PROPERTY(CBerIdentifier IdCallingAeInvocationIdentifier READ getIdCallingAeInvocationIdentifier)
 	Q_PROPERTY(IBerBaseType* CallingAeInvocationIdentifier READ getCallingAeInvocationIdentifier)
+	Q_PROPERTY(CBerIdentifier IdSenderAcseRequerements READ getIdSenderAcseRequerements)
 	Q_PROPERTY(IBerBaseType* SenderAcseRequerements READ getSenderAcseRequerements)
+	Q_PROPERTY(CBerIdentifier IdMechanismName READ getIdMechanismName)
 	Q_PROPERTY(IBerBaseType* MechanismName READ getMechanismName)
+	Q_PROPERTY(CBerIdentifier IdCallingAuthenticationValue READ getIdCallingAuthenticationValue)
 	Q_PROPERTY(IBerBaseType* CallingAuthenticationValue READ getCallingAuthenticationValue)
+	Q_PROPERTY(CBerIdentifier IdApplicationContextNameList READ getIdApplicationContextNameList)
 	Q_PROPERTY(IBerBaseType* ApplicationContextNameList READ getApplicationContextNameList)
+	Q_PROPERTY(CBerIdentifier IdImplementationInformation READ getIdImplementationInformation)
 	Q_PROPERTY(IBerBaseType* ImplementationInformation READ getImplementationInformation)
+	Q_PROPERTY(CBerIdentifier IdUserInformation READ getIdUserInformation)
 	Q_PROPERTY(IBerBaseType* UserInformation READ getUserInformation)
 
 	bool is_copy;
 
-protected:
+public:
 
 	QByteArray* getCode() { return &m_Code; }
-	CBerIdentifier* getIdentifier() { return &m_Identifier; }
+	CBerIdentifier getIdentifier() { return c_Identifier; }
+	CBerIdentifier getIdProtocolVersion() {return c_IdProtocolVersion;}
+	CBerIdentifier getIdApplicationContextName() {return c_IdApplicationContextName;}
+	CBerIdentifier getIdCalledApTitle() {return c_IdCalledApTitle;}
+	CBerIdentifier getIdCalledAeQualifier() {return c_IdCalledAeQualifier;}
+	CBerIdentifier getIdCalledApInvocationIdentifier() {return c_IdCalledApInvocationIdentifier;}
+	CBerIdentifier getIdCalledAeInvocationIdentifier() {return c_IdCalledAeInvocationIdentifier;}
+	CBerIdentifier getIdCallingApTitle() {return c_IdCallingApTitle;}
+	CBerIdentifier getIdCallingAeQualifier() {return c_IdCallingAeQualifier;}
+	CBerIdentifier getIdCallingApInvocationIdentifier() {return c_IdCallingApInvocationIdentifier;}
+	CBerIdentifier getIdCallingAeInvocationIdentifier() {return c_IdCallingAeInvocationIdentifier;}
+	CBerIdentifier getIdSenderAcseRequerements() {return c_IdSenderAcseRequerements;}
+	CBerIdentifier getIdMechanismName() {return c_IdMechanismName;}
+	CBerIdentifier getIdCallingAuthenticationValue() {return c_IdCallingAuthenticationValue;}
+	CBerIdentifier getIdApplicationContextNameList() {return c_IdApplicationContextNameList;}
+	CBerIdentifier getIdImplementationInformation() {return c_IdImplementationInformation;}
+	CBerIdentifier getIdUserInformation() {return c_IdUserInformation;}
+
 	IBerBaseType* getProtocolVersion() {return m_pProtocolVersion;}
 	IBerBaseType* getApplicationContextName() {return m_pApplicationContextName;}
 	IBerBaseType* getCalledApTitle() {return m_pCalledApTitle;}
@@ -64,12 +97,14 @@ protected:
 	IBerBaseType* getImplementationInformation() {return m_pImplementationInformation;}
 	IBerBaseType* getUserInformation() {return m_pUserInformation;}
 
+protected:
+
 	void create_objects(const CAArqApdu& rhs)
 	{
 		std::unique_ptr<CBerBitString> p1
 				( (rhs.m_pProtocolVersion != nullptr) ? new CBerBitString(*rhs.m_pProtocolVersion): nullptr );
-		std::unique_ptr<CBerObjectIdentifier> p2
-				( (rhs.m_pApplicationContextName != nullptr) ? new CBerObjectIdentifier(*rhs.m_pApplicationContextName) : nullptr );
+		std::unique_ptr<CApplicationContextName> p2
+				( (rhs.m_pApplicationContextName != nullptr) ? new CApplicationContextName(*rhs.m_pApplicationContextName) : nullptr );
 		std::unique_ptr<CApTitle> p3
 				( (rhs.m_pCalledApTitle != nullptr) ? new CApTitle(*rhs.m_pCalledApTitle) : nullptr );
 		std::unique_ptr<CAeQualifier> p4
@@ -142,11 +177,28 @@ protected:
 	}
 
 protected:
-	CBerIdentifier m_Identifier;
+	const CBerIdentifier c_Identifier;
 	QByteArray m_Code;
 
+	const CBerIdentifier c_IdProtocolVersion;
+	const CBerIdentifier c_IdApplicationContextName;
+	const CBerIdentifier c_IdCalledApTitle;
+	const CBerIdentifier c_IdCalledAeQualifier;
+	const CBerIdentifier c_IdCalledApInvocationIdentifier;
+	const CBerIdentifier c_IdCalledAeInvocationIdentifier;
+	const CBerIdentifier c_IdCallingApTitle;
+	const CBerIdentifier c_IdCallingAeQualifier;
+	const CBerIdentifier c_IdCallingApInvocationIdentifier;
+	const CBerIdentifier c_IdCallingAeInvocationIdentifier;
+	const CBerIdentifier c_IdSenderAcseRequerements;
+	const CBerIdentifier c_IdMechanismName;
+	const CBerIdentifier c_IdCallingAuthenticationValue;
+	const CBerIdentifier c_IdApplicationContextNameList;
+	const CBerIdentifier c_IdImplementationInformation;
+	const CBerIdentifier c_IdUserInformation;
+
 	CBerBitString* m_pProtocolVersion;
-	CBerObjectIdentifier* m_pApplicationContextName;
+	CApplicationContextName* m_pApplicationContextName;
 	CApTitle* m_pCalledApTitle;
 	CAeQualifier* m_pCalledAeQualifier;
 	CBerInteger* m_pCalledApInvocationIdentifier;
@@ -166,12 +218,27 @@ public:
 
 	ASN1_CODEC(CBerBaseStorage)
 
-	static CBerIdentifier s_Identifier;
 	static quint32 s_metaTypeIdentifier;
 
 	CAArqApdu():
 		is_copy(false),
-		m_Identifier(s_Identifier),
+		c_Identifier(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::CONSTRUCTED, 0),
+		c_IdProtocolVersion(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0),
+		c_IdApplicationContextName(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 1),
+		c_IdCalledApTitle(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 2),
+		c_IdCalledAeQualifier(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 3),
+		c_IdCalledApInvocationIdentifier(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 4),
+		c_IdCalledAeInvocationIdentifier(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 5),
+		c_IdCallingApTitle(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 6),
+		c_IdCallingAeQualifier(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 7),
+		c_IdCallingApInvocationIdentifier(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 8),
+		c_IdCallingAeInvocationIdentifier(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 9),
+		c_IdSenderAcseRequerements(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 10),
+		c_IdMechanismName(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 11),
+		c_IdCallingAuthenticationValue(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 12),
+		c_IdApplicationContextNameList(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 13),
+		c_IdImplementationInformation(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 29),
+		c_IdUserInformation(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 30),
 		m_pProtocolVersion(nullptr),
 		m_pApplicationContextName(nullptr),
 		m_pCalledApTitle(nullptr),
@@ -192,7 +259,7 @@ public:
 
 	CAArqApdu(
 			CBerBitString* pProtocolVersion,
-			CBerObjectIdentifier* pApplicationContextName,
+			CApplicationContextName* pApplicationContextName,
 			CApTitle* pCalledApTitle,
 			CAeQualifier* pCalledAeQualifier,
 			CBerInteger* pCalledApInvocationIdentifier,
@@ -208,7 +275,23 @@ public:
 			CBerGraphicString* pImplementationInformation,
 			CAssociationInformation* pUserInformation	):
 				is_copy(false),
-				m_Identifier(s_Identifier),
+				c_Identifier(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::CONSTRUCTED, 0),
+				c_IdProtocolVersion(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0),
+				c_IdApplicationContextName(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 1),
+				c_IdCalledApTitle(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 2),
+				c_IdCalledAeQualifier(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 3),
+				c_IdCalledApInvocationIdentifier(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 4),
+				c_IdCalledAeInvocationIdentifier(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 5),
+				c_IdCallingApTitle(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 6),
+				c_IdCallingAeQualifier(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 7),
+				c_IdCallingApInvocationIdentifier(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 8),
+				c_IdCallingAeInvocationIdentifier(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 9),
+				c_IdSenderAcseRequerements(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 10),
+				c_IdMechanismName(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 11),
+				c_IdCallingAuthenticationValue(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 12),
+				c_IdApplicationContextNameList(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 13),
+				c_IdImplementationInformation(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 29),
+				c_IdUserInformation(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 30),
 				m_pProtocolVersion(pProtocolVersion),
 				m_pApplicationContextName(pApplicationContextName),
 				m_pCalledApTitle(pCalledApTitle),
@@ -227,11 +310,27 @@ public:
 				m_pUserInformation(pUserInformation)
 	{}
 
-	CAArqApdu(const CAArqApdu& rhs): QObject()
+	CAArqApdu(const CAArqApdu& rhs): QObject(),
+		c_Identifier(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::CONSTRUCTED, 0),
+		c_IdProtocolVersion(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0),
+		c_IdApplicationContextName(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 1),
+		c_IdCalledApTitle(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 2),
+		c_IdCalledAeQualifier(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 3),
+		c_IdCalledApInvocationIdentifier(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 4),
+		c_IdCalledAeInvocationIdentifier(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 5),
+		c_IdCallingApTitle(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 6),
+		c_IdCallingAeQualifier(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 7),
+		c_IdCallingApInvocationIdentifier(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 8),
+		c_IdCallingAeInvocationIdentifier(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 9),
+		c_IdSenderAcseRequerements(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 10),
+		c_IdMechanismName(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 11),
+		c_IdCallingAuthenticationValue(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 12),
+		c_IdApplicationContextNameList(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 13),
+		c_IdImplementationInformation(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 29),
+		c_IdUserInformation(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 30)
 	{
 		create_objects(rhs);
 
-		m_Identifier = rhs.m_Identifier;
 		m_Code = rhs.m_Code;
 		is_copy = true;
 	}
@@ -244,7 +343,6 @@ public:
 
 		create_objects(rhs);
 
-		m_Identifier = rhs.m_Identifier;
 		m_Code = rhs.m_Code;
 		is_copy = true;
 
@@ -256,7 +354,7 @@ public:
 		if (this == &rhs) return false;
 
 		if ( notEqualsPointersAndValues<CBerBitString>(m_pProtocolVersion, rhs.m_pProtocolVersion) ) return true;
-		if ( notEqualsPointersAndValues<CBerObjectIdentifier>(m_pApplicationContextName, rhs.m_pApplicationContextName) ) return true;
+		if ( notEqualsPointersAndValues<CApplicationContextName>(m_pApplicationContextName, rhs.m_pApplicationContextName) ) return true;
 		if ( notEqualsPointersAndValues<CApTitle>(m_pCalledApTitle, rhs.m_pCalledApTitle) ) return true;
 		if ( notEqualsPointersAndValues<CAeQualifier>(m_pCalledAeQualifier, rhs.m_pCalledAeQualifier) ) return true;
 		if ( notEqualsPointersAndValues<CBerInteger>(m_pCalledApInvocationIdentifier, rhs.m_pCalledApInvocationIdentifier) ) return true;

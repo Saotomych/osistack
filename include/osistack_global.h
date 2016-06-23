@@ -36,6 +36,8 @@
 #  define OSISTACK_SHAREDEXPORT Q_DECL_IMPORT
 #endif
 
+#include "../ASN1/include/DeclareCommonTypes.h"
+
 /*
  * equalsPointersAndValues
  * @return: bool is true when both of input pointer is nullptr or both values equals

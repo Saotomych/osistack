@@ -25,6 +25,7 @@
 #include "acse-asn1/APtitle.h"
 #include "presentation-asn1/PdvList.h"
 #include "presentation-asn1/CpType.h"
+#include "presentation-asn1/fullyEncodedData.h"
 
 class OSISTACK_SHAREDEXPORT CAcseAssociation: public QObject
 {
@@ -36,7 +37,7 @@ public:
 	CConnection* m_tConnection;
 	QByteArray m_associateResponseAPDU;
 	quint32 m_currentCallingSessionSelector;
-	CBerOctetString* m_pSelLocalBerOctetString;
+	CBerOctetString PSelLocal;
 
 private:
 
@@ -60,9 +61,11 @@ private:
 
 	static CBerObjectIdentifier defaultMechanismName;
 
+	static CUserData getPresentationUserDataField(qint32 userDataLength);
+
 public:
 
-	CAcseAssociation(CConnection* tConnection, CBerOctetString* pSelLocalBerOctetString);
+	CAcseAssociation(CConnection* tConnection, CBerOctetString& SelLocalBerOctetString);
 
 	void accept(CBerByteArrayOutputStream& payload);
 

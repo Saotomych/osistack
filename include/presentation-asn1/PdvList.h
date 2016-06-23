@@ -22,21 +22,30 @@ namespace NsPdvList
 	class SubchoicePresentationDataValues: public QObject, public IBerBaseType
 	{
 		Q_OBJECT
-		Q_PROPERTY(CBerIdentifier* Identifier READ getIdentifier)
+		Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 		Q_PROPERTY(QByteArray* Code READ getCode)
+		Q_PROPERTY(CBerIdentifier Idany READ getIdAny)
 		Q_PROPERTY(IBerBaseType* any READ getAny)
+		Q_PROPERTY(CBerIdentifier Idoctstr READ getIdOctetString)
 		Q_PROPERTY(IBerBaseType* octstr READ getOctetString)
+		Q_PROPERTY(CBerIdentifier Idbitstr READ getIdBitString)
 		Q_PROPERTY(IBerBaseType* bitstr READ getBitString)
 
 		bool is_copy;
 
-		protected:
+	protected:
+
+		const CBerIdentifier c_Identifier;
 
 		QByteArray* getCode() { return &m_Code; }
-		CBerIdentifier* getIdentifier() { return nullptr; }
+		CBerIdentifier getIdentifier() { return c_Identifier; }
 		IBerBaseType* getAny() { return m_pSingleAsn1Type; }
 		IBerBaseType* getOctetString() { return m_pOctetAligned; }
 		IBerBaseType* getBitString() { return m_pArbitrary; }
+
+		CBerIdentifier getIdAny() { return c_IdSingleAsn1Type; }
+		CBerIdentifier getIdOctetString() { return c_IdOctetAligned; }
+		CBerIdentifier getIdBitString() { return c_IdArbitrary; }
 
 		void create_objects(const SubchoicePresentationDataValues& rhs)
 		{
@@ -71,55 +80,13 @@ namespace NsPdvList
 		CBerOctetString* m_pOctetAligned;
 		CBerBitString* m_pArbitrary;
 
+		CBerIdentifier c_IdSingleAsn1Type;
+		CBerIdentifier c_IdOctetAligned;
+		CBerIdentifier c_IdArbitrary;
+
 	public:
 
-		virtual quint32 encode(CBerByteArrayOutputStream& berOStream, bool)
-		{
-			if (m_Code.size())
-			{
-				return berOStream.write(m_Code);
-			}
-
-			quint32 codeLength = 0;
-
-			if (m_pArbitrary != nullptr)
-			{
-				codeLength += m_pArbitrary->encode(berOStream, false);
-
-				CBerIdentifier id(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 2);
-				codeLength += id.encode(berOStream);
-				return codeLength;
-			}
-
-			if (m_pOctetAligned != nullptr)
-			{
-				codeLength += m_pOctetAligned->encode(berOStream, false);
-
-				CBerIdentifier id(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 1);
-				codeLength += id.encode(berOStream);
-				return codeLength;
-			}
-
-			if (m_pSingleAsn1Type != nullptr)
-			{
-				quint32 subLength = m_pSingleAsn1Type->encode(berOStream, true);
-				codeLength += subLength;
-				codeLength += CBerLength::encodeLength(berOStream, subLength);
-
-				CBerIdentifier id(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 0);
-				codeLength += id.encode(berOStream);
-				return codeLength;
-			}
-
-			qDebug() << "ERROR: Encoding BerChoice failed. No item in choice was selected.";
-
-			return 0;
-		}
-
-		virtual quint32 decode(CBerByteArrayInputStream&, bool)
-		{
-			return 0;
-		}
+		ASN1_CODEC(CBerBaseStorage)
 
 		virtual quint32 decode(CBerByteArrayInputStream& iStream, CBerIdentifier* berIdentifier)
 		{
@@ -168,12 +135,20 @@ namespace NsPdvList
 
 		SubchoicePresentationDataValues(CBerAnyNoDecode* pSingleAsn1Type, CBerOctetString* pOctetAligned, CBerBitString* pArbitrary):
 			is_copy(false),
+			c_Identifier(),
 			m_pSingleAsn1Type(pSingleAsn1Type),
 			m_pOctetAligned(pOctetAligned),
-			m_pArbitrary(pArbitrary)
+			m_pArbitrary(pArbitrary),
+			c_IdSingleAsn1Type(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 0),
+			c_IdOctetAligned(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 1),
+			c_IdArbitrary(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 2)
 		{}
 
-		SubchoicePresentationDataValues(const SubchoicePresentationDataValues& rhs): QObject()
+		SubchoicePresentationDataValues(const SubchoicePresentationDataValues& rhs): QObject(),
+			c_Identifier(),
+			c_IdSingleAsn1Type(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 0),
+			c_IdOctetAligned(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 1),
+			c_IdArbitrary(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 2)
 		{
 			create_objects(rhs);
 
@@ -225,7 +200,8 @@ namespace NsPdvList
 class OSISTACK_SHAREDEXPORT CPdvList: public QObject, public IBerBaseType
 {
 	Q_OBJECT
-	Q_PROPERTY(CBerIdentifier* Identifier READ getIdentifier)
+	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
+	Q_PROPERTY(QByteArray* Code READ getCode)
 	Q_PROPERTY(CBerObjectIdentifier* transferSyntaxName READ getTransferSyntaxName)
 	Q_PROPERTY(CBerInteger* presentationContextIdentifier READ getPresentationContextIdentifier)
 	Q_PROPERTY(IBerBaseType* Integer READ getSPDV)
@@ -236,13 +212,14 @@ protected:
 
 	QByteArray m_Code;
 
-	CBerIdentifier m_Identifier;
+	const CBerIdentifier c_Identifier;
 
 	CBerObjectIdentifier* m_transferSyntaxName;
 	CBerInteger* m_presentationContextIdentifier;
 	NsPdvList::SubchoicePresentationDataValues* m_pSPDV;
 
-	CBerIdentifier* getIdentifier() { return &m_Identifier; }
+	CBerIdentifier getIdentifier() { return c_Identifier; }
+	QByteArray* getCode() { return &m_Code; }
 	CBerObjectIdentifier* getTransferSyntaxName() { return m_transferSyntaxName; }
 	CBerInteger* getPresentationContextIdentifier() { return m_presentationContextIdentifier; }
 	IBerBaseType* getSPDV() { return m_pSPDV; }
@@ -251,22 +228,21 @@ public:
 
 	ASN1_CODEC(CBerBaseStorage)
 
-	static CBerIdentifier s_Identifier;
 	static quint32 s_metaTypeIdentifier;
 
 	CPdvList(CBerObjectIdentifier* transferSyntaxName,
 			CBerInteger* presentationContextIdentifier,
 			NsPdvList::SubchoicePresentationDataValues* pSPDV):
 		is_copy(false),
-		m_Identifier(s_Identifier),
+		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 17),
 		m_transferSyntaxName(transferSyntaxName),
 		m_presentationContextIdentifier(presentationContextIdentifier),
 		m_pSPDV(pSPDV)
 	{ }
 
-	CPdvList(const CPdvList& rhs): QObject()
+	CPdvList(const CPdvList& rhs): QObject(),
+		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 17)
 	{
-		m_Identifier = s_Identifier;
 		m_Code = rhs.m_Code;
 
 		std::unique_ptr<NsPdvList::SubchoicePresentationDataValues> p1
@@ -290,7 +266,6 @@ public:
 	{
 		if (this == &rhs) return *this;
 
-		m_Identifier = s_Identifier;
 		m_Code = rhs.m_Code;
 
 		std::unique_ptr<NsPdvList::SubchoicePresentationDataValues> p1
@@ -343,6 +318,7 @@ public:
 
 };
 
+Q_DECLARE_METATYPE(NsPdvList::SubchoicePresentationDataValues*)
 Q_DECLARE_METATYPE(CPdvList*)
 
 

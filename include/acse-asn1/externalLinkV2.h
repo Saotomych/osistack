@@ -16,7 +16,7 @@
 class OSISTACK_SHAREDEXPORT CExternalLinkV2: public QObject, public IBerBaseType
 {
 	Q_OBJECT
-	Q_PROPERTY(CBerIdentifier* Identifier READ getIdentifier)
+	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
 	Q_PROPERTY(IBerBaseType* any READ getAny)
 	Q_PROPERTY(IBerBaseType* octstr READ getOctetString)
@@ -24,13 +24,15 @@ class OSISTACK_SHAREDEXPORT CExternalLinkV2: public QObject, public IBerBaseType
 
 	bool is_copy;
 
-protected:
+public:
 
 	QByteArray* getCode() { return &m_Code; }
-	CBerIdentifier* getIdentifier() { return nullptr; }
+	CBerIdentifier getIdentifier() { return c_Identifier; }
 	IBerBaseType* getAny() { return m_pAny; }
 	IBerBaseType* getOctetString() { return m_pOctetString; }
 	IBerBaseType* getBitString() { return m_pBitString; }
+
+protected:
 
 	void create_objects(const CExternalLinkV2& rhs)
 	{
@@ -57,6 +59,9 @@ protected:
 	}
 
 protected:
+
+	const CBerIdentifier c_Identifier;
+
 	QByteArray m_Code;
 
 	CBerAny* m_pAny;
@@ -71,12 +76,14 @@ public:
 
 	CExternalLinkV2(CBerAny* pAny, CBerOctetString* pOctetString, CBerBitString* pBitString):
 		is_copy(false),
+		c_Identifier(),
 		m_pAny(pAny),
 		m_pOctetString(pOctetString),
 		m_pBitString(pBitString)
 	{}
 
-	CExternalLinkV2(const CExternalLinkV2& rhs): QObject()
+	CExternalLinkV2(const CExternalLinkV2& rhs): QObject(),
+		c_Identifier()
 	{
 		create_objects(rhs);
 

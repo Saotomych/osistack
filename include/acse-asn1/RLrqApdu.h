@@ -15,19 +15,20 @@
 class OSISTACK_SHAREDEXPORT CRLrqApdu: public QObject, public IBerBaseType
 {
 	Q_OBJECT
-	Q_PROPERTY(CBerIdentifier* Identifier READ getIdentifier)
+	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
 	Q_PROPERTY(IBerBaseType* Reason READ getReason)
 	Q_PROPERTY(IBerBaseType* UserInformation READ getUserInformation)
 
 	bool is_copy;
 
-protected:
+public:
 
 	QByteArray* getCode() { return &m_Code; }
-	CBerIdentifier* getIdentifier() { return &m_Identifier; }
 	IBerBaseType* getReason() { return m_pReason; }
 	IBerBaseType* getUserInformation() { return m_pUserInformation; }
+
+protected:
 
 	void create_objects(const CRLrqApdu& rhs)
 	{
@@ -50,7 +51,7 @@ protected:
 	}
 
 protected:
-	CBerIdentifier m_Identifier;
+	const CBerIdentifier c_Identifier;
 	QByteArray m_Code;
 
 	CBerInteger* m_pReason;
@@ -60,28 +61,29 @@ public:
 
 	ASN1_CODEC(CBerBaseStorage)
 
-	static CBerIdentifier s_Identifier;
 	static quint32 s_metaTypeIdentifier;
+
+	CBerIdentifier getIdentifier() { return c_Identifier; }
 
 	CRLrqApdu():
 		is_copy(false),
-		m_Identifier(s_Identifier),
+		c_Identifier(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::CONSTRUCTED, 2),
 		m_pReason(nullptr),
 		m_pUserInformation(nullptr)
 	{}
 
 	CRLrqApdu(CBerInteger* pReason, CAssociationInformation* pUserInformation):
 		is_copy(false),
-		m_Identifier(s_Identifier),
+		c_Identifier(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::CONSTRUCTED, 2),
 		m_pReason(pReason),
 		m_pUserInformation(pUserInformation)
 	{}
 
-	CRLrqApdu(const CRLrqApdu& rhs):QObject()
+	CRLrqApdu(const CRLrqApdu& rhs):QObject(),
+		c_Identifier(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::CONSTRUCTED, 2)
 	{
 		create_objects(rhs);
 
-		m_Identifier = rhs.m_Identifier;
 		m_Code = rhs.m_Code;
 		is_copy = true;
 	}
@@ -94,7 +96,6 @@ public:
 
 		create_objects(rhs);
 
-		m_Identifier = rhs.m_Identifier;
 		m_Code = rhs.m_Code;
 		is_copy = true;
 

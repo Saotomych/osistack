@@ -16,7 +16,7 @@
 class OSISTACK_SHAREDEXPORT CAuthenticationValue: public QObject, public IBerBaseType
 {
 	Q_OBJECT
-	Q_PROPERTY(CBerIdentifier* Identifier READ getIdentifier)
+	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
 	Q_PROPERTY(IBerBaseType* graphstr READ getGraphString)
 	Q_PROPERTY(IBerBaseType* bitstr READ getBitString)
@@ -26,11 +26,17 @@ class OSISTACK_SHAREDEXPORT CAuthenticationValue: public QObject, public IBerBas
 
 protected:
 
+	const CBerIdentifier c_Identifier;
+
+public:
+
 	QByteArray* getCode() { return &m_Code; }
-	CBerIdentifier* getIdentifier() { return nullptr; }
+	CBerIdentifier getIdentifier() { return c_Identifier; }
 	IBerBaseType* getGraphString() { return m_pGraphString; }
 	IBerBaseType* getBitString() { return m_pBitString; }
 	IBerBaseType* getExternalLink() { return m_pExternalLink; }
+
+protected:
 
 	void create_objects(const CAuthenticationValue& rhs)
 	{
@@ -71,12 +77,14 @@ public:
 
 	CAuthenticationValue():
 		is_copy(false),
+		c_Identifier(),
 		m_pGraphString(nullptr),
 		m_pExternalLink(nullptr),
 		m_pBitString(nullptr)
 	{}
 
-	CAuthenticationValue(CBerGraphicString* pGraphString, CExternalLinkV2* pExternalLink, CBerBitString* pBitString)
+	CAuthenticationValue(CBerGraphicString* pGraphString, CExternalLinkV2* pExternalLink, CBerBitString* pBitString):
+		c_Identifier()
 	{
 		m_pGraphString = pGraphString;
 		m_pExternalLink = pExternalLink;
@@ -85,7 +93,8 @@ public:
 		is_copy = false;
 	}
 
-	CAuthenticationValue(const CAuthenticationValue& rhs): QObject()
+	CAuthenticationValue(const CAuthenticationValue& rhs): QObject(),
+		c_Identifier()
 	{
 		create_objects(rhs);
 
