@@ -24,8 +24,11 @@ namespace NsExternalLinkV1
 		Q_OBJECT
 		Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 		Q_PROPERTY(QByteArray* Code READ getCode)
+		Q_PROPERTY(CBerIdentifier Idany READ getIdAny)
 		Q_PROPERTY(IBerBaseType* any READ getAny)
+		Q_PROPERTY(CBerIdentifier Idoctstr READ getIdOctetString)
 		Q_PROPERTY(IBerBaseType* octstr READ getOctetString)
+		Q_PROPERTY(CBerIdentifier Idbitstr READ getIdBitString)
 		Q_PROPERTY(IBerBaseType* bitstr READ getBitString)
 
 		bool is_copy;
@@ -38,6 +41,10 @@ namespace NsExternalLinkV1
 
 		QByteArray* getCode() { return &m_Code; }
 		CBerIdentifier getIdentifier() { return c_Identifier; }
+		CBerIdentifier getIdAny() { return c_IdSingleAsn1Type; }
+		CBerIdentifier getIdOctetString() { return c_IdOctetAligned; }
+		CBerIdentifier getIdBitString() { return c_IdArbitrary; }
+
 		IBerBaseType* getAny() { return m_pSingleAsn1Type; }
 		IBerBaseType* getOctetString() { return m_pOctetAligned; }
 		IBerBaseType* getBitString() { return m_pArbitrary; }
@@ -73,11 +80,17 @@ namespace NsExternalLinkV1
 	protected:
 		QByteArray m_Code;
 
+		CBerIdentifier c_IdSingleAsn1Type;
+		CBerIdentifier c_IdOctetAligned;
+		CBerIdentifier c_IdArbitrary;
+
 		CBerAnyNoDecode* m_pSingleAsn1Type;
 		CBerOctetString* m_pOctetAligned;
 		CBerBitString* m_pArbitrary;
 
 	public:
+
+//		ASN1_CODEC(CBerBaseStorage)
 
 		virtual quint32 encode(CBerByteArrayOutputStream& berOStream, bool)
 		{
@@ -175,13 +188,19 @@ namespace NsExternalLinkV1
 		SubChoiceEncoding(CBerAnyNoDecode* pSingleAsn1Type, CBerOctetString* pOctetAligned, CBerBitString* pArbitrary):
 			is_copy(false),
 			c_Identifier(),
+			c_IdSingleAsn1Type(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 0),
+			c_IdOctetAligned(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 1),
+			c_IdArbitrary(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 2),
 			m_pSingleAsn1Type(pSingleAsn1Type),
 			m_pOctetAligned(pOctetAligned),
 			m_pArbitrary(pArbitrary)
 		{}
 
 		SubChoiceEncoding(const SubChoiceEncoding& rhs): QObject(),
-			c_Identifier()
+			c_Identifier(),
+			c_IdSingleAsn1Type(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 0),
+			c_IdOctetAligned(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 1),
+			c_IdArbitrary(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 2)
 		{
 			create_objects(rhs);
 
@@ -237,9 +256,9 @@ private:
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
-	Q_PROPERTY(IBerBaseType* any READ getDirectReference)
-	Q_PROPERTY(IBerBaseType* octstr READ getIndirectReference)
-	Q_PROPERTY(IBerBaseType* bitstr READ getEncoding)
+	Q_PROPERTY(IBerBaseType* oid READ getDirectReference)
+	Q_PROPERTY(IBerBaseType* integer READ getIndirectReference)
+	Q_PROPERTY(IBerBaseType* subchoice READ getEncoding)
 
 	bool is_copy;
 
@@ -247,6 +266,7 @@ public:
 
 	QByteArray* getCode() { return &m_Code; }
 	CBerIdentifier getIdentifier() { return c_Identifier; }
+
 	IBerBaseType* getDirectReference() { return m_pDirectReference; }
 	IBerBaseType* getIndirectReference() { return m_pIndirectReference; }
 	IBerBaseType* getEncoding() { return m_pEncoding; }
@@ -295,14 +315,14 @@ public:
 
 	CExternalLinkV1(CBerObjectIdentifier* pDirectReference, CBerInteger* pIndirectReference, NsExternalLinkV1::SubChoiceEncoding* pEncoding):
 		is_copy(false),
-		c_Identifier(),
+		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS,CBerIdentifier::CONSTRUCTED, 8),
 		m_pDirectReference(pDirectReference),
 		m_pIndirectReference(pIndirectReference),
 		m_pEncoding(pEncoding)
 	{}
 
 	CExternalLinkV1(const CExternalLinkV1& rhs): QObject(),
-		c_Identifier()
+		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS,CBerIdentifier::CONSTRUCTED, 8)
 	{
 		create_objects(rhs);
 

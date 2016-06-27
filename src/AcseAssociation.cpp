@@ -287,8 +287,7 @@ void CAcseAssociation::startAssociation(
 
 	// Serialize
 	CBerByteArrayOutputStream berOStream(200, true);
-//	acse.encode(berOStream, true);
-	userInformation.encode(berOStream, true);
+	acse.encode(berOStream, true);
 
 	quint32 acseHeaderLength = berOStream.getByteArray().size();
 
