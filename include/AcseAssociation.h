@@ -63,6 +63,13 @@ private:
 
 	static CUserData getPresentationUserDataField(qint32 userDataLength);
 
+	static void ISO8327Header(
+				QByteArray& spduHeader,
+				QByteArray& sSelRemote,
+				QByteArray& sSelLocal,
+				quint8 ssduLength
+			);
+
 public:
 
 	CAcseAssociation(CConnection* tConnection, CBerOctetString& SelLocalBerOctetString);
@@ -109,7 +116,7 @@ public:
 	QScopedPointer<QDataStream>& startSConnection(
 			QLinkedList<QByteArray>& ssduList,
 			QLinkedList<quint32>& ssduOffsets,
-			QLinkedList<quint32>& ssduLengths,
+			QLinkedList<quint8>& ssduLengths,
 			QByteArray& sSelRemote,
 			QByteArray& sSelLocal);
 

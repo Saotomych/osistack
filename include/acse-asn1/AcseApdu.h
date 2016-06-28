@@ -80,9 +80,49 @@ protected:
 
 public:
 
-	ASN1_CODEC(CBerBaseStorage)
+//	ASN1_CODEC(CBerBaseStorage)
 
 	CBerIdentifier getIdentifier() { return c_Identifier; }
+
+	virtual quint32 encode(CBerByteArrayOutputStream& berOStream, bool)
+	{
+		if (m_Code != nullptr) {
+			berOStream.write(m_Code);
+			return m_Code.size();
+		}
+
+		quint32 codeLength = 0;
+
+		if (m_pRlreApdu != nullptr) {
+			codeLength += m_pRlreApdu->encode(berOStream, true);
+			return codeLength;
+
+		}
+
+		if (m_pRlrqApdu != nullptr) {
+			codeLength += m_pRlrqApdu->encode(berOStream, true);
+			return codeLength;
+
+		}
+
+		if (m_pAareApdu != nullptr) {
+			codeLength += m_pAareApdu->encode(berOStream, true);
+			return codeLength;
+
+		}
+
+		if (m_pAarqApdu != nullptr) {
+			codeLength += m_pAarqApdu->encode(berOStream, true);
+			return codeLength;
+		}
+
+		return codeLength;
+	}
+
+	virtual quint32 decode(CBerByteArrayInputStream&, bool)
+	{
+		return 0;
+	}
 
 	// Alternative decoder by Identifier
 	quint32 decode(CBerByteArrayInputStream& iStream, CBerIdentifier* berIdentifier)
@@ -103,6 +143,8 @@ public:
 		if (*workIdentifier == AarqApdu.getIdentifier())
 		{
 			codeLength += AarqApdu.decode(iStream, false);
+			CAcseApdu acse(&AarqApdu, nullptr, nullptr, nullptr);
+			*this = acse;
 			return codeLength;
 		}
 
@@ -110,6 +152,8 @@ public:
 		if (*workIdentifier == AareApdu.getIdentifier())
 		{
 			codeLength += AareApdu.decode(iStream, false);
+			CAcseApdu acse(nullptr, &AareApdu, nullptr, nullptr);
+			*this = acse;
 			return codeLength;
 		}
 
@@ -117,6 +161,8 @@ public:
 		if (*workIdentifier == RlrqApdu.getIdentifier())
 		{
 			codeLength += RlrqApdu.decode(iStream, false);
+			CAcseApdu acse(nullptr, nullptr, &RlrqApdu, nullptr);
+			*this = acse;
 			return codeLength;
 		}
 
@@ -124,15 +170,18 @@ public:
 		if (*workIdentifier == RlreApdu.getIdentifier())
 		{
 			codeLength += RlreApdu.decode(iStream, false);
+			CAcseApdu acse(nullptr, nullptr, nullptr, &RlreApdu);
+			*this = acse;
 			return codeLength;
 		}
 
 		if (berIdentifier != nullptr)
 		{
+			qDebug() << "CAcseApdu decode: Error decoding CAcseApdu: Identifier matches to no item";
 			return 0;
 		}
 
-		qDebug() << "CAcseApdu decode: Error decoding CAcseApdu: Identifier matches to no item";
+		qDebug() << "CAcseApdu decode: Error decoding CAcseApdu: NO Identifier";
 
 		return 0;
 	}

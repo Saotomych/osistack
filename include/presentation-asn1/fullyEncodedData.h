@@ -25,12 +25,10 @@ protected:
 	QByteArray m_Code;
 
 	QLinkedList<CPdvList>* m_pSeqOf;
-//	CPdvList* m_pSeqOftest;
 
 	QByteArray* getCode() { return &m_Code; }
 	CBerIdentifier getIdentifier() { return c_Identifier; }
 	QLinkedList<CPdvList>* getSeqOf() { return m_pSeqOf; }
-//	CPdvList* getSeqOftest() { return m_pSeqOftest; }
 
 public:
 
@@ -40,11 +38,16 @@ public:
 	static quint32 s_metaTypeIdentifier;
 	static quint32 s_metaTypeListId;
 
+	CFullyEncodedData():
+		is_copy(false),
+		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
+		m_pSeqOf(nullptr)
+	{}
+
 	CFullyEncodedData(QLinkedList<CPdvList>* pExternalListV1):
 		is_copy(false),
 		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
 		m_pSeqOf(pExternalListV1)
-//		m_pSeqOftest( &(*pExternalListV1->begin()) )
 	{}
 
 	CFullyEncodedData(const CFullyEncodedData& rhs): QObject(),

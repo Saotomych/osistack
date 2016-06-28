@@ -86,31 +86,80 @@ namespace NsPdvList
 
 	public:
 
-		ASN1_CODEC(CBerBaseStorage)
+//		ASN1_CODEC(CBerBaseStorage)
+
+		virtual quint32 encode(CBerByteArrayOutputStream& berOStream, bool)
+		{
+			if (m_Code.size()) {
+				berOStream.write(m_Code);
+				return m_Code.size();
+			}
+
+			int codeLength = 0;
+			int sublength;
+
+			if (m_pArbitrary != nullptr) {
+				codeLength += m_pArbitrary->encode(berOStream, false);
+				codeLength += c_IdArbitrary.encode(berOStream);
+				return codeLength;
+			}
+
+			if (m_pOctetAligned != nullptr) {
+				codeLength += m_pOctetAligned->encode(berOStream, false);
+				codeLength += c_IdOctetAligned.encode(berOStream);
+				return codeLength;
+			}
+
+			if (m_pSingleAsn1Type != nullptr) {
+				sublength = m_pSingleAsn1Type->encode(berOStream, true);
+				codeLength += sublength;
+				codeLength += CBerLength::encodeLength(berOStream, sublength);
+				codeLength += c_IdSingleAsn1Type.encode(berOStream);
+				return codeLength;
+			}
+
+			return codeLength;
+		}
+
+		virtual quint32 decode(CBerByteArrayInputStream&, bool)
+		{
+			return 0;
+		}
+
+		virtual bool hasLength()
+		{
+			return false;
+		}
 
 		virtual quint32 decode(CBerByteArrayInputStream& iStream, CBerIdentifier* berIdentifier)
 		{
 			quint32 codeLength = 0;
 
+			CBerIdentifier defaultId;
+
 			CBerIdentifier* workIdentifier = berIdentifier;
 
-			if (workIdentifier == nullptr)
+			if (berIdentifier == nullptr)
 			{
-				workIdentifier = new CBerIdentifier();
+				workIdentifier = &defaultId;
 				codeLength += workIdentifier->decode(iStream);
 			}
 
-			if (workIdentifier->equals(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 0))
+			if (*workIdentifier == c_IdSingleAsn1Type)
 			{
 				CBerAnyNoDecode singleAsn1Type;
 				codeLength += singleAsn1Type.decode(iStream, false);
+				SubchoicePresentationDataValues schoice(&singleAsn1Type, nullptr, nullptr);
+				*this = schoice;
 				return codeLength;
 			}
 
-			if (workIdentifier->equals(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 1))
+			if (*workIdentifier == c_IdOctetAligned)
 			{
 				CBerOctetString octetAligned;
 				codeLength += octetAligned.decode(iStream, false);
+				SubchoicePresentationDataValues schoice(nullptr, &octetAligned, nullptr);
+				*this = schoice;
 				return codeLength;
 			}
 
@@ -118,15 +167,19 @@ namespace NsPdvList
 			{
 				CBerBitString arbitrary;
 				codeLength += arbitrary.decode(iStream, false);
+				SubchoicePresentationDataValues schoice(nullptr, nullptr, &arbitrary);
+				*this = schoice;
 				return codeLength;
 			}
 
 			if (berIdentifier != nullptr)
 			{
+				qDebug() << "SubchoicePresentationDataValues decode: Error decoding BerChoice: Identifier matches to no item";
+
 				return 0;
 			}
 
-			qDebug() << "SubchoicePresentationDataValues decode: Error decoding BerChoice: Identifier matches to no item";
+			qDebug() << "SubchoicePresentationDataValues decode: Error decoding BerChoice: No Identifier";
 
 			return 0;
 		}
@@ -202,9 +255,9 @@ class OSISTACK_SHAREDEXPORT CPdvList: public QObject, public IBerBaseType
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
-	Q_PROPERTY(CBerObjectIdentifier* transferSyntaxName READ getTransferSyntaxName)
-	Q_PROPERTY(CBerInteger* presentationContextIdentifier READ getPresentationContextIdentifier)
-	Q_PROPERTY(IBerBaseType* Integer READ getSPDV)
+	Q_PROPERTY(IBerBaseType* transferSyntaxName READ getTransferSyntaxName)
+	Q_PROPERTY(IBerBaseType* presentationContextIdentifier READ getPresentationContextIdentifier)
+	Q_PROPERTY(IBerBaseType* SPDV READ getSPDV)
 
 	bool is_copy;
 
@@ -216,12 +269,13 @@ protected:
 
 	CBerObjectIdentifier* m_transferSyntaxName;
 	CBerInteger* m_presentationContextIdentifier;
-	NsPdvList::SubchoicePresentationDataValues* m_pSPDV;
+	NsPdvList::SubchoicePresentationDataValues* m_pSPDV; // Subchoice Presentation Data Values
 
 	CBerIdentifier getIdentifier() { return c_Identifier; }
 	QByteArray* getCode() { return &m_Code; }
-	CBerObjectIdentifier* getTransferSyntaxName() { return m_transferSyntaxName; }
-	CBerInteger* getPresentationContextIdentifier() { return m_presentationContextIdentifier; }
+
+	IBerBaseType* getTransferSyntaxName() { return m_transferSyntaxName; }
+	IBerBaseType* getPresentationContextIdentifier() { return m_presentationContextIdentifier; }
 	IBerBaseType* getSPDV() { return m_pSPDV; }
 
 public:
@@ -234,14 +288,14 @@ public:
 			CBerInteger* presentationContextIdentifier,
 			NsPdvList::SubchoicePresentationDataValues* pSPDV):
 		is_copy(false),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 17),
+		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
 		m_transferSyntaxName(transferSyntaxName),
 		m_presentationContextIdentifier(presentationContextIdentifier),
 		m_pSPDV(pSPDV)
 	{ }
 
 	CPdvList(const CPdvList& rhs): QObject(),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 17)
+		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16)
 	{
 		m_Code = rhs.m_Code;
 

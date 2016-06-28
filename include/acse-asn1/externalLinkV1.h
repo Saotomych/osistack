@@ -313,6 +313,14 @@ public:
 
 	static quint32 s_metaTypeIdentifier;
 
+	CExternalLinkV1():
+		is_copy(false),
+		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS,CBerIdentifier::CONSTRUCTED, 8),
+		m_pDirectReference(nullptr),
+		m_pIndirectReference(nullptr),
+		m_pEncoding(nullptr)
+	{}
+
 	CExternalLinkV1(CBerObjectIdentifier* pDirectReference, CBerInteger* pIndirectReference, NsExternalLinkV1::SubChoiceEncoding* pEncoding):
 		is_copy(false),
 		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS,CBerIdentifier::CONSTRUCTED, 8),

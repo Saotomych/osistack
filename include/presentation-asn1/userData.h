@@ -18,7 +18,9 @@ class CUserData: public QObject, public IBerBaseType
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
+	Q_PROPERTY(CBerIdentifier IdSimpleEncodedData READ getIdSimpleEncodedData)
 	Q_PROPERTY(IBerBaseType* SimpleEncodedData READ getSimpleEncodedData)
+	Q_PROPERTY(CBerIdentifier IdFullyEncodedData READ getIdFullyEncodedData)
 	Q_PROPERTY(IBerBaseType* FullyEncodedData READ getFullyEncodedData)
 
 	bool is_copy;
@@ -29,6 +31,9 @@ protected:
 
 	QByteArray* getCode() { return &m_Code; }
 	CBerIdentifier getIdentifier() { return c_Identifier; }
+	CBerIdentifier getIdSimpleEncodedData() { return c_IdSimpleEncodedData; }
+	CBerIdentifier getIdFullyEncodedData() { return c_IdFullyEncodedData; }
+
 	IBerBaseType* getSimpleEncodedData() { return m_pSimpleEncodedData; }
 	IBerBaseType* getFullyEncodedData() { return m_pFullyEncodedData; }
 
@@ -55,18 +60,91 @@ protected:
 protected:
 	QByteArray m_Code;
 
+	CBerIdentifier c_IdSimpleEncodedData;
+	CBerIdentifier c_IdFullyEncodedData;
+
 	CBerOctetString* m_pSimpleEncodedData;
 	CFullyEncodedData* m_pFullyEncodedData;
 
 public:
 
-	ASN1_CODEC(CBerBaseStorage)
+//	ASN1_CODEC(CBerBaseStorage)
+
+	virtual quint32 encode(CBerByteArrayOutputStream& berOStream, bool)
+	{
+		if (m_Code != nullptr) {
+			berOStream.write(m_Code);
+			return m_Code.size();
+		}
+
+		quint32 codeLength = 0;
+		if (m_pFullyEncodedData != nullptr) {
+			codeLength += m_pFullyEncodedData->encode(berOStream, false);
+			codeLength += c_IdFullyEncodedData.encode(berOStream);
+			return codeLength;
+		}
+
+		if (m_pSimpleEncodedData != nullptr) {
+			codeLength += m_pSimpleEncodedData->encode(berOStream, false);
+			codeLength += c_IdSimpleEncodedData.encode(berOStream);
+			return codeLength;
+		}
+
+		return codeLength;
+	}
+
+	virtual quint32 decode(CBerByteArrayInputStream&, bool)
+	{
+		return 0;
+	}
+
+	virtual quint32 decode(CBerByteArrayInputStream& iStream, CBerIdentifier* berIdentifier)
+	{
+		quint32 codeLength = 0;
+
+		CBerIdentifier defaultId;
+
+		CBerIdentifier* workIdentifier = berIdentifier;
+
+		if (berIdentifier == nullptr)
+		{
+			workIdentifier = &defaultId;
+			codeLength += workIdentifier->decode(iStream);
+		}
+
+		CBerOctetString simply_encoded_data;
+		if (*workIdentifier == c_IdSimpleEncodedData) {
+			codeLength += simply_encoded_data.decode(iStream, false);
+			CUserData udata(&simply_encoded_data, nullptr);
+			*this = udata;
+			return codeLength;
+		}
+
+		CFullyEncodedData fully_encoded_data;
+		if (*workIdentifier == c_IdFullyEncodedData) {
+			codeLength += fully_encoded_data.decode(iStream, false);
+			CUserData udata(nullptr, &fully_encoded_data);
+			*this = udata;
+			return codeLength;
+		}
+
+		if (berIdentifier != nullptr) {
+			qDebug() << "CUserData decode: Error decoding CUserData: Identifier matches to no item";
+			return 0;
+		}
+
+		qDebug() << "CUserData decode: Error decoding CUserData: NO Identifier";
+
+		return 0;
+	}
 
 	static quint32 s_metaTypeIdentifier;
 
 	CUserData():
 		is_copy(false),
 		c_Identifier(),
+		c_IdSimpleEncodedData(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::PRIMITIVE, 0),
+		c_IdFullyEncodedData(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::CONSTRUCTED, 1),
 		m_pSimpleEncodedData(nullptr),
 		m_pFullyEncodedData(nullptr)
 	{}
@@ -74,11 +152,16 @@ public:
 	CUserData(CBerOctetString* pReason, CFullyEncodedData* pUserInformation):
 		is_copy(false),
 		c_Identifier(),
+		c_IdSimpleEncodedData(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::PRIMITIVE, 0),
+		c_IdFullyEncodedData(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::CONSTRUCTED, 1),
 		m_pSimpleEncodedData(pReason),
 		m_pFullyEncodedData(pUserInformation)
 	{}
 
-	CUserData(const CUserData& rhs):QObject()
+	CUserData(const CUserData& rhs):QObject(),
+		c_Identifier(),
+		c_IdSimpleEncodedData(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::PRIMITIVE, 0),
+		c_IdFullyEncodedData(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::CONSTRUCTED, 1)
 	{
 		create_objects(rhs);
 

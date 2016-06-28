@@ -41,6 +41,7 @@ class OSISTACK_SHAREDEXPORT CSubSeqNormalModeParameters: public QObject, public 
 	Q_PROPERTY(IBerBaseType* PresentationRequirements READ getPresentationRequirements)
 	Q_PROPERTY(CBerIdentifier IdUserSessionRequirements READ getIdUserSessionRequirements)
 	Q_PROPERTY(IBerBaseType* UserSessionRequirements READ getUserSessionRequirements)
+	Q_PROPERTY(CBerIdentifier ClearId READ getClearId)
 	Q_PROPERTY(IBerBaseType* UserData READ getUserData)
 
 	bool is_copy;
@@ -59,6 +60,7 @@ protected:
 	IBerBaseType* getUserSessionRequirements() {return m_pUserSessionRequirements;}
 	IBerBaseType* getUserData() {return m_pUserData;}
 
+	CBerIdentifier getClearId() {return c_clearId;}
 	CBerIdentifier getIdProtocolVersion() {return c_IdProtocolVersion;}
 	CBerIdentifier getIdCallingPresentationSelector() {return c_IdCallingPresentationSelector;}
 	CBerIdentifier getIdCalledPresentationSelector() {return c_IdCalledPresentationSelector;}
@@ -117,6 +119,7 @@ protected:
 	const CBerIdentifier c_Identifier;
 	QByteArray m_Code;
 
+	const CBerIdentifier c_clearId;
 	const CBerIdentifier c_IdProtocolVersion;
 	const CBerIdentifier c_IdCallingPresentationSelector;
 	const CBerIdentifier c_IdCalledPresentationSelector;
@@ -152,6 +155,7 @@ public:
 	):
 		is_copy(false),
 		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
+		c_clearId(),
 		c_IdProtocolVersion(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0),
 		c_IdCallingPresentationSelector(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 1),
 		c_IdCalledPresentationSelector(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 2),
