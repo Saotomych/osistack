@@ -63,12 +63,14 @@ private:
 
 	static CUserData getPresentationUserDataField(qint32 userDataLength);
 
-	static void ISO8327Header(
+	void ISO8327Header(
 				QByteArray& spduHeader,
 				QByteArray& sSelRemote,
 				QByteArray& sSelLocal,
 				quint8 ssduLength
 			);
+
+	bool parseServerAnswer(QDataStream& iStream);
 
 public:
 
@@ -113,7 +115,7 @@ public:
 	 *
 	 * @throws IOException
 	 */
-	QScopedPointer<QDataStream>& startSConnection(
+	QSharedPointer<QDataStream> startSConnection(
 			QLinkedList<QByteArray>& ssduList,
 			QLinkedList<quint32>& ssduOffsets,
 			QLinkedList<quint8>& ssduLengths,

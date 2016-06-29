@@ -329,7 +329,7 @@ void CAcseAssociation::startAssociation(
 	ssduOffsets.push_back(payload.index() + 1);
 	ssduLengths.push_back(payload.size());
 
-	QScopedPointer<QDataStream>& iStream = startSConnection( ssduList, ssduOffsets, ssduLengths, sSelRemote, sSelLocal);
+	QSharedPointer<QDataStream> iStream = startSConnection( ssduList, ssduOffsets, ssduLengths, sSelRemote, sSelLocal);
 //
 ////	decodePConResponse(*iStream);
 ////
@@ -595,7 +595,7 @@ void CAcseAssociation::ISO8327Header(
 	// write session user data
 }
 
-QScopedPointer<QDataStream>& CAcseAssociation::startSConnection(
+QSharedPointer<QDataStream> CAcseAssociation::startSConnection(
 		QLinkedList<QByteArray>& ssduList,
 		QLinkedList<quint32>& ssduOffsets,
 		QLinkedList<quint8>& ssduLengths,
@@ -606,19 +606,22 @@ QScopedPointer<QDataStream>& CAcseAssociation::startSConnection(
 	if ( m_connected )
 	{
 		qDebug() << "ERROR: CAcseAssociation::startAssociation connected already";
-		return m_tConnection->inputStream();
+		QSharedPointer<QDataStream> m_pInputStream(m_tConnection->inputStream().data());
+		return m_pInputStream;
 	}
 
 	if (sSelRemote.size() < 2)
 	{
 		qDebug() << "ERROR: CAcseAssociation::startAssociation sSelRemote size = " << sSelRemote.size();
-		return m_tConnection->inputStream();
+		QSharedPointer<QDataStream> m_pInputStream(m_tConnection->inputStream().data());
+		return m_pInputStream;
 	}
 
 	if (sSelLocal.size() < 2)
 	{
 		qDebug() << "ERROR: CAcseAssociation::startAssociation sSelLocal size = " << sSelLocal.size();
-		return m_tConnection->inputStream();
+		QSharedPointer<QDataStream> m_pInputStream(m_tConnection->inputStream().data());
+		return m_pInputStream;
 	}
 
 	QByteArray header;
@@ -647,7 +650,9 @@ QScopedPointer<QDataStream>& CAcseAssociation::startSConnection(
 	// TODO asynchronous receive must be in the future
 //	QScopedPointer<QDataStream>& m_pInputStream = m_tConnection->waitData();
 	QDataStream InputStream(testInput);
-	QScopedPointer<QDataStream> m_pInputStream(&InputStream);
+	QSharedPointer<QDataStream> m_pInputStream(&InputStream);
+
+	parseServerAnswer(*m_pInputStream);
 
 //	if ( m_pInputStream->atEnd() == true )
 //	{
@@ -660,26 +665,26 @@ QScopedPointer<QDataStream>& CAcseAssociation::startSConnection(
 //  TODO: По хорошему надо так, но уже был сделан парсер на потоках, надо будет переделать
 //	QByteArray DataBlock;
 //	m_tConnection->readUserDataBlock(DataBlock);
-
-	// А так не надо, но пока пусть будет
-	quint8 data8;
-	*m_pInputStream >> data8;
-
-	// read ISO 8327-1 Header
-	// SPDU Type: ACCEPT (14)
-	quint8 SPDUType;
-	*m_pInputStream >> SPDUType;
-	if ( SPDUType != (quint8) 0x0e)
-	{
-		qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. ISO 8327-1 header wrong SPDU type, expected ACCEPT (14), got "
-				<< getSPDUTypeString(SPDUType) << " (" << SPDUType << ")";
-		return m_tConnection->inputStream();
-	}
-
-	receiveDataParser(m_pInputStream);
-
-	m_connected = true;
-
+//
+//	// А так не надо, но пока пусть будет
+//	quint8 data8;
+//	*m_pInputStream >> data8;
+//
+//	// read ISO 8327-1 Header
+//	// SPDU Type: ACCEPT (14)
+//	quint8 SPDUType;
+//	*m_pInputStream >> SPDUType;
+//	if ( SPDUType != (quint8) 0x0e)
+//	{
+//		qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. ISO 8327-1 header wrong SPDU type, expected ACCEPT (14), got "
+//				<< getSPDUTypeString(SPDUType) << " (" << SPDUType << ")";
+//		return m_tConnection->inputStream();
+//	}
+//
+//	receiveDataParser(m_pInputStream);
+//
+//	m_connected = true;
+//
 	return m_pInputStream;
 }
 
@@ -797,6 +802,39 @@ void CAcseAssociation::close()
 	}
 }
 
+bool CAcseAssociation::parseServerAnswer(QDataStream& iStream)
+{
+	quint8 spduType;
+	iStream >> spduType;
+	qDebug() << "CAcseAssociation::listenForCn: spduType = " << spduType;
+
+	if (spduType != 0x0d)
+	{
+		QString str = QString("CAcseAssociation::listenForCn: ISO 8327-1 header wrong SPDU type, expected CONNECT (13), got %1 (%2)")
+				.arg(getSPDUTypeString(spduType))
+				.arg(spduType);
+
+		qDebug() << str;
+		signalAcseIOError(str);
+		return false;
+	}
+
+	quint8 headerLength;
+	iStream >> headerLength;
+	qDebug() << "CAcseAssociation::listenForCn: headerLength = " << headerLength;
+
+//	receiveDataParser(iStream);
+
+	CCpType cpType;
+	CBerByteArrayInputStream berIStream(iStream);
+	cpType.decode(berIStream, true);
+
+	CAcseApdu acseApdu;
+	acseApdu.decode(berIStream, (CBerIdentifier*) nullptr);
+
+	return true;
+}
+
 void CAcseAssociation::listenForCn()
 {
 	qDebug() << "CAcseAssociation::listenForCn called";
@@ -820,41 +858,13 @@ void CAcseAssociation::listenForCn()
 //	m_tConnection->readUserDataBlock(DataBlock);
 
 	// А так не надо
-	quint8 data8;
-	*m_pInputStream >> data8;
-	qint32 parameterLength = data8;
+	quint8 parameterLength;
+	*m_pInputStream >> parameterLength;
 
 	qDebug() << "CAcseAssociation::listenForCn: parameterLength = " << parameterLength;
 
-	quint8 spduType;
-	*m_pInputStream >> spduType;
-	qDebug() << "CAcseAssociation::listenForCn: spduType = " << spduType;
-
-	if (spduType != 0x0d)
-	{
-		QString str = QString("CAcseAssociation::listenForCn: ISO 8327-1 header wrong SPDU type, expected CONNECT (13), got %1 (%2)")
-				.arg(getSPDUTypeString(spduType))
-				.arg(spduType);
-
-		qDebug() << str;
-		signalAcseIOError(str);
-		return;
-	}
-
-	quint8 headerLength;
-	*m_pInputStream >> headerLength;
-	qDebug() << "CAcseAssociation::listenForCn: headerLength = " << headerLength;
-
-	receiveDataParser( m_pInputStream );
-
-	CCpType cpType;
-	CBerByteArrayInputStream iStream( *m_pInputStream);
-	cpType.decode(iStream, true);
-
-	CAcseApdu acseApdu;
-	acseApdu.decode(iStream, (CBerIdentifier*) nullptr);
-
-	emit signalAcseCnReady(this);
+	if (parseServerAnswer(*m_pInputStream) == true)
+		emit signalAcseCnReady(this);
 
 }
 
