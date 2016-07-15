@@ -141,14 +141,14 @@ public:
 
 		if (*workIdentifier == m_pAarqApdu->getIdentifier())
 		{
-			codeLength += m_pAarqApdu->decode(iStream, false);
+			codeLength += m_pAarqApdu->decode(iStream, true);
 			return codeLength;
 		}
 
 		CAAreApdu AareApdu;
 		if (*workIdentifier == AareApdu.getIdentifier())
 		{
-			codeLength += AareApdu.decode(iStream, false);
+			codeLength += AareApdu.decode(iStream, true);
 			CAcseApdu acse(nullptr, &AareApdu, nullptr, nullptr);
 			*this = acse;
 			return codeLength;
@@ -157,7 +157,7 @@ public:
 		CRLrqApdu RlrqApdu;
 		if (*workIdentifier == RlrqApdu.getIdentifier())
 		{
-			codeLength += RlrqApdu.decode(iStream, false);
+			codeLength += RlrqApdu.decode(iStream, true);
 			CAcseApdu acse(nullptr, nullptr, &RlrqApdu, nullptr);
 			*this = acse;
 			return codeLength;
@@ -166,7 +166,7 @@ public:
 		CRLreApdu RlreApdu;
 		if (*workIdentifier == RlreApdu.getIdentifier())
 		{
-			codeLength += RlreApdu.decode(iStream, false);
+			codeLength += RlreApdu.decode(iStream, true);
 			CAcseApdu acse(nullptr, nullptr, nullptr, &RlreApdu);
 			*this = acse;
 			return codeLength;
