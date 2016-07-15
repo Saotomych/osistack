@@ -121,8 +121,15 @@ namespace NsPdvList
 			return codeLength;
 		}
 
-		virtual quint32 decode(CBerByteArrayInputStream&, bool)
+		virtual quint32 decode(CBerByteArrayInputStream& iStream, bool)
 		{
+			qint32 codeLength = 0;
+
+			CBerIdentifier BerId;
+			codeLength += BerId.decode(iStream);
+
+			decode(iStream, &BerId);
+
 			return 0;
 		}
 

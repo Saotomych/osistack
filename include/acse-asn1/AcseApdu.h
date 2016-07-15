@@ -139,12 +139,9 @@ public:
 			codeLength += workIdentifier->decode(iStream);
 		}
 
-		CAArqApdu AarqApdu;
-		if (*workIdentifier == AarqApdu.getIdentifier())
+		if (*workIdentifier == m_pAarqApdu->getIdentifier())
 		{
-			codeLength += AarqApdu.decode(iStream, false);
-			CAcseApdu acse(&AarqApdu, nullptr, nullptr, nullptr);
-			*this = acse;
+			codeLength += m_pAarqApdu->decode(iStream, false);
 			return codeLength;
 		}
 

@@ -71,6 +71,7 @@ private:
 			);
 
 	bool parseServerAnswer(QDataStream& iStream);
+	quint32 receiveDataParser(QDataStream& iStream);
 
 public:
 
@@ -106,8 +107,6 @@ public:
 			QVector<qint32>& apTitleCalling,
 			quint32 aeQualifierCalled,
 			quint32 aeQualifierCalling);
-
-	quint32 receiveDataParser(QScopedPointer<QDataStream>& iStream);
 
 	/**
 	 * Starts a session layer connection, sends a CONNECT (CN), waits for a ACCEPT (AC) and throws an IOException if not

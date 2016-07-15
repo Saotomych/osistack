@@ -72,6 +72,7 @@ void CAcseAssociation::accept(CBerByteArrayOutputStream& payload)
 	CAssociationInformation userInformation(&listExternal);
 
 	CApplicationContextName acn(&applicationContextName);
+
 	CAAreApdu aare(nullptr, &acn, &aareAccepted, &associateSourceDiagnostic, nullptr,
 			nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, &userInformation);
 	CAcseApdu acse(nullptr, &aare, nullptr, nullptr);
@@ -362,16 +363,16 @@ CUserData CAcseAssociation::getPresentationUserDataField(qint32 userDataLength)
 	return userData;
 }
 
-quint32 CAcseAssociation::receiveDataParser(QScopedPointer<QDataStream>& iStream)
+quint32 CAcseAssociation::receiveDataParser(QDataStream& iStream)
 {
-	while ( iStream->atEnd() == false )
+	while ( iStream.atEnd() == false )
 	{
 		// read parameter type
 		quint8 parameterType;
-		*iStream >> parameterType;
+		iStream >> parameterType;
 		// read parameter length
 		quint8 parameterLength;
-		*iStream >> parameterLength;
+		iStream >> parameterLength;
 
 		switch (parameterType) {
 		// Connect Accept Item (5)
@@ -383,9 +384,9 @@ quint32 CAcseAssociation::receiveDataParser(QScopedPointer<QDataStream>& iStream
 				{
 					// read parameter type
 					quint8 ca_parameterType;
-					*iStream >> ca_parameterType;
+					iStream >> ca_parameterType;
 					quint8 ca_parameterLen;
-					*iStream >> ca_parameterLen;
+					iStream >> ca_parameterLen;
 
 					bytesToRead -= 2;
 
@@ -398,13 +399,13 @@ quint32 CAcseAssociation::receiveDataParser(QScopedPointer<QDataStream>& iStream
 						// concatenated SPDU: False
 						{
 							quint8 protocolOptions;
-							*iStream >> protocolOptions;
+							iStream >> protocolOptions;
 							if (protocolOptions != 0x00)
 							{
 								qDebug() << "CAcseAssociation::receiveDataParser didn't receive connect answer. SPDU Connect Accept Item/Protocol Options is "
 										<< protocolOptions << ", expected 0";
 
-								iStream->skipRawData(INT_MAX);
+								iStream.skipRawData(INT_MAX);
 								return 0;
 							}
 
@@ -416,13 +417,13 @@ quint32 CAcseAssociation::receiveDataParser(QScopedPointer<QDataStream>& iStream
 						// flags .... ..1. = Protocol Version 2: True
 						{
 							quint8 versionNumber;
-							*iStream >> versionNumber;
+							iStream >> versionNumber;
 							if (versionNumber != 0x02)
 							{
 								qDebug() << "CAcseAssociation::receiveDataParser didn't receive connect answer. SPDU Connect Accept Item/Version Number is "
 										<< versionNumber << ", expected 2";
 
-								iStream->skipRawData(INT_MAX);
+								iStream.skipRawData(INT_MAX);
 								return 0;
 							}
 
@@ -435,7 +436,7 @@ quint32 CAcseAssociation::receiveDataParser(QScopedPointer<QDataStream>& iStream
 							qDebug() << "CAcseAssociation::receiveDataParser didn't receive connect answer. SPDU Connect Accept Item: parameter not implemented: "
 								<< ca_parameterType;
 
-							iStream->skipRawData(INT_MAX);
+							iStream.skipRawData(INT_MAX);
 							return 0;
 
 						}
@@ -451,7 +452,7 @@ quint32 CAcseAssociation::receiveDataParser(QScopedPointer<QDataStream>& iStream
 			// flags: (.... .... .... ..1. = Duplex functional unit: True)
 			{
 				quint64 sessionRequirement = 0;
-				iStream->readRawData((char*) &sessionRequirement, parameterLength);
+				iStream.readRawData((char*) &sessionRequirement, parameterLength);
 
 				qDebug() << "CAcseAssociation::receiveDataParser: section = 0x14; parameterLength = " << parameterLength;
 
@@ -459,7 +460,7 @@ quint32 CAcseAssociation::receiveDataParser(QScopedPointer<QDataStream>& iStream
 					qDebug() << "CAcseAssociation::receiveDataParser didn't receive connect answer. SPDU header parameter 'Session Requirement (0x14)' is "
 							<< sessionRequirement << ", expected 2";
 
-					iStream->skipRawData(INT_MAX);
+					iStream.skipRawData(INT_MAX);
 					return 0;
 				}
 			}
@@ -469,7 +470,7 @@ quint32 CAcseAssociation::receiveDataParser(QScopedPointer<QDataStream>& iStream
 		case 0x33:
 			{
 				quint64 css = 0;
-				iStream->readRawData((char*) &css, parameterLength);
+				iStream.readRawData((char*) &css, parameterLength);
 
 				qDebug() << "CAcseAssociation::receiveDataParser: section = 0x33; parameterLength = " << parameterLength;
 
@@ -477,7 +478,7 @@ quint32 CAcseAssociation::receiveDataParser(QScopedPointer<QDataStream>& iStream
 					qDebug() << "CAcseAssociation::receiveDataParser didn't receive connect answer. SPDU header parameter 'Calling Session Selector (0x33)' is "
 							<< css << ", expected 1";
 
-					iStream->skipRawData(INT_MAX);
+					iStream.skipRawData(INT_MAX);
 					return 0;
 				}
 			}
@@ -487,7 +488,7 @@ quint32 CAcseAssociation::receiveDataParser(QScopedPointer<QDataStream>& iStream
 		case 0x34:
 			{
 				quint64 calledSessionSelector = 0;
-				iStream->readRawData((char*) &calledSessionSelector, parameterLength);
+				iStream.readRawData((char*) &calledSessionSelector, parameterLength);
 
 				qDebug() << "CAcseAssociation::receiveDataParser: section = 0x34; parameterLength = " << parameterLength;
 
@@ -495,7 +496,7 @@ quint32 CAcseAssociation::receiveDataParser(QScopedPointer<QDataStream>& iStream
 					qDebug() << "CAcseAssociation::receiveDataParser didn't receive connect answer. SPDU header parameter 'Called Session Selector (0x34)' is "
 							<< calledSessionSelector << ", expected 1";
 
-					iStream->skipRawData(INT_MAX);
+					iStream.skipRawData(INT_MAX);
 					return 0;
 				}
 			}
@@ -511,7 +512,7 @@ quint32 CAcseAssociation::receiveDataParser(QScopedPointer<QDataStream>& iStream
 				qDebug() << "CAcseAssociation::receiveDataParser didn't receive connect answer. SPDU header parameter type "
 				<< parameterType << " not implemented.";
 
-				iStream->skipRawData(INT_MAX);
+				iStream.skipRawData(INT_MAX);
 				return 0;
 			}
 		}
@@ -810,7 +811,7 @@ bool CAcseAssociation::parseServerAnswer(QDataStream& iStream)
 
 	if (spduType != 0x0d)
 	{
-		QString str = QString("CAcseAssociation::listenForCn: ISO 8327-1 header wrong SPDU type, expected CONNECT (13), got %1 (%2)")
+		QString str = QString("CAcseAssociation::parseServerAnswer: ISO 8327-1 header wrong SPDU type, expected CONNECT (13), got %1 (%2)")
 				.arg(getSPDUTypeString(spduType))
 				.arg(spduType);
 
@@ -821,16 +822,125 @@ bool CAcseAssociation::parseServerAnswer(QDataStream& iStream)
 
 	quint8 headerLength;
 	iStream >> headerLength;
-	qDebug() << "CAcseAssociation::listenForCn: headerLength = " << headerLength;
+	qDebug() << "CAcseAssociation::parseServerAnswer: headerLength = " << headerLength;
 
-//	receiveDataParser(iStream);
+	receiveDataParser(iStream);
 
-	CCpType cpType;
+// Test print of all data from stream
+
 	CBerByteArrayInputStream berIStream(iStream);
+	QByteArray out = berIStream.get();
+	qDebug() << out.toHex();
+
+// Create empty structure for decoding
+
+	CBerObjectIdentifier calledId;
+	CApTitle calledApTitle( &calledId );
+	CBerObjectIdentifier callingId;
+	CApTitle callingApTitle( &callingId );
+
+	CBerAnyNoDecode noDecode;
+	NsExternalLinkV1::SubChoiceEncoding encoding( &noDecode, nullptr, nullptr );
+
+	CBerObjectIdentifier directReference;
+	CBerInteger indirectReference;
+	CExternalLinkV1 externalLink( &directReference, &indirectReference, &encoding);
+
+	QLinkedList<CExternalLinkV1> externalList;
+	externalList.push_back(externalLink);
+
+	CAssociationInformation userInformation( &externalList );
+
+	QByteArray code;
+	CBerBitString SenderAcseRequirements(code);
+
+	CBerGraphicString auString;
+	CAuthenticationValue AuthenticationValue( &auString, nullptr, nullptr);
+
+	CBerObjectIdentifier MechanismName;
+
+	CBerInteger aeIntCalled;
+	CAeQualifier aeQaCalled( &aeIntCalled );
+	CBerInteger aeIntCalling;
+	CAeQualifier aeQaCalling( &aeIntCalling );
+
+	CBerObjectIdentifier applicationContextName;
+	CApplicationContextName acn( &applicationContextName );
+
+	CAArqApdu aarq(
+			(CBerBitString*) nullptr,
+			&acn,
+			&calledApTitle,
+			&aeQaCalled,
+			(CBerInteger*) nullptr,
+			(CBerInteger*) nullptr,
+			&callingApTitle,
+			&aeQaCalling,
+			(CBerInteger*) nullptr,
+			(CBerInteger*) nullptr,
+			&SenderAcseRequirements,
+			&MechanismName,
+			&AuthenticationValue,
+			(CApplicationContextNameList*) nullptr,
+			(CBerGraphicString*) nullptr,
+			&userInformation);
+
+	CAcseApdu acse( &aarq, nullptr, nullptr, nullptr );
+
+// ------------------------------------------------------------------------
+//	getPresentationUserDataField
+// ------------------------------------------------------------------------
+	CBerAnyNoDecode band;
+
+	NsPdvList::SubchoicePresentationDataValues presDataValues(
+			&band,
+			(CBerOctetString*) nullptr,
+			(CBerBitString*) nullptr );
+
+	CPdvList pdvList(
+			(CBerObjectIdentifier*) nullptr,
+			&acsePresentationContextId,
+			&presDataValues);
+
+	QLinkedList<CPdvList> listPdvList;
+	listPdvList.push_back(pdvList);
+
+	CFullyEncodedData fullyEncodedData(&listPdvList);
+
+	CUserData userData( (CBerOctetString*) nullptr, &fullyEncodedData);
+
+// ------------------------------------------------------------------------
+
+	QByteArray selRemote;
+	CBerOctetString SelRemoteBerOctetString(selRemote);
+
+	QLinkedList<CBerObjectIdentifier> cnList;
+	CBerObjectIdentifier oid1;
+	CBerObjectIdentifier oid2;
+//	CApplicationContextName cn1(&oid1);
+//	CApplicationContextName cn2(&oid2);
+	cnList.push_back(oid1);
+	cnList.push_back(oid2);
+	CApplicationContextNameList appCNList(&cnList);
+	CContextList contextList(nullptr, nullptr, &appCNList);
+
+	NsCpType::CSubSeqNormalModeParameters normalModeParameter(
+			nullptr,
+			&PSelLocal,
+			&SelRemoteBerOctetString,
+			&contextList,
+			nullptr,
+			nullptr,
+			nullptr,
+			&userData
+			);
+
+	CCpType cpType( &normalModeSelector, &normalModeParameter);
+
 	cpType.decode(berIStream, true);
 
-	CAcseApdu acseApdu;
-	acseApdu.decode(berIStream, (CBerIdentifier*) nullptr);
+	CBerIdentifier id = aarq.getIdentifier();
+	acse.decode(berIStream, &id);
 
 	return true;
 }

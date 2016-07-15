@@ -41,7 +41,7 @@ class OSISTACK_SHAREDEXPORT CSubSeqNormalModeParameters: public QObject, public 
 	Q_PROPERTY(IBerBaseType* PresentationRequirements READ getPresentationRequirements)
 	Q_PROPERTY(CBerIdentifier IdUserSessionRequirements READ getIdUserSessionRequirements)
 	Q_PROPERTY(IBerBaseType* UserSessionRequirements READ getUserSessionRequirements)
-	Q_PROPERTY(CBerIdentifier ClearId READ getClearId)
+//	Q_PROPERTY(CBerIdentifier ClearId READ getClearId)
 	Q_PROPERTY(IBerBaseType* UserData READ getUserData)
 
 	bool is_copy;

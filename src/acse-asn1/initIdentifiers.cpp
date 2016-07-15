@@ -52,7 +52,7 @@ quint32 CAeQualifier::s_metaTypeIdentifier = qRegisterMetaType<CAeQualifier*>();
 // asce-asn1/applicationContextNameList.h
 quint32 CApplicationContextName::s_metaTypeIdentifier = qRegisterMetaType<CApplicationContextName*>();
 quint32 CApplicationContextNameList::s_metaTypeIdentifier = qRegisterMetaType<CApplicationContextNameList*>();
-quint32 CApplicationContextNameList::s_metaTypeListId = qRegisterMetaType<QLinkedList<CApplicationContextName>*>();
+quint32 CApplicationContextNameList::s_metaTypeListId = qRegisterMetaType<QLinkedList<CBerObjectIdentifier>*>();
 
 // asce-asn1/APtitle.h
 quint32 CApTitle::s_metaTypeIdentifier = qRegisterMetaType<CApTitle*>();
@@ -143,6 +143,7 @@ CContextList CAcseAssociation::context_list ( QByteArray ( (char*) context_list_
 CBerInteger CAcseAssociation::acsePresentationContextId (
 		QByteArray ((char*)acsePresentationContextId_char, sizeof(acsePresentationContextId_char) ) );
 
+// warning: утечка памяти
 CModeSelector CAcseAssociation::normalModeSelector = CModeSelector( new CBerInteger(1) );
 
 CResultList CAcseAssociation::presentationResultList = CResultList(

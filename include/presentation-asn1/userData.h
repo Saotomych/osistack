@@ -93,8 +93,15 @@ public:
 		return codeLength;
 	}
 
-	virtual quint32 decode(CBerByteArrayInputStream&, bool)
+	virtual quint32 decode(CBerByteArrayInputStream& iStream, bool)
 	{
+		qint32 codeLength = 0;
+
+		CBerIdentifier BerId;
+		codeLength += BerId.decode(iStream);
+
+		decode(iStream, &BerId);
+
 		return 0;
 	}
 
@@ -114,17 +121,19 @@ public:
 
 		CBerOctetString simply_encoded_data;
 		if (*workIdentifier == c_IdSimpleEncodedData) {
-			codeLength += simply_encoded_data.decode(iStream, false);
-			CUserData udata(&simply_encoded_data, nullptr);
-			*this = udata;
+			if (m_pSimpleEncodedData == nullptr)
+				throw std::runtime_error("UserData has m_pSimpleEncodedData = nullptr");
+
+			codeLength += m_pSimpleEncodedData->decode(iStream, false);
 			return codeLength;
 		}
 
 		CFullyEncodedData fully_encoded_data;
 		if (*workIdentifier == c_IdFullyEncodedData) {
-			codeLength += fully_encoded_data.decode(iStream, false);
-			CUserData udata(nullptr, &fully_encoded_data);
-			*this = udata;
+			if (m_pFullyEncodedData == nullptr)
+				throw std::runtime_error("UserData has m_pFullyEncodedData = nullptr");
+
+			codeLength += m_pFullyEncodedData->decode(iStream, false);
 			return codeLength;
 		}
 

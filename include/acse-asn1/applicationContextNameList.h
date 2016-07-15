@@ -28,8 +28,8 @@ protected:
 
 public:
 
-	QByteArray* getCode() { return &m_Code; }
 	CBerIdentifier getIdentifier() { return c_Identifier; }
+	QByteArray* getCode() { return &m_Code; }
 	IBerBaseType* getObjectIdentifier() { return m_pAppContextName; }
 
 	ASN1_CODEC(CBerBaseStorage)
@@ -105,41 +105,48 @@ class OSISTACK_SHAREDEXPORT CApplicationContextNameList: public QObject, public 
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
-	Q_PROPERTY(QLinkedList<CApplicationContextName>* OI READ getObjectIdentifierList)
+	Q_PROPERTY(CBerIdentifier IdOID READ getIdOID)
+	Q_PROPERTY(QLinkedList<CBerObjectIdentifier>* OI READ getObjectIdentifierList)
 
 	bool is_copy;
 
 protected:
-	const CBerIdentifier c_Identifier;
+	CBerIdentifier c_Identifier;
 	QByteArray m_Code;
 
-	QLinkedList<CApplicationContextName>* m_pSeqOf;
+	CBerIdentifier c_IdOID;
+	QLinkedList<CBerObjectIdentifier>* m_pSeqOf;
 
 public:
 
-	QByteArray* getCode() { return &m_Code; }
 	CBerIdentifier getIdentifier() { return c_Identifier; }
-	QLinkedList<CApplicationContextName>* getObjectIdentifierList() { return m_pSeqOf; }
+	QByteArray* getCode() { return &m_Code; }
+	CBerIdentifier getIdOID() { return c_IdOID; }
+	QLinkedList<CBerObjectIdentifier>* getObjectIdentifierList() { return m_pSeqOf; }
 
-	typedef CContainerStorage< QLinkedList<CApplicationContextName>, CApplicationContextName > TLocalStorage;
+	typedef CContainerStorage< QLinkedList<CBerObjectIdentifier>, CBerObjectIdentifier > TLocalStorage;
 	ASN1_CODEC( TLocalStorage )
 
 	static quint32 s_metaTypeIdentifier;
 	static quint32 s_metaTypeListId;
 
-	explicit CApplicationContextNameList(QLinkedList<CApplicationContextName>* pObjectIdentifierList):
+	explicit CApplicationContextNameList(QLinkedList<CBerObjectIdentifier>* pObjectIdentifierList):
 		is_copy(false),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
+//		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
+		c_Identifier(),
+		c_IdOID(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
 		m_pSeqOf(pObjectIdentifierList)
 	{}
 
 	CApplicationContextNameList(const CApplicationContextNameList& rhs): QObject(),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16)
+//		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16)
+		c_Identifier(),
+		c_IdOID(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16)
 	{
 		m_Code = rhs.m_Code;
 
 		if (rhs.m_pSeqOf != nullptr)
-			m_pSeqOf = new QLinkedList<CApplicationContextName>(*rhs.m_pSeqOf);
+			m_pSeqOf = new QLinkedList<CBerObjectIdentifier>(*rhs.m_pSeqOf);
 
 		is_copy = true;
 	}
@@ -151,7 +158,7 @@ public:
 		m_Code = rhs.m_Code;
 
 		if (rhs.m_pSeqOf != nullptr)
-			m_pSeqOf = new QLinkedList<CApplicationContextName>(*rhs.m_pSeqOf);
+			m_pSeqOf = new QLinkedList<CBerObjectIdentifier>(*rhs.m_pSeqOf);
 
 		is_copy = true;
 
@@ -162,7 +169,7 @@ public:
 	{
 		if (this == &rhs) return false;
 
-		if ( notEqualsPointersAndValues< QLinkedList<CApplicationContextName> >(m_pSeqOf, rhs.m_pSeqOf) ) return true;
+		if ( notEqualsPointersAndValues< QLinkedList<CBerObjectIdentifier> >(m_pSeqOf, rhs.m_pSeqOf) ) return true;
 
 		return false;
 	}
@@ -177,6 +184,6 @@ public:
 
 Q_DECLARE_METATYPE(CApplicationContextName*)
 Q_DECLARE_METATYPE(CApplicationContextNameList*)
-Q_DECLARE_METATYPE(QLinkedList<CApplicationContextName>*)
+Q_DECLARE_METATYPE(QLinkedList<CBerObjectIdentifier>*)
 
 #endif /* INCLUDE_ACSE_ASN1_APPLICATIONCONTEXTNAMELIST_H_ */
