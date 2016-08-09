@@ -135,9 +135,22 @@ namespace NsExternalLinkV1
 			return 0;
 		}
 
-		virtual quint32 decode(CBerByteArrayInputStream&, bool)
+		virtual quint32 decode(CBerByteArrayInputStream& iStream, bool explct)
 		{
-			return 0;
+			quint32 codeLength = 0;
+
+			if (explct)
+			{
+				CBerIdentifier berIdentifier;
+				codeLength += berIdentifier.decode(iStream);
+				codeLength += decode(iStream, &berIdentifier);
+			}
+			else
+			{
+				codeLength += decode(iStream, (CBerIdentifier*) nullptr);
+			}
+
+			return codeLength;
 		}
 
 		virtual quint32 decode(CBerByteArrayInputStream& iStream, CBerIdentifier* berIdentifier)
@@ -155,7 +168,12 @@ namespace NsExternalLinkV1
 			if (workIdentifier->equals(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 0))
 			{
 				CBerAnyNoDecode singleAsn1Type;
-				codeLength += singleAsn1Type.decode(iStream, false);
+				quint32 subCodeLength = singleAsn1Type.decode(iStream, false);
+
+				QByteArray bytes;
+				iStream.read(bytes, 0, subCodeLength);
+
+				codeLength += subCodeLength;
 				return codeLength;
 			}
 

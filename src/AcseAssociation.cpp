@@ -834,9 +834,12 @@ bool CAcseAssociation::parseServerAnswer(QDataStream& iStream)
 
 // Create empty structure for decoding
 
-	CBerObjectIdentifier calledId;
+	QVector<qint32> bitStringCalled;
+	CBerObjectIdentifier calledId(bitStringCalled, false);
 	CApTitle calledApTitle( &calledId );
-	CBerObjectIdentifier callingId;
+
+	QVector<qint32> bitStringCalling;
+	CBerObjectIdentifier callingId(bitStringCalling, true);
 	CApTitle callingApTitle( &callingId );
 
 	CBerAnyNoDecode noDecode;
@@ -878,9 +881,9 @@ bool CAcseAssociation::parseServerAnswer(QDataStream& iStream)
 			&aeQaCalling,
 			(CBerInteger*) nullptr,
 			(CBerInteger*) nullptr,
-			&SenderAcseRequirements,
-			&MechanismName,
-			&AuthenticationValue,
+			(CBerBitString*) nullptr, // &SenderAcseRequirements,
+			(CBerObjectIdentifier*) nullptr, //&MechanismName,
+			(CAuthenticationValue*) nullptr, //&AuthenticationValue,
 			(CApplicationContextNameList*) nullptr,
 			(CBerGraphicString*) nullptr,
 			&userInformation);

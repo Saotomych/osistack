@@ -64,18 +64,21 @@ public:
 	virtual quint32 decode(CBerByteArrayInputStream& iStream, bool explct)
 	{
 		quint32 codeLength = 0;
-		quint32 subCodeLength = 0;
+		quint32 subCodeLength = 1;
 		QLinkedList<CExternalLinkV1> seqOf;
 
 		if (explct) {
-			codeLength += c_Identifier.decodeAndCheck(iStream);
+			codeLength += c_Identifier.decode(iStream);
 		}
 
 		CBerLength length;
 		codeLength += length.decode(iStream);
 
 		while (subCodeLength < length.getVal()) {
-			CExternalLinkV1 element;
+			CBerObjectIdentifier directReference;
+			CBerAnyNoDecode noDecode;
+			NsExternalLinkV1::SubChoiceEncoding subChoiceEncoding(&noDecode, nullptr, nullptr);
+			CExternalLinkV1 element(&directReference, nullptr, &subChoiceEncoding);
 			subCodeLength += element.decode(iStream, true);
 			seqOf.push_back(element);
 		}
