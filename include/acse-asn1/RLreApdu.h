@@ -17,7 +17,9 @@ class CRLreApdu: public QObject, public IBerBaseType
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
+	Q_PROPERTY(CBerIdentifier IdReason READ getIdReason)
 	Q_PROPERTY(IBerBaseType* Reason READ getReason)
+	Q_PROPERTY(CBerIdentifier IdUserInformation READ getIdUserInformation)
 	Q_PROPERTY(IBerBaseType* UserInformation READ getUserInformation)
 
 	bool is_copy;
@@ -25,6 +27,10 @@ class CRLreApdu: public QObject, public IBerBaseType
 public:
 
 	QByteArray* getCode() { return &m_Code; }
+
+	CBerIdentifier getIdReason() { return c_IdReason; }
+	CBerIdentifier getIdUserInformation() { return c_IdUserInformation; }
+
 	IBerBaseType* getReason() { return m_pReason; }
 	IBerBaseType* getUserInformation() { return m_pUserInformation; }
 
@@ -56,6 +62,9 @@ protected:
 
 	QByteArray m_Code;
 
+	const CBerIdentifier c_IdReason;
+	const CBerIdentifier c_IdUserInformation;
+
 	CBerInteger* m_pReason;
 	CAssociationInformation* m_pUserInformation;
 
@@ -70,6 +79,8 @@ public:
 	CRLreApdu():
 		is_copy(false),
 		c_Identifier(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::CONSTRUCTED, 3),
+		c_IdReason(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0),
+		c_IdUserInformation(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 30),
 		m_pReason(nullptr),
 		m_pUserInformation(nullptr)
 	{}
@@ -77,11 +88,17 @@ public:
 	CRLreApdu(CBerInteger* pReason, CAssociationInformation* pUserInformation):
 		is_copy(false),
 		c_Identifier(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::CONSTRUCTED, 3),
+		c_IdReason(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0),
+		c_IdUserInformation(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 30),
 		m_pReason(pReason),
 		m_pUserInformation(pUserInformation)
 	{}
 
-	CRLreApdu(const CRLreApdu& rhs):QObject()
+	CRLreApdu(const CRLreApdu& rhs):
+		QObject(),
+		c_Identifier(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::CONSTRUCTED, 3),
+		c_IdReason(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0),
+		c_IdUserInformation(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 30)
 	{
 		create_objects(rhs);
 
