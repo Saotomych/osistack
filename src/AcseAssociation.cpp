@@ -174,7 +174,21 @@ void CAcseAssociation::writeSessionAccept(QLinkedList<QByteArray>& ssdu, QLinked
 	ssduOffsets.push_front(0);
 	ssduLengths.push_front(sduAcceptHeader.size());
 
-	m_tConnection->send(ssdu, ssduOffsets, ssduLengths);
+//	m_tConnection->send(ssdu, ssduOffsets, ssduLengths);
+	// temporary test client->server
+	{
+		QByteArray testInput;
+		for (auto& val: ssdu)
+		{
+			qDebug() << val.toHex();
+			testInput += val;
+		}
+
+		QDataStream InputStream(testInput);
+		QSharedPointer<QDataStream> m_pInputStream(&InputStream);
+
+//		receiveDataParser(*m_pInputStream);	// Это парсит client
+	}
 
 }
 
@@ -331,8 +345,15 @@ void CAcseAssociation::startAssociation(
 	ssduLengths.push_back(payload.size());
 
 	QSharedPointer<QDataStream> iStream = startSConnection( ssduList, ssduOffsets, ssduLengths, sSelRemote, sSelLocal);
-//
-////	decodePConResponse(*iStream);
+
+	// temporary test server->client
+
+	accept(payload);
+
+	// end temporary test
+
+
+//	decodePConResponse(*iStream);
 ////
 ////	quint8 data;
 ////	m_associateResponseAPDU.clear();
@@ -639,6 +660,12 @@ QSharedPointer<QDataStream> CAcseAssociation::startSConnection(
 	ssduOffsets.push_front(0);
 	ssduLengths.push_front(header.size());
 
+//	m_tConnection->send(ssduList, ssduOffsets, ssduLengths);
+
+	// TODO asynchronous receive must be in the future
+//	QScopedPointer<QDataStream>& m_pInputStream = m_tConnection->waitData();
+
+	// temporary test client->server
 	QByteArray testInput;
 	for (auto& val: ssduList)
 	{
@@ -646,14 +673,11 @@ QSharedPointer<QDataStream> CAcseAssociation::startSConnection(
 		testInput += val;
 	}
 
-//	m_tConnection->send(ssduList, ssduOffsets, ssduLengths);
-
-	// TODO asynchronous receive must be in the future
-//	QScopedPointer<QDataStream>& m_pInputStream = m_tConnection->waitData();
 	QDataStream InputStream(testInput);
 	QSharedPointer<QDataStream> m_pInputStream(&InputStream);
 
-	parseServerAnswer(*m_pInputStream);
+	parseServerAnswer(*m_pInputStream);	// Это парсит сервер
+	// end temporary test
 
 //	if ( m_pInputStream->atEnd() == true )
 //	{
@@ -682,7 +706,7 @@ QSharedPointer<QDataStream> CAcseAssociation::startSConnection(
 //		return m_tConnection->inputStream();
 //	}
 //
-//	receiveDataParser(m_pInputStream);
+//	receiveDataParser(*m_pInputStream);
 //
 //	m_connected = true;
 //
