@@ -172,8 +172,6 @@ private: /*statics */
 
 	static QDataStream& decodePConResponse(QDataStream& ppdu);
 
-	static CUserData getPresentationUserDataField( quint32 userDataLength );
-
 public slots:
 	void slotAcseConnectionClosed(const CConnection* pconn);
 	void slotAcseTSduReady(const CConnection* pconn);

@@ -30,22 +30,29 @@ class OSISTACK_SHAREDEXPORT CAAreApdu: public QObject, public IBerBaseType
 	Q_PROPERTY(CBerIdentifier IdApplicationContextName READ getIdApplicationContextName)
 	Q_PROPERTY(IBerBaseType* ApplicationContextName READ getApplicationContextName)
 	Q_PROPERTY(CBerIdentifier IdResult READ getIdResult)
+	Q_PROPERTY(CBerLength length READ getLength)
 	Q_PROPERTY(IBerBaseType* Result READ getResult)
 	Q_PROPERTY(CBerIdentifier IdResultSourceDiagnostic READ getIdResultSourceDiagnostic)
+	Q_PROPERTY(CBerLength length READ getLength)
 	Q_PROPERTY(IBerBaseType* ResultSourceDiagnostic READ getResultSourceDiagnostic)
 	Q_PROPERTY(CBerIdentifier IdApTitle READ getIdApTitle)
+	Q_PROPERTY(CBerLength length READ getLength)
 	Q_PROPERTY(IBerBaseType* ApTitle READ getApTitle)
 	Q_PROPERTY(CBerIdentifier IdRespondingAeQualifier READ getIdRespondingAeQualifier)
+	Q_PROPERTY(CBerLength length READ getLength)
 	Q_PROPERTY(IBerBaseType* RespondingAeQualifier READ getRespondingAeQualifier)
 	Q_PROPERTY(CBerIdentifier IdRespondingApInvocationIdentifier READ getIdRespondingApInvocationIdentifier)
+	Q_PROPERTY(CBerLength length READ getLength)
 	Q_PROPERTY(IBerBaseType* RespondingApInvocationIdentifier READ getRespondingApInvocationIdentifier)
 	Q_PROPERTY(CBerIdentifier IdRespondingAeInvocationIdentifier READ getIdRespondingAeInvocationIdentifier)
+	Q_PROPERTY(CBerLength length READ getLength)
 	Q_PROPERTY(IBerBaseType* RespondingAeInvocationIdentifier READ getRespondingAeInvocationIdentifier)
 	Q_PROPERTY(CBerIdentifier IdResponderAcseRequrements READ getIdResponderAcseRequrements)
 	Q_PROPERTY(IBerBaseType* ResponderAcseRequrements READ getResponderAcseRequrements)
 	Q_PROPERTY(CBerIdentifier IdMechanismName READ getIdMechanismName)
 	Q_PROPERTY(IBerBaseType* MechanismName READ getMechanismName)
 	Q_PROPERTY(CBerIdentifier IdRespondingAuthenticationValue READ getIdRespondingAuthenticationValue)
+	Q_PROPERTY(CBerLength length READ getLength)
 	Q_PROPERTY(IBerBaseType* RespondingAuthenticationValue READ getRespondingAuthenticationValue)
 	Q_PROPERTY(CBerIdentifier IdApplicationContextNameList READ getIdApplicationContextNameList)
 	Q_PROPERTY(IBerBaseType* ApplicationContextNameList READ getApplicationContextNameList)
@@ -74,6 +81,8 @@ public:
 	CBerIdentifier getIdApplicationContextNameList() {return c_IdApplicationContextNameList;}
 	CBerIdentifier getIdImplementationInformation() {return c_IdImplementationInformation;}
 	CBerIdentifier getIdUserInformation() {return c_IdUserInformation;}
+
+	CBerLength getLength() { CBerLength t; return t; }
 
 	IBerBaseType* getProtocolVersion() {return m_pProtocolVersion;}
 	IBerBaseType* getApplicationContextName() {return m_pApplicationContextName;}

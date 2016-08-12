@@ -17,7 +17,9 @@ class OSISTACK_SHAREDEXPORT CAssociateSourceDiagnostic: public QObject, public I
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
+	Q_PROPERTY(CBerIdentifier IdAcseServiceUser READ getIdAcseServiceUser)
 	Q_PROPERTY(IBerBaseType* AcseServiceUser READ getAcseServiceUser)
+	Q_PROPERTY(CBerIdentifier IdAcseServiceProvider READ getIdAcseServiceProvider)
 	Q_PROPERTY(IBerBaseType* AcseServiceProvider READ getAcseServiceProvider)
 
 	bool is_copy;
@@ -26,6 +28,10 @@ public:
 
 	QByteArray* getCode() { return &m_Code; }
 	CBerIdentifier getIdentifier() { return c_Identifier; }
+
+	CBerIdentifier getIdAcseServiceUser() { return c_IdAcseServiceUser; }
+	CBerIdentifier getIdAcseServiceProvider() { return c_IdAcseServiceProvider; }
+
 	IBerBaseType* getAcseServiceUser() { return m_pAcseServiceUser; }
 	IBerBaseType* getAcseServiceProvider() { return m_pAcseServiceProvider; }
 
@@ -54,10 +60,13 @@ protected:
 protected:
 	QByteArray m_Code;
 
+	const CBerIdentifier c_Identifier;
+
+	const CBerIdentifier c_IdAcseServiceUser;
+	const CBerIdentifier c_IdAcseServiceProvider;
+
 	CBerInteger* m_pAcseServiceUser;
 	CBerInteger* m_pAcseServiceProvider;
-
-	const CBerIdentifier c_Identifier;
 
 public:
 
@@ -67,18 +76,22 @@ public:
 
 	CAssociateSourceDiagnostic(CBerInteger* pAcseServiceUser, CBerInteger* pAcseServiceProvider):
 		is_copy(false),
+		c_Identifier(),
+		c_IdAcseServiceUser(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 1),
+		c_IdAcseServiceProvider(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 2),
 		m_pAcseServiceUser(pAcseServiceUser),
-		m_pAcseServiceProvider(pAcseServiceProvider),
-		c_Identifier()
+		m_pAcseServiceProvider(pAcseServiceProvider)
 	{
 		qDebug() << "CAssociateSourceDiagnostic common constructor";
 	}
 
 	CAssociateSourceDiagnostic(QByteArray& code):
 		is_copy(false),
+		c_Identifier(),
+		c_IdAcseServiceUser(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 1),
+		c_IdAcseServiceProvider(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 2),
 		m_pAcseServiceUser(nullptr),
-		m_pAcseServiceProvider(nullptr),
-		c_Identifier()
+		m_pAcseServiceProvider(nullptr)
 	{
 		qDebug() << "CAssociateSourceDiagnostic code constructor";
 		m_Code = code;
@@ -86,16 +99,20 @@ public:
 
 	CAssociateSourceDiagnostic(QByteArray code):
 		is_copy(false),
+		c_Identifier(),
+		c_IdAcseServiceUser(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 1),
+		c_IdAcseServiceProvider(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 2),
 		m_pAcseServiceUser(nullptr),
-		m_pAcseServiceProvider(nullptr),
-		c_Identifier()
+		m_pAcseServiceProvider(nullptr)
 	{
 		qDebug() << "CAssociateSourceDiagnostic code constructor";
 		m_Code = code;
 	}
 
 	CAssociateSourceDiagnostic(const CAssociateSourceDiagnostic& rhs): QObject(),
-			c_Identifier()
+		c_Identifier(),
+		c_IdAcseServiceUser(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 1),
+		c_IdAcseServiceProvider(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 2)
 	{
 		qDebug() << "CAssociateSourceDiagnostic copy constructor";
 
