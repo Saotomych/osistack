@@ -94,7 +94,39 @@ void CAcseAssociation::accept(CBerByteArrayOutputStream& payload)
 	ssduOffsets.push_back(payload.index() + 1);
 	ssduLengths.push_back(payload.size() - payload.index() + 1);
 
-//	writeSessionAccept(ssduList, ssduOffsets, ssduLengths);
+	writeSessionAccept(ssduList, ssduOffsets, ssduLengths);
+
+	// Decode answer
+	// temporary test client->server
+	QByteArray testInput;
+	for (auto& val: ssduList)
+	{
+		qDebug() << val.toHex();
+		testInput += val;
+	}
+
+	QDataStream DataStream(testInput);
+
+	quint8 	SPDUType,
+			SPDULength;
+	DataStream >> SPDUType;
+	DataStream >> SPDULength;
+	if ( SPDUType != (quint8) 0x0e)
+	{
+		qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. ISO 8327-1 header wrong SPDU type, expected ACCEPT (14), got "
+				<< getSPDUTypeString(SPDUType) << " (" << SPDUType << ")";
+	}
+	else
+	{
+		receiveDataParser(DataStream);	// Это парсит client
+
+		CBerByteArrayInputStream InputStream(DataStream);
+		cpaPpdu.decode(InputStream, true);
+
+//		CBerIdentifier id = aare.getIdentifier();
+//		acse.decode(InputStream, &id);
+	}
+
 }
 
 void CAcseAssociation::writeSessionAccept(QLinkedList<QByteArray>& ssdu, QLinkedList<quint32>& ssduOffsets, QLinkedList<quint32>& ssduLengths)
@@ -133,7 +165,7 @@ void CAcseAssociation::writeSessionAccept(QLinkedList<QByteArray>& ssdu, QLinked
 	// Parameter type: Version Number (22)
 	sduAcceptHeader[idx++] = 0x16;
 	// Parameter length
-	sduAcceptHeader[idx++] = 0x01;
+	sduAcceptHeader[idx++] = 0x01;	// temporary test client->server
 	// flags: (.... ..1. = Protocol Version 2: True)
 	sduAcceptHeader[idx++] = 0x02;
 	// -- end Connect Accept Item
@@ -163,26 +195,11 @@ void CAcseAssociation::writeSessionAccept(QLinkedList<QByteArray>& ssdu, QLinked
 	// Parameter length
 	sduAcceptHeader[idx++] = (quint8) ssduLength;
 
-//	ssdu.push_front(sduAcceptHeader);
-//	ssduOffsets.push_front(0);
-//	ssduLengths.push_front(sduAcceptHeader.size());
-//
+	ssdu.push_front(sduAcceptHeader);
+	ssduOffsets.push_front(0);
+	ssduLengths.push_front(sduAcceptHeader.size());
+
 //	m_tConnection->send(ssdu, ssduOffsets, ssduLengths);
-	// temporary test client->server
-	{
-		QByteArray testInput;
-		for (auto& val: ssdu)
-		{
-			qDebug() << val.toHex();
-			testInput += val;
-		}
-
-		QDataStream InputStream(testInput);
-		QSharedPointer<QDataStream> m_pInputStream(&InputStream);
-
-//		receiveDataParser(*m_pInputStream);	// Это парсит client
-	}
-
 }
 
 QByteArray CAcseAssociation::getAssociateResponseAPdu()
