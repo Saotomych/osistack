@@ -17,8 +17,11 @@ class OSISTACK_SHAREDEXPORT CResultSubsequence: public QObject, public IBerBaseT
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
+	Q_PROPERTY(CBerIdentifier Idresult READ getIdResult)
 	Q_PROPERTY(IBerBaseType* result READ getResult)
+	Q_PROPERTY(CBerIdentifier IdtransferSyntaxName READ getIdTransferSyntaxName)
 	Q_PROPERTY(IBerBaseType* transferSyntaxName READ getTransferSyntaxName)
+	Q_PROPERTY(CBerIdentifier IdproviderReason READ getIdProviderReason)
 	Q_PROPERTY(IBerBaseType* providerReason READ getProviderReason)
 
 	bool is_copy;
@@ -27,6 +30,10 @@ protected:
 
 	QByteArray* getCode() { return &m_Code; }
 	CBerIdentifier getIdentifier() { return c_Identifier; }
+	CBerIdentifier getIdResult() { return c_IdResult; }
+	CBerIdentifier getIdTransferSyntaxName() { return c_IdTransferSyntaxName; }
+	CBerIdentifier getIdProviderReason() { return c_IdProviderReason; }
+
 	IBerBaseType* getResult() { return m_pResult; }
 	IBerBaseType* getTransferSyntaxName() { return m_pTransferSyntaxName; }
 	IBerBaseType* getProviderReason() { return m_pProviderReason; }
@@ -57,6 +64,9 @@ protected:
 
 protected:
 	const CBerIdentifier c_Identifier;
+	const CBerIdentifier c_IdResult;
+	const CBerIdentifier c_IdTransferSyntaxName;
+	const CBerIdentifier c_IdProviderReason;
 	QByteArray m_Code;
 
 	CBerInteger* m_pResult;
@@ -73,13 +83,19 @@ public:
 	CResultSubsequence(CBerInteger* pResult, CBerObjectIdentifier* pTransferSyntaxName, CBerInteger* pProviderReason):
 		is_copy(false),
 		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
+		c_IdResult(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0),
+		c_IdTransferSyntaxName(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 1),
+		c_IdProviderReason(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 2),
 		m_pResult(pResult),
 		m_pTransferSyntaxName(pTransferSyntaxName),
 		m_pProviderReason(pProviderReason)
 	{}
 
 	CResultSubsequence(const CResultSubsequence& rhs): QObject(),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16)
+		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
+		c_IdResult(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0),
+		c_IdTransferSyntaxName(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 1),
+		c_IdProviderReason(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 2)
 	{
 		create_objects(rhs);
 

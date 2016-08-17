@@ -120,11 +120,80 @@ void CAcseAssociation::accept(CBerByteArrayOutputStream& payload)
 	{
 		receiveDataParser(DataStream);	// Это парсит client
 
+		// Decode to stack
+
+		// CpaPpdu
+
+		CBerAnyNoDecode band(codeLength);
+
+		NsPdvList::SubchoicePresentationDataValues presDataValues(
+				&band,
+				(CBerOctetString*) nullptr,
+				(CBerBitString*) nullptr );
+
+		CBerInteger acsePresentationContextId;
+		CPdvList pdvList(
+				(CBerObjectIdentifier*) nullptr,
+				&acsePresentationContextId,
+				&presDataValues);
+
+		QLinkedList<CPdvList> listPdvList;
+		listPdvList.push_back(pdvList);
+
+		CFullyEncodedData fullyEncodedData(&listPdvList);
+
+		CUserData userData( (CBerOctetString*) nullptr, &fullyEncodedData);
+
+		CBerOctetString PSelLocal;
+		CBerInteger iR1, iR2;
+		CBerObjectIdentifier OIR1, OIR2;
+		CResultSubsequence r1(&iR1, &OIR1, nullptr);
+		CResultSubsequence r2(&iR2, &OIR2, nullptr);
+		QLinkedList<CResultSubsequence> listR;
+		listR.push_back(r1);
+		listR.push_back(r2);
+		CResultList presentationResultList(&listR);
+		NsCpaPpdu::CSubSecNormalModeParameters normalModeParameters(nullptr, &PSelLocal, &presentationResultList,
+				(CBerBitString*) nullptr, (CBerBitString*) nullptr, &userData);
+
+		CBerInteger modeSelector;
+		CModeSelector normalModeSelector(&modeSelector);
+		CCpaPpdu cpaPpdu(&normalModeSelector, &normalModeParameters);
+
+		// ACSE
+
+		CBerAnyNoDecode berAny;
+		NsExternalLinkV1::SubChoiceEncoding subChEncoding( &berAny, (CBerOctetString*) nullptr, (CBerBitString*) nullptr );
+
+		CBerObjectIdentifier directReference;
+		CBerInteger indirectReference;
+		CExternalLinkV1 external(&directReference, &indirectReference, &subChEncoding);
+
+		QLinkedList<CExternalLinkV1> listExternal;
+		listExternal.push_back(external);
+
+		CAssociationInformation userInformation(&listExternal);
+
+		CBerObjectIdentifier applicationContextName;
+		CApplicationContextName acn(&applicationContextName);
+
+		CBerInteger aareAccepted;
+		CBerInteger acseServiceUser;
+		CBerInteger acseServiceProvider;
+		CAssociateSourceDiagnostic associateSourceDiagnostic(&acseServiceUser, &acseServiceProvider);
+		CAAreApdu aare(nullptr, &acn, &aareAccepted, &associateSourceDiagnostic, nullptr,
+				nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, &userInformation);
+		CAcseApdu acse(nullptr, &aare, nullptr, nullptr);
+
+		CBerByteArrayOutputStream berOStream(100, true);
+
+		quint32 codeLength = acse.encode(berOStream, true);
+
 		CBerByteArrayInputStream InputStream(DataStream);
 		cpaPpdu.decode(InputStream, true);
 
-//		CBerIdentifier id = aare.getIdentifier();
-//		acse.decode(InputStream, &id);
+		CBerIdentifier id = aare.getIdentifier();
+		acse.decode(InputStream, &id);
 	}
 
 }
@@ -230,136 +299,136 @@ void CAcseAssociation::startAssociation(
 	qDebug() << "Client -> Server";
 	qDebug() << "--------------------------------------";
 
-//	quint32 payloadLength = payload.size();
-//
-//	CBerObjectIdentifier calledId(apTitleCalled);
-//	CApTitle calledApTitle( &calledId );
-//	CBerObjectIdentifier callingId(apTitleCalling);
-//	CApTitle callingApTitle( &callingId );
-//
-//	CBerAnyNoDecode noDecode( payloadLength );
-//	NsExternalLinkV1::SubChoiceEncoding encoding( &noDecode, nullptr, nullptr );
-//
-//	CExternalLinkV1 externalLink( &directReference, &indirectReference, &encoding);
-//
-//	QLinkedList<CExternalLinkV1> externalList;
-//	externalList.push_back(externalLink);
-//
-//	CAssociationInformation userInformation( &externalList );
-//
-//	CBerBitString* pSenderAcseRequirements = nullptr;
-//	CBerObjectIdentifier* pMechanismName = nullptr;
-//	CAuthenticationValue* pAuthenticationValue = nullptr;
-//
-//	if (authenticationParameter.size() != 0)
-//	{
-//		{
-//			QByteArray code( (const char*) sender_acse_requirements_char, (int) (sizeof(sender_acse_requirements_char)/sizeof(sender_acse_requirements_char[0])) );
-//			CBerBitString tmp(code);
-//			pSenderAcseRequirements = &tmp;
-//		}
-//
-//		pMechanismName = &defaultMechanismName;
-//
-//		{
-//			QByteArray auth(authenticationParameter.toUtf8());
-//			CBerGraphicString auString( auth );
-//			CAuthenticationValue tmp( &auString, nullptr, nullptr);
-//			pAuthenticationValue = &tmp;
-//		}
-//	}
-//
-//	CBerInteger aeIntCalled(aeQualifierCalled);
-//	CAeQualifier aeQaCalled(&aeIntCalled);
-//	CBerInteger aeIntCalling(aeQualifierCalling);
-//	CAeQualifier aeQaCalling(&aeIntCalling);
-//
-//	CApplicationContextName acn(&applicationContextName);
-//
-//	CAArqApdu aarq(
-//			(CBerBitString*) nullptr,
-//			&acn,
-//			&calledApTitle,
-//			&aeQaCalled,
-//			(CBerInteger*) nullptr,
-//			(CBerInteger*) nullptr,
-//			&callingApTitle,
-//			&aeQaCalling,
-//			(CBerInteger*) nullptr,
-//			(CBerInteger*) nullptr,
-//			pSenderAcseRequirements,
-//			pMechanismName,
-//			pAuthenticationValue,
-//			(CApplicationContextNameList*) nullptr,
-//			(CBerGraphicString*) nullptr,
-//			&userInformation);
-//
-//	CAcseApdu acse( &aarq, nullptr, nullptr, nullptr );
-//
-//	// Serialize
-//	CBerByteArrayOutputStream berOStream(200, true);
-//
-//	acse.encode(berOStream, true);
-//
-//	quint32 acseHeaderLength = berOStream.getByteArray().size();
-//
-//// ------------------------------------------------------------------------
-////	getPresentationUserDataField
-////	------------------------------------------------------------------------
-//	CBerAnyNoDecode band(acseHeaderLength + payloadLength);
-//
-//	NsPdvList::SubchoicePresentationDataValues presDataValues(
-//			&band,
-//			(CBerOctetString*) nullptr,
-//			(CBerBitString*) nullptr );
-//
-//	CPdvList pdvList(
-//			(CBerObjectIdentifier*) nullptr,
-//			&acsePresentationContextId,
-//			&presDataValues);
-//
-//	QLinkedList<CPdvList> listPdvList;
-//	listPdvList.push_back(pdvList);
-//
-//	CFullyEncodedData fullyEncodedData(&listPdvList);
-//
-//	CUserData userData( (CBerOctetString*) nullptr, &fullyEncodedData);
-//
-//// ------------------------------------------------------------------------
-//
-//	CBerOctetString SelRemoteBerOctetString(pSelRemote);
-//
-//	NsCpType::CSubSeqNormalModeParameters normalModeParameter(
-//			nullptr,
-//			&PSelLocal,
-//			&SelRemoteBerOctetString,
-//			&context_list,
-//			nullptr,
-//			nullptr,
-//			nullptr,
-//			&userData
-//			);
-//
-//	CCpType cpType( &normalModeSelector, &normalModeParameter);
-//
-//	cpType.encode(berOStream, true);
-//
-//	QByteArray outarr = berOStream.getByteArray();
-//
-//	QLinkedList<QByteArray> ssduList;
-//	QLinkedList<quint32> ssduOffsets;
-//	QLinkedList<quint8> ssduLengths;
-//
-//	ssduList.push_back(berOStream.getByteArray());
-//	ssduOffsets.push_back(berOStream.index() + 1);
-//	ssduLengths.push_back(berOStream.size());
-//
-//	ssduList.push_back(payload.getByteArray());
-//	ssduOffsets.push_back(payload.index() + 1);
-//	ssduLengths.push_back(payload.size());
-//
-//	QSharedPointer<QDataStream> iStream = startSConnection( ssduList, ssduOffsets, ssduLengths, sSelRemote, sSelLocal);
-//
+	quint32 payloadLength = payload.size();
+
+	CBerObjectIdentifier calledId(apTitleCalled);
+	CApTitle calledApTitle( &calledId );
+	CBerObjectIdentifier callingId(apTitleCalling);
+	CApTitle callingApTitle( &callingId );
+
+	CBerAnyNoDecode noDecode( payloadLength );
+	NsExternalLinkV1::SubChoiceEncoding encoding( &noDecode, nullptr, nullptr );
+
+	CExternalLinkV1 externalLink( &directReference, &indirectReference, &encoding);
+
+	QLinkedList<CExternalLinkV1> externalList;
+	externalList.push_back(externalLink);
+
+	CAssociationInformation userInformation( &externalList );
+
+	CBerBitString* pSenderAcseRequirements = nullptr;
+	CBerObjectIdentifier* pMechanismName = nullptr;
+	CAuthenticationValue* pAuthenticationValue = nullptr;
+
+	if (authenticationParameter.size() != 0)
+	{
+		{
+			QByteArray code( (const char*) sender_acse_requirements_char, (int) (sizeof(sender_acse_requirements_char)/sizeof(sender_acse_requirements_char[0])) );
+			CBerBitString tmp(code);
+			pSenderAcseRequirements = &tmp;
+		}
+
+		pMechanismName = &defaultMechanismName;
+
+		{
+			QByteArray auth(authenticationParameter.toUtf8());
+			CBerGraphicString auString( auth );
+			CAuthenticationValue tmp( &auString, nullptr, nullptr);
+			pAuthenticationValue = &tmp;
+		}
+	}
+
+	CBerInteger aeIntCalled(aeQualifierCalled);
+	CAeQualifier aeQaCalled(&aeIntCalled);
+	CBerInteger aeIntCalling(aeQualifierCalling);
+	CAeQualifier aeQaCalling(&aeIntCalling);
+
+	CApplicationContextName acn(&applicationContextName);
+
+	CAArqApdu aarq(
+			(CBerBitString*) nullptr,
+			&acn,
+			&calledApTitle,
+			&aeQaCalled,
+			(CBerInteger*) nullptr,
+			(CBerInteger*) nullptr,
+			&callingApTitle,
+			&aeQaCalling,
+			(CBerInteger*) nullptr,
+			(CBerInteger*) nullptr,
+			pSenderAcseRequirements,
+			pMechanismName,
+			pAuthenticationValue,
+			(CApplicationContextNameList*) nullptr,
+			(CBerGraphicString*) nullptr,
+			&userInformation);
+
+	CAcseApdu acse( &aarq, nullptr, nullptr, nullptr );
+
+	// Serialize
+	CBerByteArrayOutputStream berOStream(200, true);
+
+	acse.encode(berOStream, true);
+
+	quint32 acseHeaderLength = berOStream.getByteArray().size();
+
+// ------------------------------------------------------------------------
+//	getPresentationUserDataField
+//	------------------------------------------------------------------------
+	CBerAnyNoDecode band(acseHeaderLength + payloadLength);
+
+	NsPdvList::SubchoicePresentationDataValues presDataValues(
+			&band,
+			(CBerOctetString*) nullptr,
+			(CBerBitString*) nullptr );
+
+	CPdvList pdvList(
+			(CBerObjectIdentifier*) nullptr,
+			&acsePresentationContextId,
+			&presDataValues);
+
+	QLinkedList<CPdvList> listPdvList;
+	listPdvList.push_back(pdvList);
+
+	CFullyEncodedData fullyEncodedData(&listPdvList);
+
+	CUserData userData( (CBerOctetString*) nullptr, &fullyEncodedData);
+
+// ------------------------------------------------------------------------
+
+	CBerOctetString SelRemoteBerOctetString(pSelRemote);
+
+	NsCpType::CSubSeqNormalModeParameters normalModeParameter(
+			nullptr,
+			&PSelLocal,
+			&SelRemoteBerOctetString,
+			&context_list,
+			nullptr,
+			nullptr,
+			nullptr,
+			&userData
+			);
+
+	CCpType cpType( &normalModeSelector, &normalModeParameter);
+
+	cpType.encode(berOStream, true);
+
+	QByteArray outarr = berOStream.getByteArray();
+
+	QLinkedList<QByteArray> ssduList;
+	QLinkedList<quint32> ssduOffsets;
+	QLinkedList<quint8> ssduLengths;
+
+	ssduList.push_back(berOStream.getByteArray());
+	ssduOffsets.push_back(berOStream.index() + 1);
+	ssduLengths.push_back(berOStream.size());
+
+	ssduList.push_back(payload.getByteArray());
+	ssduOffsets.push_back(payload.index() + 1);
+	ssduLengths.push_back(payload.size());
+
+	QSharedPointer<QDataStream> iStream = startSConnection( ssduList, ssduOffsets, ssduLengths, sSelRemote, sSelLocal);
+
 	// temporary test server->client
 
 	qDebug() << "--------------------------------------";
