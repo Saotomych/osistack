@@ -32,7 +32,7 @@ protected:
 
 public:
 
-	typedef CContainerStorage< QLinkedList<CResultSubsequence>, CResultSubsequence > TLocalStorage;
+	typedef CContainerStorage< CResultList, QLinkedList<CResultSubsequence>, CResultSubsequence > TLocalStorage;
 	ASN1_CODEC( TLocalStorage )
 
 	static CBerIdentifier s_Identifier;

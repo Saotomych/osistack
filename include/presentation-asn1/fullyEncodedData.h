@@ -32,7 +32,7 @@ protected:
 
 public:
 
-	typedef CContainerStorage<QLinkedList<CPdvList>, CPdvList> LocalStorage;
+	typedef CContainerStorage<CFullyEncodedData, QLinkedList<CPdvList>, CPdvList> LocalStorage;
 	ASN1_CODEC( LocalStorage )
 
 	static quint32 s_metaTypeIdentifier;

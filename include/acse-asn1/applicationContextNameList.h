@@ -124,7 +124,7 @@ public:
 	CBerIdentifier getIdOID() { return c_IdOID; }
 	QLinkedList<CBerObjectIdentifier>* getObjectIdentifierList() { return m_pSeqOf; }
 
-	typedef CContainerStorage< QLinkedList<CBerObjectIdentifier>, CBerObjectIdentifier > TLocalStorage;
+	typedef CContainerStorage< CApplicationContextNameList, QLinkedList<CBerObjectIdentifier>, CBerObjectIdentifier > TLocalStorage;
 	ASN1_CODEC( TLocalStorage )
 
 	static quint32 s_metaTypeIdentifier;

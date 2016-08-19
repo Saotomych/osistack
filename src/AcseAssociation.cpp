@@ -1028,24 +1028,21 @@ bool CAcseAssociation::parseServerAnswer(QDataStream& iStream)
 	QByteArray selRemote;
 	CBerOctetString SelRemoteBerOctetString(selRemote);
 
-	QLinkedList<CBerObjectIdentifier> cnList1;
-	QLinkedList<CBerObjectIdentifier> cnList2;
-	QLinkedList<CBerObjectIdentifier> cnList3;
 	CBerObjectIdentifier oid1;
 	CBerObjectIdentifier oid2;
 	CBerObjectIdentifier oid3;
-	cnList1.push_back(oid1);
-	cnList2.push_back(oid2);
-	cnList3.push_back(oid3);
-	CContextListSubSeqOfTransferSyntaxName appSubCNList1(&cnList1);
-	CContextListSubSeqOfTransferSyntaxName appSubCNList2(&cnList2);
-	CContextListSubSeqOfTransferSyntaxName appSubCNList3(&cnList3);
-	CContextListSubSeq appCN1(nullptr, nullptr, &appSubCNList1);
-	CContextListSubSeq appCN2(nullptr, nullptr, &appSubCNList2);
-	CContextListSubSeq appCN3(nullptr, nullptr, &appSubCNList3);
+	CBerObjectIdentifier oid4;
+	CBerInteger int1;
+	CBerInteger int3;
+	CContextListSubSeq appCN1(&int1, &oid1, nullptr);
+	CContextListSubSeq appCN2(nullptr, &oid2, nullptr);
+	CContextListSubSeq appCN3(&int3, &oid3, nullptr);
+	CContextListSubSeq appCN4(nullptr, &oid4, nullptr);
 	QLinkedList<CContextListSubSeq> appCNList;
 	appCNList.push_back(appCN1);
 	appCNList.push_back(appCN2);
+	appCNList.push_back(appCN3);
+	appCNList.push_back(appCN4);
 	CContextList contextList(&appCNList);
 
 	NsCpType::CSubSeqNormalModeParameters normalModeParameter(

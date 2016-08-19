@@ -101,8 +101,7 @@ quint32 CContextList::s_metaTypeIdentifier = qRegisterMetaType<CContextList*>();
 quint32 CContextList::s_metaTypeListId = qRegisterMetaType<QLinkedList<CContextListSubSeq>*>();
 quint32 CContextListSubSeq::s_metaTypeIdentifier = qRegisterMetaType<CContextListSubSeq*>();
 quint32 CContextListSubSeqOfTransferSyntaxName::s_metaTypeIdentifier = qRegisterMetaType<CContextListSubSeqOfTransferSyntaxName*>();
-// registered already
-//quint32 CContextListSubSeqOfTransferSyntaxName::s_metaTypeListId = qRegisterMetaType<QLinkedList<CBerIdentifier>*>();
+quint32 CContextListSubSeqOfTransferSyntaxName::s_metaTypeListId = qRegisterMetaType<QLinkedList<CBerObjectIdentifier>*>();
 
 // presentation-asn1/defaultContextName.h, 2 variables
 quint32 CDefaultContextName::s_metaTypeIdentifier = qRegisterMetaType<CDefaultContextName*>();

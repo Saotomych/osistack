@@ -37,7 +37,9 @@ public:
 	CBerIdentifier getIdOID() { return c_IdOID; }
 	QLinkedList<CBerObjectIdentifier>* getObjectIdentifierList() { return m_pSeqOf; }
 
-	typedef CContainerStorage< QLinkedList<CBerObjectIdentifier>, CBerObjectIdentifier > TLocalStorage;
+	typedef CContainerStorage< CContextListSubSeqOfTransferSyntaxName,
+								QLinkedList<CBerObjectIdentifier>,
+								CBerObjectIdentifier > TLocalStorage;
 	ASN1_CODEC( TLocalStorage )
 
 	static quint32 s_metaTypeIdentifier;
@@ -229,7 +231,6 @@ class OSISTACK_SHAREDEXPORT CContextList: public QObject, public IBerBaseType
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
-	Q_PROPERTY(CBerLength length READ getLength)
 	Q_PROPERTY(QLinkedList<CContextListSubSeq>* OI READ getObjectIdentifierList)
 
 	bool is_copy;
@@ -249,7 +250,7 @@ public:
 
 	QLinkedList<CContextListSubSeq>* getObjectIdentifierList() { return m_pSeqOf; }
 
-	typedef CContainerStorage< QLinkedList<CContextListSubSeq>, CContextListSubSeq > TLocalStorage;
+	typedef CContainerStorage<CContextList, QLinkedList<CContextListSubSeq>, CContextListSubSeq > TLocalStorage;
 	ASN1_CODEC( TLocalStorage )
 
 	static quint32 s_metaTypeIdentifier;
@@ -315,6 +316,5 @@ Q_DECLARE_METATYPE(CContextList*)
 Q_DECLARE_METATYPE(QLinkedList<CContextListSubSeq>*)
 Q_DECLARE_METATYPE(CContextListSubSeq*)
 Q_DECLARE_METATYPE(CContextListSubSeqOfTransferSyntaxName*)
-//Q_DECLARE_METATYPE(QLinkedList<CBerObjectIdentifier>*)
 
 #endif /* INCLUDE_PRESENTATION_ASN1_CONTEXTLIST_H_ */
