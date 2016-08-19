@@ -153,6 +153,7 @@ void CAcseAssociation::accept(CBerByteArrayOutputStream& payload)
 		listR.push_back(r1);
 		listR.push_back(r2);
 		CResultList presentationResultList(&listR);
+
 		NsCpaPpdu::CSubSecNormalModeParameters normalModeParameters(nullptr, &PSelLocal, &presentationResultList,
 				(CBerBitString*) nullptr, (CBerBitString*) nullptr, &userData);
 
@@ -187,9 +188,8 @@ void CAcseAssociation::accept(CBerByteArrayOutputStream& payload)
 
 		CBerByteArrayOutputStream berOStream(100, true);
 
-		quint32 codeLength = acse.encode(berOStream, true);
-
 		CBerByteArrayInputStream InputStream(DataStream);
+
 		cpaPpdu.decode(InputStream, true);
 
 		CBerIdentifier id = aare.getIdentifier();
@@ -1028,15 +1028,25 @@ bool CAcseAssociation::parseServerAnswer(QDataStream& iStream)
 	QByteArray selRemote;
 	CBerOctetString SelRemoteBerOctetString(selRemote);
 
-	QLinkedList<CBerObjectIdentifier> cnList;
+	QLinkedList<CBerObjectIdentifier> cnList1;
+	QLinkedList<CBerObjectIdentifier> cnList2;
+	QLinkedList<CBerObjectIdentifier> cnList3;
 	CBerObjectIdentifier oid1;
 	CBerObjectIdentifier oid2;
-//	CApplicationContextName cn1(&oid1);
-//	CApplicationContextName cn2(&oid2);
-	cnList.push_back(oid1);
-	cnList.push_back(oid2);
-	CApplicationContextNameList appCNList(&cnList);
-	CContextList contextList(nullptr, nullptr, &appCNList);
+	CBerObjectIdentifier oid3;
+	cnList1.push_back(oid1);
+	cnList2.push_back(oid2);
+	cnList3.push_back(oid3);
+	CContextListSubSeqOfTransferSyntaxName appSubCNList1(&cnList1);
+	CContextListSubSeqOfTransferSyntaxName appSubCNList2(&cnList2);
+	CContextListSubSeqOfTransferSyntaxName appSubCNList3(&cnList3);
+	CContextListSubSeq appCN1(nullptr, nullptr, &appSubCNList1);
+	CContextListSubSeq appCN2(nullptr, nullptr, &appSubCNList2);
+	CContextListSubSeq appCN3(nullptr, nullptr, &appSubCNList3);
+	QLinkedList<CContextListSubSeq> appCNList;
+	appCNList.push_back(appCN1);
+	appCNList.push_back(appCN2);
+	CContextList contextList(&appCNList);
 
 	NsCpType::CSubSeqNormalModeParameters normalModeParameter(
 			nullptr,

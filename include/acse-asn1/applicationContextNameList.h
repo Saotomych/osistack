@@ -132,15 +132,13 @@ public:
 
 	explicit CApplicationContextNameList(QLinkedList<CBerObjectIdentifier>* pObjectIdentifierList):
 		is_copy(false),
-//		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
-		c_Identifier(),
+		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
 		c_IdOID(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
 		m_pSeqOf(pObjectIdentifierList)
 	{}
 
 	CApplicationContextNameList(const CApplicationContextNameList& rhs): QObject(),
-//		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16)
-		c_Identifier(),
+		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
 		c_IdOID(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16)
 	{
 		m_Code = rhs.m_Code;
