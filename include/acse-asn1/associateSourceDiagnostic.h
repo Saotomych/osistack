@@ -70,7 +70,7 @@ protected:
 
 public:
 
-	ASN1_CODEC(CBerBaseStorage)
+	ASN1_CODEC(CUnionStorage)
 
 	static quint32 s_metaTypeIdentifier;
 

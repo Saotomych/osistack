@@ -32,64 +32,8 @@ public:
 	CBerIdentifier getIdentifier() { return c_Identifier; }
 	QLinkedList<CExternalLinkV1>* getSeqOf() { return m_pSeqOf; }
 
-//	typedef CContainerStorage<QLinkedList<CExternalLinkV1>, CExternalLinkV1> LocalStorage;
-//	ASN1_CODEC( LocalStorage )
-
-	virtual quint32 encode(CBerByteArrayOutputStream& berOStream, bool explct)
-	{
-		int codeLength;
-
-		if (m_Code != nullptr) {
-			codeLength = m_Code.size();
-			berOStream.write(m_Code);
-		}
-		else {
-			codeLength = 0;
-
-			for (auto& val: *m_pSeqOf) {
-				codeLength += val.encode(berOStream, true);
-			}
-
-			codeLength += CBerLength::encodeLength(berOStream, codeLength);
-
-		}
-
-		if (explct) {
-			codeLength += c_Identifier.encode(berOStream);
-		}
-
-		return codeLength;
-	}
-
-	virtual quint32 decode(CBerByteArrayInputStream& iStream, bool explct)
-	{
-		quint32 codeLength = 0;
-		quint32 subCodeLength = 1;
-		QLinkedList<CExternalLinkV1> seqOf;
-
-		if (explct) {
-			codeLength += c_Identifier.decode(iStream);
-		}
-
-		CBerLength length;
-		codeLength += length.decode(iStream);
-
-		while (subCodeLength < length.getVal()) {
-			CBerObjectIdentifier directReference;
-			CBerAnyNoDecode noDecode;
-			NsExternalLinkV1::SubChoiceEncoding subChoiceEncoding(&noDecode, nullptr, nullptr);
-			CExternalLinkV1 element(&directReference, nullptr, &subChoiceEncoding);
-			subCodeLength += element.decode(iStream, true);
-			seqOf.push_back(element);
-		}
-
-		if (subCodeLength != length.getVal()) {
-			return 0;
-		}
-		codeLength += subCodeLength;
-
-		return codeLength;
-	}
+	typedef CContainerStorage<CAssociationInformation, QLinkedList<CExternalLinkV1>, CExternalLinkV1> LocalStorage;
+	ASN1_CODEC( LocalStorage )
 
 	static quint32 s_metaTypeIdentifier;
 	static quint32 s_metaTypeListId;

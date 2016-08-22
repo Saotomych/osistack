@@ -29,6 +29,7 @@
 #include "storages/berBaseType.h"
 #include "storages/decoder.h"
 #include "storages/containerStorage.h"
+#include "storages/unionStorage.h"
 
 #if defined(OSISTACK_LIBRARY)
 #  define OSISTACK_SHAREDEXPORT Q_DECL_EXPORT

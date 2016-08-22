@@ -90,116 +90,7 @@ namespace NsExternalLinkV1
 
 	public:
 
-//		ASN1_CODEC(CBerBaseStorage)
-
-		virtual quint32 encode(CBerByteArrayOutputStream& berOStream, bool)
-		{
-			if (m_Code.size())
-			{
-				return berOStream.write(m_Code);
-			}
-
-			quint32 codeLength = 0;
-
-			if (m_pArbitrary != nullptr)
-			{
-				codeLength += m_pArbitrary->encode(berOStream, false);
-
-				CBerIdentifier id(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 2);
-				codeLength += id.encode(berOStream);
-				return codeLength;
-			}
-
-			if (m_pOctetAligned != nullptr)
-			{
-				codeLength += m_pOctetAligned->encode(berOStream, false);
-
-				CBerIdentifier id(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 1);
-				codeLength += id.encode(berOStream);
-				return codeLength;
-			}
-
-			if (m_pSingleAsn1Type != nullptr)
-			{
-				quint32 subLength = m_pSingleAsn1Type->encode(berOStream, true);
-				codeLength += subLength;
-				codeLength += CBerLength::encodeLength(berOStream, subLength);
-
-				CBerIdentifier id(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 0);
-				codeLength += id.encode(berOStream);
-				return codeLength;
-			}
-
-			qDebug() << "ERROR: Encoding BerChoice failed. No item in choice was selected.";
-
-			return 0;
-		}
-
-		virtual quint32 decode(CBerByteArrayInputStream& iStream, bool explct)
-		{
-			quint32 codeLength = 0;
-
-			if (explct)
-			{
-				CBerIdentifier berIdentifier;
-				codeLength += berIdentifier.decode(iStream);
-				codeLength += decode(iStream, &berIdentifier);
-			}
-			else
-			{
-				codeLength += decode(iStream, (CBerIdentifier*) nullptr);
-			}
-
-			return codeLength;
-		}
-
-		virtual quint32 decode(CBerByteArrayInputStream& iStream, CBerIdentifier* berIdentifier)
-		{
-			quint32 codeLength = 0;
-
-			CBerIdentifier* workIdentifier = berIdentifier;
-
-			if (workIdentifier == nullptr)
-			{
-				workIdentifier = new CBerIdentifier();
-				codeLength += workIdentifier->decode(iStream);
-			}
-
-			if (workIdentifier->equals(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 0))
-			{
-				CBerAnyNoDecode singleAsn1Type;
-				quint32 subCodeLength = singleAsn1Type.decode(iStream, false);
-
-				QByteArray bytes;
-				iStream.read(bytes, 0, subCodeLength);
-
-				codeLength += subCodeLength;
-				return codeLength;
-			}
-
-			if (workIdentifier->equals(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 1))
-			{
-				CBerOctetString octetAligned;
-				codeLength += octetAligned.decode(iStream, false);
-				return codeLength;
-			}
-
-			if (workIdentifier->equals(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 2))
-			{
-				CBerBitString arbitrary;
-				codeLength += arbitrary.decode(iStream, false);
-				return codeLength;
-			}
-
-			if (berIdentifier != nullptr)
-			{
-				return 0;
-			}
-
-			qDebug() << "SubChoiceEncoding decode: Error decoding BerChoice: Identifier matches to no item";
-
-			return 0;
-		}
+		ASN1_CODEC(CUnionStorage)
 
 		static quint32 s_metaTypeIdentifier;
 
@@ -284,6 +175,7 @@ public:
 
 	QByteArray* getCode() { return &m_Code; }
 	CBerIdentifier getIdentifier() { return c_Identifier; }
+	CBerLength getLength() { CBerLength len; return len; }
 
 	IBerBaseType* getDirectReference() { return m_pDirectReference; }
 	IBerBaseType* getIndirectReference() { return m_pIndirectReference; }

@@ -163,7 +163,7 @@ void CAcseAssociation::accept(CBerByteArrayOutputStream& payload)
 
 		// ACSE
 
-		CBerAnyNoDecode berAny;
+		CBerAnyNoDecode berAny(payload.size());
 		NsExternalLinkV1::SubChoiceEncoding subChEncoding( &berAny, (CBerOctetString*) nullptr, (CBerBitString*) nullptr );
 
 		CBerObjectIdentifier directReference;
@@ -180,11 +180,12 @@ void CAcseAssociation::accept(CBerByteArrayOutputStream& payload)
 
 		CBerInteger aareAccepted;
 		CBerInteger acseServiceUser;
-		CBerInteger acseServiceProvider;
-		CAssociateSourceDiagnostic associateSourceDiagnostic(&acseServiceUser, &acseServiceProvider);
+		CAssociateSourceDiagnostic associateSourceDiagnostic(&acseServiceUser, (CBerInteger*)nullptr);
 		CAAreApdu aare(nullptr, &acn, &aareAccepted, &associateSourceDiagnostic, nullptr,
 				nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, &userInformation);
 		CAcseApdu acse(nullptr, &aare, nullptr, nullptr);
+
+		// ACSE Ready
 
 		CBerByteArrayOutputStream berOStream(100, true);
 
@@ -193,7 +194,7 @@ void CAcseAssociation::accept(CBerByteArrayOutputStream& payload)
 		cpaPpdu.decode(InputStream, true);
 
 		CBerIdentifier id = aare.getIdentifier();
-		acse.decode(InputStream, &id);
+		acse.decode(InputStream, true);
 	}
 
 }
@@ -1060,8 +1061,7 @@ bool CAcseAssociation::parseServerAnswer(QDataStream& iStream)
 
 	cpType.decode(berIStream, true);
 
-	CBerIdentifier id = aarq.getIdentifier();
-	acse.decode(berIStream, &id);
+	acse.decode(berIStream, true);
 
 	return true;
 }
