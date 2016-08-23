@@ -114,7 +114,8 @@ public:
 	 *
 	 * @throws IOException
 	 */
-	QSharedPointer<QDataStream> startSConnection(
+	QDataStream* startSConnection(
+			QDataStream* InputStream,
 			QLinkedList<QByteArray>& ssduList,
 			QLinkedList<quint32>& ssduOffsets,
 			QLinkedList<quint8>& ssduLengths,

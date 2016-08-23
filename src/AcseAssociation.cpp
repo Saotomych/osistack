@@ -193,7 +193,6 @@ void CAcseAssociation::accept(CBerByteArrayOutputStream& payload)
 
 		cpaPpdu.decode(InputStream, true);
 
-		CBerIdentifier id = aare.getIdentifier();
 		acse.decode(InputStream, true);
 	}
 
@@ -428,7 +427,8 @@ void CAcseAssociation::startAssociation(
 	ssduOffsets.push_back(payload.index() + 1);
 	ssduLengths.push_back(payload.size());
 
-	QSharedPointer<QDataStream> iStream = startSConnection( ssduList, ssduOffsets, ssduLengths, sSelRemote, sSelLocal);
+	QDataStream iStream;
+	startSConnection( &iStream, ssduList, ssduOffsets, ssduLengths, sSelRemote, sSelLocal);
 
 	// temporary test server->client
 
@@ -705,7 +705,8 @@ void CAcseAssociation::ISO8327Header(
 	// write session user data
 }
 
-QSharedPointer<QDataStream> CAcseAssociation::startSConnection(
+QDataStream* CAcseAssociation::startSConnection(
+		QDataStream* InputStream,
 		QLinkedList<QByteArray>& ssduList,
 		QLinkedList<quint32>& ssduOffsets,
 		QLinkedList<quint8>& ssduLengths,
@@ -716,22 +717,22 @@ QSharedPointer<QDataStream> CAcseAssociation::startSConnection(
 	if ( m_connected )
 	{
 		qDebug() << "ERROR: CAcseAssociation::startAssociation connected already";
-		QSharedPointer<QDataStream> m_pInputStream(m_tConnection->inputStream().data());
-		return m_pInputStream;
+		InputStream = m_tConnection->inputStream().data();
+		return InputStream;
 	}
 
 	if (sSelRemote.size() < 2)
 	{
 		qDebug() << "ERROR: CAcseAssociation::startAssociation sSelRemote size = " << sSelRemote.size();
-		QSharedPointer<QDataStream> m_pInputStream(m_tConnection->inputStream().data());
-		return m_pInputStream;
+		InputStream = m_tConnection->inputStream().data();
+		return InputStream;
 	}
 
 	if (sSelLocal.size() < 2)
 	{
 		qDebug() << "ERROR: CAcseAssociation::startAssociation sSelLocal size = " << sSelLocal.size();
-		QSharedPointer<QDataStream> m_pInputStream(m_tConnection->inputStream().data());
-		return m_pInputStream;
+		InputStream = m_tConnection->inputStream().data();
+		return InputStream;
 	}
 
 	QByteArray header;
@@ -758,13 +759,11 @@ QSharedPointer<QDataStream> CAcseAssociation::startSConnection(
 	for (auto& val: ssduList)
 	{
 		qDebug() << val.toHex();
-		testInput += val;
 	}
 
-	QDataStream InputStream(testInput);
-	QSharedPointer<QDataStream> m_pInputStream(&InputStream);
+	InputStream->writeBytes(testInput.data(), testInput.size());
 
-	parseServerAnswer(*m_pInputStream);	// Это парсит сервер
+	parseServerAnswer(*InputStream);	// Это парсит сервер
 	// end temporary test
 
 //	if ( m_pInputStream->atEnd() == true )
@@ -798,7 +797,7 @@ QSharedPointer<QDataStream> CAcseAssociation::startSConnection(
 //
 //	m_connected = true;
 //
-	return m_pInputStream;
+	return InputStream;
 }
 
 void CAcseAssociation::send(CBerByteArrayOutputStream& payload)
