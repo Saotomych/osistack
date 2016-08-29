@@ -98,14 +98,14 @@ void CAcseAssociation::accept(CBerByteArrayOutputStream& payload)
 
 	// Decode answer
 	// temporary test client->server
-	QByteArray testInput;
-	for (auto& val: ssduList)
-	{
-		qDebug() << val.toHex();
-		testInput += val;
-	}
-
-	QDataStream DataStream(testInput);
+//	QByteArray testInput;
+//	for (auto& val: ssduList)
+//	{
+//		qDebug() << val.toHex();
+//		testInput += val;
+//	}
+//	QDataStream DataStream(testInput);
+//`	temporary test client->server end
 
 	quint8 	SPDUType,
 			SPDULength;
@@ -268,7 +268,7 @@ void CAcseAssociation::writeSessionAccept(QLinkedList<QByteArray>& ssdu, QLinked
 	ssduOffsets.push_front(0);
 	ssduLengths.push_front(sduAcceptHeader.size());
 
-//	m_tConnection->send(ssdu, ssduOffsets, ssduLengths);
+	m_tConnection->send(ssdu, ssduOffsets, ssduLengths);
 }
 
 QByteArray CAcseAssociation::getAssociateResponseAPdu()
@@ -417,7 +417,7 @@ void CAcseAssociation::startAssociation(
 
 	QLinkedList<QByteArray> ssduList;
 	QLinkedList<quint32> ssduOffsets;
-	QLinkedList<quint8> ssduLengths;
+	QLinkedList<quint32> ssduLengths;
 
 	ssduList.push_back(berOStream.getByteArray());
 	ssduOffsets.push_back(berOStream.index() + 1);
@@ -432,27 +432,27 @@ void CAcseAssociation::startAssociation(
 
 	// temporary test server->client
 
-	qDebug() << "--------------------------------------";
-	qDebug() << "Server -> Client";
-	qDebug() << "--------------------------------------";
-
-	accept(payload);
+//	qDebug() << "--------------------------------------";
+//	qDebug() << "Server -> Client";
+//	qDebug() << "--------------------------------------";
+//
+//	accept(payload);
 
 	// end temporary test
 
 
-//	decodePConResponse(*iStream);
-////
-////	quint8 data;
-////	m_associateResponseAPDU.clear();
-////	m_associateResponseAPDU.reserve(8192);
-//	while(iStream->atEnd() == false)
-//	{
-//		*iStream >> data;
-//		m_associateResponseAPDU.push_back(data);
-//	}
-////
-//	emit signalAcseAssociationReady(this);
+	decodePConResponse(iStream);
+
+	quint8 data;
+	m_associateResponseAPDU.clear();
+	m_associateResponseAPDU.reserve(8192);
+	while(iStream.atEnd() == false)
+	{
+		*iStream >> data;
+		m_associateResponseAPDU.push_back(data);
+	}
+
+	emit signalAcseAssociationReady(this);
 
 }
 
@@ -709,7 +709,7 @@ QDataStream* CAcseAssociation::startSConnection(
 		QDataStream* InputStream,
 		QLinkedList<QByteArray>& ssduList,
 		QLinkedList<quint32>& ssduOffsets,
-		QLinkedList<quint8>& ssduLengths,
+		QLinkedList<quint32>& ssduLengths,
 		QByteArray& sSelRemote,
 		QByteArray& sSelLocal)
 {
@@ -749,54 +749,54 @@ QDataStream* CAcseAssociation::startSConnection(
 	ssduOffsets.push_front(0);
 	ssduLengths.push_front(header.size());
 
-//	m_tConnection->send(ssduList, ssduOffsets, ssduLengths);
+	m_tConnection->send(ssduList, ssduOffsets, ssduLengths);
 
 	// TODO asynchronous receive must be in the future
 //	QScopedPointer<QDataStream>& m_pInputStream = m_tConnection->waitData();
 
 	// temporary test client->server
-	QByteArray testInput;
-	for (auto& val: ssduList)
-	{
-		qDebug() << val.toHex();
-	}
-
-	InputStream->writeBytes(testInput.data(), testInput.size());
-
-	parseServerAnswer(*InputStream);	// Это парсит сервер
+//	QByteArray testInput;
+//	for (auto& val: ssduList)
+//	{
+//		qDebug() << val.toHex();
+//	}
+//
+//	InputStream->writeBytes(testInput.data(), testInput.size());
+//
+//	parseServerAnswer(*InputStream);	// Это парсит сервер
 	// end temporary test
 
-//	if ( m_pInputStream->atEnd() == true )
-//	{
-//		qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. ResponseTimeout waiting for connection response.";
-//	}
+	if ( InputStream->atEnd() == true )
+	{
+		qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. ResponseTimeout waiting for connection response.";
+	}
 
-//	m_tConnection->readRFC1006Header(*m_pInputStream);
-//	m_tConnection->readRFC905DataHeader(*m_pInputStream);
-//
+	m_tConnection->readRFC1006Header(*InputStream);
+	m_tConnection->readRFC905DataHeader(*InputStream);
+
 //  TODO: По хорошему надо так, но уже был сделан парсер на потоках, надо будет переделать
 //	QByteArray DataBlock;
 //	m_tConnection->readUserDataBlock(DataBlock);
-//
-//	// А так не надо, но пока пусть будет
-//	quint8 data8;
-//	*m_pInputStream >> data8;
-//
-//	// read ISO 8327-1 Header
-//	// SPDU Type: ACCEPT (14)
-//	quint8 SPDUType;
-//	*m_pInputStream >> SPDUType;
-//	if ( SPDUType != (quint8) 0x0e)
-//	{
-//		qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. ISO 8327-1 header wrong SPDU type, expected ACCEPT (14), got "
-//				<< getSPDUTypeString(SPDUType) << " (" << SPDUType << ")";
-//		return m_tConnection->inputStream();
-//	}
-//
-//	receiveDataParser(*m_pInputStream);
-//
-//	m_connected = true;
-//
+
+	// А так не надо, но пока пусть будет
+	quint8 data8;
+	*InputStream >> data8;
+
+	// read ISO 8327-1 Header
+	// SPDU Type: ACCEPT (14)
+	quint8 SPDUType;
+	*InputStream >> SPDUType;
+	if ( SPDUType != (quint8) 0x0e)
+	{
+		qDebug() << "CAcseAssociation::startAssociation didn't receive connect answer. ISO 8327-1 header wrong SPDU type, expected ACCEPT (14), got "
+				<< getSPDUTypeString(SPDUType) << " (" << SPDUType << ")";
+		return m_tConnection->inputStream();
+	}
+
+	receiveDataParser(*m_pInputStream);
+
+	m_connected = true;
+
 	return InputStream;
 }
 

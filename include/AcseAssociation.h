@@ -118,7 +118,7 @@ public:
 			QDataStream* InputStream,
 			QLinkedList<QByteArray>& ssduList,
 			QLinkedList<quint32>& ssduOffsets,
-			QLinkedList<quint8>& ssduLengths,
+			QLinkedList<quint32>& ssduLengths,
 			QByteArray& sSelRemote,
 			QByteArray& sSelLocal);
 
