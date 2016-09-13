@@ -70,7 +70,7 @@ private:
 				quint8 ssduLength
 			);
 
-	bool parseServerAnswer(QDataStream& iStream);
+	QByteArray parseServerAnswer(QDataStream& iStream);
 	quint32 receiveDataParser(QDataStream& iStream);
 
 public:
@@ -139,6 +139,7 @@ public:
 	 *             if a timeout occurs
 	 */
 	void receive(QByteArray& pduBuffer);
+	QByteArray parseClientAnswer(QDataStream& iStream, quint32 payloadSize);
 
 	/**
 	 * Disconnects by sending a disconnect request at the Transport Layer and then closing the socket.
@@ -150,7 +151,7 @@ public:
 	 */
 	void close();
 
-	void listenForCn();
+	QByteArray listenForCn(QDataStream& InputStream);
 	quint32 getMessageTimeout();
 	void setMessageTimeout(quint32 tout);
 

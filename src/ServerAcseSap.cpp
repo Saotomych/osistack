@@ -140,14 +140,12 @@ CConnectionListener* CServerAcseSap::getConnectionListener()
 
 void CServerAcseSap::slotServerAcseAcceptConnection(const CConnection* pconn)
 {
-	qDebug() << "CAcseAssociation::slotServerAcseAcceptConnection";
+	qDebug() << "CServerAcseSap::slotServerAcseAcceptConnection";
 
-	Q_CHECK_PTR(pconn);
+//	Q_CHECK_PTR(pconn);
 
 	CAcseAssociation* assoc = createNewAcseAssociation( const_cast<CConnection*> (pconn) );
 
 	emit signalAcseClientConnected(assoc);
-
-	assoc->listenForCn();
 }
 

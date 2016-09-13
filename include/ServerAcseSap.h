@@ -88,8 +88,6 @@ public:
 
 	CConnectionListener* getConnectionListener();
 
-private:
-
 	CAcseAssociation* createNewAcseAssociation(CConnection* pconn);
 
 public slots:
