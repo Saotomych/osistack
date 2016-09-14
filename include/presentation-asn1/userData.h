@@ -100,9 +100,9 @@ public:
 		CBerIdentifier BerId;
 		codeLength += BerId.decode(iStream);
 
-		decode(iStream, &BerId);
+		codeLength += decode(iStream, &BerId);
 
-		return 0;
+		return codeLength;
 	}
 
 	virtual quint32 decode(CBerByteArrayInputStream& iStream, CBerIdentifier* berIdentifier)
