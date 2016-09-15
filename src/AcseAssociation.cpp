@@ -330,8 +330,7 @@ void CAcseAssociation::startAssociation(
 
 	qDebug() << "length[1] (payload) = " <<  ssduLengths.back();
 
-	QDataStream iStream;
-	startSConnection( &iStream, ssduList, ssduOffsets, ssduLengths, sSelRemote, sSelLocal);
+	startSConnection(ssduList, ssduOffsets, ssduLengths, sSelRemote, sSelLocal);
 
 }
 
@@ -584,8 +583,7 @@ void CAcseAssociation::ISO8327Header(
 	// write session user data
 }
 
-QDataStream* CAcseAssociation::startSConnection(
-		QDataStream* InputStream,
+void CAcseAssociation::startSConnection(
 		QLinkedList<QByteArray>& ssduList,
 		QLinkedList<quint32>& ssduOffsets,
 		QLinkedList<quint32>& ssduLengths,
@@ -593,24 +591,22 @@ QDataStream* CAcseAssociation::startSConnection(
 		QByteArray& sSelLocal)
 {
 
-	InputStream = m_tConnection->inputStream().data();
-
 	if ( m_connected )
 	{
 		qDebug() << "ERROR: CAcseAssociation::startAssociation connected already";
-		return InputStream;
+		return;
 	}
 
 	if (sSelRemote.size() < 2)
 	{
 		qDebug() << "ERROR: CAcseAssociation::startAssociation sSelRemote size = " << sSelRemote.size();
-		return InputStream;
+		return;
 	}
 
 	if (sSelLocal.size() < 2)
 	{
 		qDebug() << "ERROR: CAcseAssociation::startAssociation sSelLocal size = " << sSelLocal.size();
-		return InputStream;
+		return;
 	}
 
 	QByteArray header;
@@ -630,8 +626,6 @@ QDataStream* CAcseAssociation::startSConnection(
 	qDebug() << "length[2] (header) = " <<  ssduLengths.front();
 
 	m_tConnection->send(ssduList, ssduOffsets, ssduLengths);
-
-	return InputStream;
 }
 
 void CAcseAssociation::send(CBerByteArrayOutputStream& payload)
