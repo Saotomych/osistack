@@ -43,7 +43,6 @@ OBJECTS_DIR   = build/debug/
 
 SOURCES       = src/acse-asn1/initIdentifiers.cpp \
 		src/AcseAssociation.cpp \
-		src/AcseAssociationListener.cpp \
 		src/ServerAcseSap.cpp \
 		src/ClientAcseSap.cpp \
 		../ASN1/src/berByteArrayOutputStream.cpp \
@@ -96,7 +95,6 @@ SOURCES       = src/acse-asn1/initIdentifiers.cpp \
 		debug/moc_modeSelector.cpp \
 		debug/moc_CpaPpdu.cpp \
 		debug/moc_AcseAssociation.cpp \
-		debug/moc_AcseAssociationListener.cpp \
 		debug/moc_ClientAcseSap.cpp \
 		debug/moc_ServerAcseSap.cpp \
 		debug/moc_berByteArrayOutputStream.cpp \
@@ -132,7 +130,6 @@ SOURCES       = src/acse-asn1/initIdentifiers.cpp \
 		debug/moc_connectionserver.cpp
 OBJECTS       = build/debug/initIdentifiers.o \
 		build/debug/AcseAssociation.o \
-		build/debug/AcseAssociationListener.o \
 		build/debug/ServerAcseSap.o \
 		build/debug/ClientAcseSap.o \
 		build/debug/berByteArrayOutputStream.o \
@@ -186,7 +183,6 @@ OBJECTS       = build/debug/initIdentifiers.o \
 		build/debug/moc_modeSelector.o \
 		build/debug/moc_CpaPpdu.o \
 		build/debug/moc_AcseAssociation.o \
-		build/debug/moc_AcseAssociationListener.o \
 		build/debug/moc_ClientAcseSap.o \
 		build/debug/moc_ServerAcseSap.o \
 		build/debug/moc_berByteArrayOutputStream.o \
@@ -327,7 +323,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d build/debug/osistackd0.0.0.0 || mkdir -p build/debug/osistackd0.0.0.0
-	$(COPY_FILE) --parents $(SOURCES) $(DIST) build/debug/osistackd0.0.0.0/ && $(COPY_FILE) --parents include/osistack_global.h include/acse-asn1/APtitle.h include/acse-asn1/AEtitle.h include/acse-asn1/AEqualifier.h include/acse-asn1/externalLinkV1.h include/acse-asn1/externalLinkV2.h include/acse-asn1/associateSourceDiagnostic.h include/acse-asn1/authenticationValue.h include/acse-asn1/applicationContextNameList.h include/acse-asn1/associationInformation.h include/acse-asn1/RLreApdu.h include/acse-asn1/RLrqApdu.h include/acse-asn1/AAreApdu.h include/acse-asn1/AArqApdu.h include/acse-asn1/AcseApdu.h include/presentation-asn1/ResultSubsequence.h include/presentation-asn1/ResultList.h include/presentation-asn1/PdvList.h include/presentation-asn1/fullyEncodedData.h include/presentation-asn1/userData.h include/presentation-asn1/contextList.h include/presentation-asn1/defaultContextName.h include/presentation-asn1/CpType.h include/presentation-asn1/modeSelector.h include/presentation-asn1/CpaPpdu.h include/AcseAssociation.h include/AcseAssociationListener.h include/ClientAcseSap.h include/ServerAcseSap.h ../ASN1/include/DeclareCommonTypes.h ../ASN1/include/berByteArrayOutputStream.h ../ASN1/include/berByteArrayInputStream.h ../ASN1/include/berIdentifier.h ../ASN1/include/berLength.h ../ASN1/include/berBase.h ../ASN1/include/berAny.h ../ASN1/include/berAnyNoDecode.h ../ASN1/include/berBitString.h ../ASN1/include/berBoolean.h ../ASN1/include/berEnum.h ../ASN1/include/berInteger.h ../ASN1/include/berNull.h ../ASN1/include/berObjectIdentifier.h ../ASN1/include/berOctetString.h ../ASN1/include/berReal.h ../ASN1/include/berBMPString.h ../ASN1/include/berGeneralizedTime.h ../ASN1/include/berGeneralString.h ../ASN1/include/berGraphicString.h ../ASN1/include/berIA5String.h ../ASN1/include/berNumericString.h ../ASN1/include/berPrintableString.h ../ASN1/include/berTeletexString.h ../ASN1/include/berUniversalString.h ../ASN1/include/berUTF8String.h ../ASN1/include/berVideotexString.h ../ASN1/include/berVisibleString.h ../ASN1/include/compositeValue.h ../ASN1/include/storages/berBitStringStorage.h ../ASN1/include/storages/berBooleanStorage.h ../ASN1/include/storages/berIntegerStorage.h ../ASN1/include/storages/berNullStorage.h ../ASN1/include/storages/berObjectIdentifierStorage.h ../ASN1/include/storages/berOctetStringStorage.h ../ASN1/include/storages/berRealStorage.h ../ASN1/include/storages/berBaseType.h ../ASN1/include/storages/containerStorage.h ../ASN1/include/storages/decoder.h ../ositransport/clienttsap.h ../ositransport/connection.h ../ositransport/connectionlistener.h ../ositransport/servertsap.h ../ositransport/connectionserver.h ../ositransport/socketfactory.h ../ositransport/tcpeasysocket.h build/debug/osistackd0.0.0.0/ && $(COPY_FILE) --parents src/acse-asn1/initIdentifiers.cpp src/AcseAssociation.cpp src/AcseAssociationListener.cpp src/ServerAcseSap.cpp src/ClientAcseSap.cpp ../ASN1/src/berByteArrayOutputStream.cpp ../ASN1/src/berByteArrayInputStream.cpp ../ASN1/src/InitIdentifiers.cpp ../ASN1/src/berIdentifier.cpp ../ASN1/src/berLength.cpp ../ASN1/src/berBase.cpp ../ASN1/src/types/berBitString.cpp ../ASN1/src/types/berBoolean.cpp ../ASN1/src/types/berInteger.cpp ../ASN1/src/types/berObjectIdentifier.cpp ../ASN1/src/types/berReal.cpp ../ASN1/src/types/berVisibleString.cpp ../ASN1/src/storages/berBitStringStorage.cpp ../ASN1/src/storages/berBooleanStorage.cpp ../ASN1/src/storages/berIntegerStorage.cpp ../ASN1/src/storages/berNullStorage.cpp ../ASN1/src/storages/berObjectIdentifierStorage.cpp ../ASN1/src/storages/berOctetStringStorage.cpp ../ASN1/src/storages/berRealStorage.cpp ../ositransport/clienttsap.cpp ../ositransport/connection.cpp ../ositransport/connectionlistener.cpp ../ositransport/servertsap.cpp ../ositransport/connectionserver.cpp ../ositransport/socketfactory.cpp ../ositransport/tcpeasysocket.cpp build/debug/osistackd0.0.0.0/ && (cd `dirname build/debug/osistackd0.0.0.0` && $(TAR) osistackd0.0.0.0.tar osistackd0.0.0.0 && $(COMPRESS) osistackd0.0.0.0.tar) && $(MOVE) `dirname build/debug/osistackd0.0.0.0`/osistackd0.0.0.0.tar.gz . && $(DEL_FILE) -r build/debug/osistackd0.0.0.0
+	$(COPY_FILE) --parents $(SOURCES) $(DIST) build/debug/osistackd0.0.0.0/ && $(COPY_FILE) --parents include/osistack_global.h include/acse-asn1/APtitle.h include/acse-asn1/AEtitle.h include/acse-asn1/AEqualifier.h include/acse-asn1/externalLinkV1.h include/acse-asn1/externalLinkV2.h include/acse-asn1/associateSourceDiagnostic.h include/acse-asn1/authenticationValue.h include/acse-asn1/applicationContextNameList.h include/acse-asn1/associationInformation.h include/acse-asn1/RLreApdu.h include/acse-asn1/RLrqApdu.h include/acse-asn1/AAreApdu.h include/acse-asn1/AArqApdu.h include/acse-asn1/AcseApdu.h include/presentation-asn1/ResultSubsequence.h include/presentation-asn1/ResultList.h include/presentation-asn1/PdvList.h include/presentation-asn1/fullyEncodedData.h include/presentation-asn1/userData.h include/presentation-asn1/contextList.h include/presentation-asn1/defaultContextName.h include/presentation-asn1/CpType.h include/presentation-asn1/modeSelector.h include/presentation-asn1/CpaPpdu.h include/AcseAssociation.h include/ClientAcseSap.h include/ServerAcseSap.h ../ASN1/include/DeclareCommonTypes.h ../ASN1/include/berByteArrayOutputStream.h ../ASN1/include/berByteArrayInputStream.h ../ASN1/include/berIdentifier.h ../ASN1/include/berLength.h ../ASN1/include/berBase.h ../ASN1/include/berAny.h ../ASN1/include/berAnyNoDecode.h ../ASN1/include/berBitString.h ../ASN1/include/berBoolean.h ../ASN1/include/berEnum.h ../ASN1/include/berInteger.h ../ASN1/include/berNull.h ../ASN1/include/berObjectIdentifier.h ../ASN1/include/berOctetString.h ../ASN1/include/berReal.h ../ASN1/include/berBMPString.h ../ASN1/include/berGeneralizedTime.h ../ASN1/include/berGeneralString.h ../ASN1/include/berGraphicString.h ../ASN1/include/berIA5String.h ../ASN1/include/berNumericString.h ../ASN1/include/berPrintableString.h ../ASN1/include/berTeletexString.h ../ASN1/include/berUniversalString.h ../ASN1/include/berUTF8String.h ../ASN1/include/berVideotexString.h ../ASN1/include/berVisibleString.h ../ASN1/include/compositeValue.h ../ASN1/include/storages/berBitStringStorage.h ../ASN1/include/storages/berBooleanStorage.h ../ASN1/include/storages/berIntegerStorage.h ../ASN1/include/storages/berNullStorage.h ../ASN1/include/storages/berObjectIdentifierStorage.h ../ASN1/include/storages/berOctetStringStorage.h ../ASN1/include/storages/berRealStorage.h ../ASN1/include/storages/berBaseType.h ../ASN1/include/storages/containerStorage.h ../ASN1/include/storages/decoder.h ../ositransport/clienttsap.h ../ositransport/connection.h ../ositransport/connectionlistener.h ../ositransport/servertsap.h ../ositransport/connectionserver.h ../ositransport/socketfactory.h ../ositransport/tcpeasysocket.h build/debug/osistackd0.0.0.0/ && $(COPY_FILE) --parents src/acse-asn1/initIdentifiers.cpp src/AcseAssociation.cpp src/ServerAcseSap.cpp src/ClientAcseSap.cpp ../ASN1/src/berByteArrayOutputStream.cpp ../ASN1/src/berByteArrayInputStream.cpp ../ASN1/src/InitIdentifiers.cpp ../ASN1/src/berIdentifier.cpp ../ASN1/src/berLength.cpp ../ASN1/src/berBase.cpp ../ASN1/src/types/berBitString.cpp ../ASN1/src/types/berBoolean.cpp ../ASN1/src/types/berInteger.cpp ../ASN1/src/types/berObjectIdentifier.cpp ../ASN1/src/types/berReal.cpp ../ASN1/src/types/berVisibleString.cpp ../ASN1/src/storages/berBitStringStorage.cpp ../ASN1/src/storages/berBooleanStorage.cpp ../ASN1/src/storages/berIntegerStorage.cpp ../ASN1/src/storages/berNullStorage.cpp ../ASN1/src/storages/berObjectIdentifierStorage.cpp ../ASN1/src/storages/berOctetStringStorage.cpp ../ASN1/src/storages/berRealStorage.cpp ../ositransport/clienttsap.cpp ../ositransport/connection.cpp ../ositransport/connectionlistener.cpp ../ositransport/servertsap.cpp ../ositransport/connectionserver.cpp ../ositransport/socketfactory.cpp ../ositransport/tcpeasysocket.cpp build/debug/osistackd0.0.0.0/ && (cd `dirname build/debug/osistackd0.0.0.0` && $(TAR) osistackd0.0.0.0.tar osistackd0.0.0.0 && $(COMPRESS) osistackd0.0.0.0.tar) && $(MOVE) `dirname build/debug/osistackd0.0.0.0`/osistackd0.0.0.0.tar.gz . && $(DEL_FILE) -r build/debug/osistackd0.0.0.0
 
 
 clean:compiler_clean 
@@ -350,9 +346,9 @@ check: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: debug/moc_APtitle.cpp debug/moc_AEtitle.cpp debug/moc_AEqualifier.cpp debug/moc_externalLinkV1.cpp debug/moc_externalLinkV2.cpp debug/moc_associateSourceDiagnostic.cpp debug/moc_authenticationValue.cpp debug/moc_applicationContextNameList.cpp debug/moc_associationInformation.cpp debug/moc_RLreApdu.cpp debug/moc_RLrqApdu.cpp debug/moc_AAreApdu.cpp debug/moc_AArqApdu.cpp debug/moc_AcseApdu.cpp debug/moc_ResultSubsequence.cpp debug/moc_ResultList.cpp debug/moc_PdvList.cpp debug/moc_fullyEncodedData.cpp debug/moc_userData.cpp debug/moc_contextList.cpp debug/moc_defaultContextName.cpp debug/moc_CpType.cpp debug/moc_modeSelector.cpp debug/moc_CpaPpdu.cpp debug/moc_AcseAssociation.cpp debug/moc_AcseAssociationListener.cpp debug/moc_ClientAcseSap.cpp debug/moc_ServerAcseSap.cpp debug/moc_berByteArrayOutputStream.cpp debug/moc_berByteArrayInputStream.cpp debug/moc_berIdentifier.cpp debug/moc_berLength.cpp debug/moc_berAny.cpp debug/moc_berAnyNoDecode.cpp debug/moc_berBitString.cpp debug/moc_berBoolean.cpp debug/moc_berEnum.cpp debug/moc_berInteger.cpp debug/moc_berNull.cpp debug/moc_berObjectIdentifier.cpp debug/moc_berOctetString.cpp debug/moc_berReal.cpp debug/moc_berBMPString.cpp debug/moc_berGeneralizedTime.cpp debug/moc_berGeneralString.cpp debug/moc_berGraphicString.cpp debug/moc_berIA5String.cpp debug/moc_berNumericString.cpp debug/moc_berPrintableString.cpp debug/moc_berTeletexString.cpp debug/moc_berUniversalString.cpp debug/moc_berUTF8String.cpp debug/moc_berVideotexString.cpp debug/moc_berVisibleString.cpp debug/moc_compositeValue.cpp debug/moc_clienttsap.cpp debug/moc_connection.cpp debug/moc_connectionlistener.cpp debug/moc_connectionserver.cpp
+compiler_moc_header_make_all: debug/moc_APtitle.cpp debug/moc_AEtitle.cpp debug/moc_AEqualifier.cpp debug/moc_externalLinkV1.cpp debug/moc_externalLinkV2.cpp debug/moc_associateSourceDiagnostic.cpp debug/moc_authenticationValue.cpp debug/moc_applicationContextNameList.cpp debug/moc_associationInformation.cpp debug/moc_RLreApdu.cpp debug/moc_RLrqApdu.cpp debug/moc_AAreApdu.cpp debug/moc_AArqApdu.cpp debug/moc_AcseApdu.cpp debug/moc_ResultSubsequence.cpp debug/moc_ResultList.cpp debug/moc_PdvList.cpp debug/moc_fullyEncodedData.cpp debug/moc_userData.cpp debug/moc_contextList.cpp debug/moc_defaultContextName.cpp debug/moc_CpType.cpp debug/moc_modeSelector.cpp debug/moc_CpaPpdu.cpp debug/moc_AcseAssociation.cpp debug/moc_ClientAcseSap.cpp debug/moc_ServerAcseSap.cpp debug/moc_berByteArrayOutputStream.cpp debug/moc_berByteArrayInputStream.cpp debug/moc_berIdentifier.cpp debug/moc_berLength.cpp debug/moc_berAny.cpp debug/moc_berAnyNoDecode.cpp debug/moc_berBitString.cpp debug/moc_berBoolean.cpp debug/moc_berEnum.cpp debug/moc_berInteger.cpp debug/moc_berNull.cpp debug/moc_berObjectIdentifier.cpp debug/moc_berOctetString.cpp debug/moc_berReal.cpp debug/moc_berBMPString.cpp debug/moc_berGeneralizedTime.cpp debug/moc_berGeneralString.cpp debug/moc_berGraphicString.cpp debug/moc_berIA5String.cpp debug/moc_berNumericString.cpp debug/moc_berPrintableString.cpp debug/moc_berTeletexString.cpp debug/moc_berUniversalString.cpp debug/moc_berUTF8String.cpp debug/moc_berVideotexString.cpp debug/moc_berVisibleString.cpp debug/moc_compositeValue.cpp debug/moc_clienttsap.cpp debug/moc_connection.cpp debug/moc_connectionlistener.cpp debug/moc_connectionserver.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) debug/moc_APtitle.cpp debug/moc_AEtitle.cpp debug/moc_AEqualifier.cpp debug/moc_externalLinkV1.cpp debug/moc_externalLinkV2.cpp debug/moc_associateSourceDiagnostic.cpp debug/moc_authenticationValue.cpp debug/moc_applicationContextNameList.cpp debug/moc_associationInformation.cpp debug/moc_RLreApdu.cpp debug/moc_RLrqApdu.cpp debug/moc_AAreApdu.cpp debug/moc_AArqApdu.cpp debug/moc_AcseApdu.cpp debug/moc_ResultSubsequence.cpp debug/moc_ResultList.cpp debug/moc_PdvList.cpp debug/moc_fullyEncodedData.cpp debug/moc_userData.cpp debug/moc_contextList.cpp debug/moc_defaultContextName.cpp debug/moc_CpType.cpp debug/moc_modeSelector.cpp debug/moc_CpaPpdu.cpp debug/moc_AcseAssociation.cpp debug/moc_AcseAssociationListener.cpp debug/moc_ClientAcseSap.cpp debug/moc_ServerAcseSap.cpp debug/moc_berByteArrayOutputStream.cpp debug/moc_berByteArrayInputStream.cpp debug/moc_berIdentifier.cpp debug/moc_berLength.cpp debug/moc_berAny.cpp debug/moc_berAnyNoDecode.cpp debug/moc_berBitString.cpp debug/moc_berBoolean.cpp debug/moc_berEnum.cpp debug/moc_berInteger.cpp debug/moc_berNull.cpp debug/moc_berObjectIdentifier.cpp debug/moc_berOctetString.cpp debug/moc_berReal.cpp debug/moc_berBMPString.cpp debug/moc_berGeneralizedTime.cpp debug/moc_berGeneralString.cpp debug/moc_berGraphicString.cpp debug/moc_berIA5String.cpp debug/moc_berNumericString.cpp debug/moc_berPrintableString.cpp debug/moc_berTeletexString.cpp debug/moc_berUniversalString.cpp debug/moc_berUTF8String.cpp debug/moc_berVideotexString.cpp debug/moc_berVisibleString.cpp debug/moc_compositeValue.cpp debug/moc_clienttsap.cpp debug/moc_connection.cpp debug/moc_connectionlistener.cpp debug/moc_connectionserver.cpp
+	-$(DEL_FILE) debug/moc_APtitle.cpp debug/moc_AEtitle.cpp debug/moc_AEqualifier.cpp debug/moc_externalLinkV1.cpp debug/moc_externalLinkV2.cpp debug/moc_associateSourceDiagnostic.cpp debug/moc_authenticationValue.cpp debug/moc_applicationContextNameList.cpp debug/moc_associationInformation.cpp debug/moc_RLreApdu.cpp debug/moc_RLrqApdu.cpp debug/moc_AAreApdu.cpp debug/moc_AArqApdu.cpp debug/moc_AcseApdu.cpp debug/moc_ResultSubsequence.cpp debug/moc_ResultList.cpp debug/moc_PdvList.cpp debug/moc_fullyEncodedData.cpp debug/moc_userData.cpp debug/moc_contextList.cpp debug/moc_defaultContextName.cpp debug/moc_CpType.cpp debug/moc_modeSelector.cpp debug/moc_CpaPpdu.cpp debug/moc_AcseAssociation.cpp debug/moc_ClientAcseSap.cpp debug/moc_ServerAcseSap.cpp debug/moc_berByteArrayOutputStream.cpp debug/moc_berByteArrayInputStream.cpp debug/moc_berIdentifier.cpp debug/moc_berLength.cpp debug/moc_berAny.cpp debug/moc_berAnyNoDecode.cpp debug/moc_berBitString.cpp debug/moc_berBoolean.cpp debug/moc_berEnum.cpp debug/moc_berInteger.cpp debug/moc_berNull.cpp debug/moc_berObjectIdentifier.cpp debug/moc_berOctetString.cpp debug/moc_berReal.cpp debug/moc_berBMPString.cpp debug/moc_berGeneralizedTime.cpp debug/moc_berGeneralString.cpp debug/moc_berGraphicString.cpp debug/moc_berIA5String.cpp debug/moc_berNumericString.cpp debug/moc_berPrintableString.cpp debug/moc_berTeletexString.cpp debug/moc_berUniversalString.cpp debug/moc_berUTF8String.cpp debug/moc_berVideotexString.cpp debug/moc_berVisibleString.cpp debug/moc_compositeValue.cpp debug/moc_clienttsap.cpp debug/moc_connection.cpp debug/moc_connectionlistener.cpp debug/moc_connectionserver.cpp
 debug/moc_APtitle.cpp: include/osistack_global.h \
 		/usr/include/qt5/QtCore/qglobal.h \
 		/usr/include/qt5/QtCore/qconfig.h \
@@ -455,9 +451,9 @@ debug/moc_APtitle.cpp: include/osistack_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -465,6 +461,7 @@ debug/moc_APtitle.cpp: include/osistack_global.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		include/acse-asn1/APtitle.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/acse-asn1/APtitle.h -o debug/moc_APtitle.cpp
 
@@ -570,9 +567,9 @@ debug/moc_AEtitle.cpp: include/osistack_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -580,6 +577,7 @@ debug/moc_AEtitle.cpp: include/osistack_global.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		include/acse-asn1/AEtitle.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/acse-asn1/AEtitle.h -o debug/moc_AEtitle.cpp
 
@@ -685,9 +683,9 @@ debug/moc_AEqualifier.cpp: include/osistack_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -695,6 +693,7 @@ debug/moc_AEqualifier.cpp: include/osistack_global.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		include/acse-asn1/AEqualifier.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/acse-asn1/AEqualifier.h -o debug/moc_AEqualifier.cpp
 
@@ -800,9 +799,9 @@ debug/moc_externalLinkV1.cpp: include/osistack_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -810,6 +809,7 @@ debug/moc_externalLinkV1.cpp: include/osistack_global.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		../ASN1/include/berAnyNoDecode.h \
 		../ASN1/include/berBitString.h \
 		../ASN1/include/storages/berBitStringStorage.h \
@@ -918,9 +918,9 @@ debug/moc_externalLinkV2.cpp: include/osistack_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -928,6 +928,7 @@ debug/moc_externalLinkV2.cpp: include/osistack_global.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		../ASN1/include/berAny.h \
 		../ASN1/include/berBitString.h \
 		../ASN1/include/storages/berBitStringStorage.h \
@@ -1036,9 +1037,9 @@ debug/moc_associateSourceDiagnostic.cpp: include/osistack_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -1046,6 +1047,7 @@ debug/moc_associateSourceDiagnostic.cpp: include/osistack_global.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		../ASN1/include/berAny.h \
 		include/acse-asn1/associateSourceDiagnostic.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/acse-asn1/associateSourceDiagnostic.h -o debug/moc_associateSourceDiagnostic.cpp
@@ -1152,9 +1154,9 @@ debug/moc_authenticationValue.cpp: include/osistack_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -1162,6 +1164,7 @@ debug/moc_authenticationValue.cpp: include/osistack_global.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		include/acse-asn1/externalLinkV2.h \
 		../ASN1/include/berAny.h \
 		../ASN1/include/berBitString.h \
@@ -1272,9 +1275,9 @@ debug/moc_applicationContextNameList.cpp: include/osistack_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -1282,6 +1285,7 @@ debug/moc_applicationContextNameList.cpp: include/osistack_global.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		include/acse-asn1/applicationContextNameList.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/acse-asn1/applicationContextNameList.h -o debug/moc_applicationContextNameList.cpp
 
@@ -1387,9 +1391,9 @@ debug/moc_associationInformation.cpp: include/osistack_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -1397,6 +1401,7 @@ debug/moc_associationInformation.cpp: include/osistack_global.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		include/acse-asn1/externalLinkV1.h \
 		../ASN1/include/berAnyNoDecode.h \
 		../ASN1/include/berBitString.h \
@@ -1506,9 +1511,9 @@ debug/moc_RLreApdu.cpp: include/osistack_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -1516,6 +1521,7 @@ debug/moc_RLreApdu.cpp: include/osistack_global.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		include/acse-asn1/associationInformation.h \
 		include/acse-asn1/externalLinkV1.h \
 		../ASN1/include/berAnyNoDecode.h \
@@ -1626,9 +1632,9 @@ debug/moc_RLrqApdu.cpp: include/osistack_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -1636,6 +1642,7 @@ debug/moc_RLrqApdu.cpp: include/osistack_global.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		include/acse-asn1/associationInformation.h \
 		include/acse-asn1/externalLinkV1.h \
 		../ASN1/include/berAnyNoDecode.h \
@@ -1746,9 +1753,9 @@ debug/moc_AAreApdu.cpp: include/osistack_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -1756,6 +1763,7 @@ debug/moc_AAreApdu.cpp: include/osistack_global.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		../ASN1/include/berBitString.h \
 		../ASN1/include/storages/berBitStringStorage.h \
 		../ASN1/include/berGraphicString.h \
@@ -1874,9 +1882,9 @@ debug/moc_AArqApdu.cpp: include/osistack_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -1884,6 +1892,7 @@ debug/moc_AArqApdu.cpp: include/osistack_global.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		../ASN1/include/berBitString.h \
 		../ASN1/include/storages/berBitStringStorage.h \
 		../ASN1/include/berGraphicString.h \
@@ -2001,9 +2010,9 @@ debug/moc_AcseApdu.cpp: include/osistack_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -2011,6 +2020,7 @@ debug/moc_AcseApdu.cpp: include/osistack_global.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		include/acse-asn1/AArqApdu.h \
 		../ASN1/include/berBitString.h \
 		../ASN1/include/storages/berBitStringStorage.h \
@@ -2133,9 +2143,9 @@ debug/moc_ResultSubsequence.cpp: include/osistack_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -2143,6 +2153,7 @@ debug/moc_ResultSubsequence.cpp: include/osistack_global.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		include/presentation-asn1/ResultSubsequence.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/presentation-asn1/ResultSubsequence.h -o debug/moc_ResultSubsequence.cpp
 
@@ -2248,9 +2259,9 @@ debug/moc_ResultList.cpp: include/osistack_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -2258,6 +2269,7 @@ debug/moc_ResultList.cpp: include/osistack_global.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		include/presentation-asn1/ResultSubsequence.h \
 		include/presentation-asn1/ResultList.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/presentation-asn1/ResultList.h -o debug/moc_ResultList.cpp
@@ -2364,9 +2376,9 @@ debug/moc_PdvList.cpp: include/osistack_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -2374,6 +2386,7 @@ debug/moc_PdvList.cpp: include/osistack_global.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		../ASN1/include/berAnyNoDecode.h \
 		../ASN1/include/berBitString.h \
 		../ASN1/include/storages/berBitStringStorage.h \
@@ -2482,9 +2495,9 @@ debug/moc_fullyEncodedData.cpp: include/osistack_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -2492,6 +2505,7 @@ debug/moc_fullyEncodedData.cpp: include/osistack_global.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		include/presentation-asn1/PdvList.h \
 		../ASN1/include/berAnyNoDecode.h \
 		../ASN1/include/berBitString.h \
@@ -2601,9 +2615,9 @@ debug/moc_userData.cpp: include/osistack_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -2611,6 +2625,7 @@ debug/moc_userData.cpp: include/osistack_global.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		include/presentation-asn1/fullyEncodedData.h \
 		include/presentation-asn1/PdvList.h \
 		../ASN1/include/berAnyNoDecode.h \
@@ -2721,9 +2736,9 @@ debug/moc_contextList.cpp: include/osistack_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -2731,6 +2746,7 @@ debug/moc_contextList.cpp: include/osistack_global.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		include/acse-asn1/applicationContextNameList.h \
 		include/presentation-asn1/contextList.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/presentation-asn1/contextList.h -o debug/moc_contextList.cpp
@@ -2837,9 +2853,9 @@ debug/moc_defaultContextName.cpp: include/osistack_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -2847,6 +2863,7 @@ debug/moc_defaultContextName.cpp: include/osistack_global.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		include/presentation-asn1/defaultContextName.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/presentation-asn1/defaultContextName.h -o debug/moc_defaultContextName.cpp
 
@@ -2952,9 +2969,9 @@ debug/moc_CpType.cpp: include/osistack_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -2962,6 +2979,7 @@ debug/moc_CpType.cpp: include/osistack_global.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		../ASN1/include/berBitString.h \
 		../ASN1/include/storages/berBitStringStorage.h \
 		include/presentation-asn1/ResultList.h \
@@ -3079,9 +3097,9 @@ debug/moc_modeSelector.cpp: include/osistack_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -3089,6 +3107,7 @@ debug/moc_modeSelector.cpp: include/osistack_global.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		include/presentation-asn1/modeSelector.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/presentation-asn1/modeSelector.h -o debug/moc_modeSelector.cpp
 
@@ -3194,9 +3213,9 @@ debug/moc_CpaPpdu.cpp: include/osistack_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -3204,6 +3223,7 @@ debug/moc_CpaPpdu.cpp: include/osistack_global.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		../ASN1/include/berBitString.h \
 		../ASN1/include/storages/berBitStringStorage.h \
 		include/presentation-asn1/ResultList.h \
@@ -3318,9 +3338,9 @@ debug/moc_AcseAssociation.cpp: include/osistack_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -3328,6 +3348,7 @@ debug/moc_AcseAssociation.cpp: include/osistack_global.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		../ositransport/connection.h \
 		../ositransport/ositransport_global.h \
 		/usr/include/qt5/QtNetwork/QTcpSocket \
@@ -3373,165 +3394,6 @@ debug/moc_AcseAssociation.cpp: include/osistack_global.h \
 		include/presentation-asn1/defaultContextName.h \
 		include/AcseAssociation.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/AcseAssociation.h -o debug/moc_AcseAssociation.cpp
-
-debug/moc_AcseAssociationListener.cpp: include/osistack_global.h \
-		/usr/include/qt5/QtCore/qglobal.h \
-		/usr/include/qt5/QtCore/qconfig.h \
-		/usr/include/qt5/QtCore/qfeatures.h \
-		/usr/include/qt5/QtCore/qsystemdetection.h \
-		/usr/include/qt5/QtCore/qprocessordetection.h \
-		/usr/include/qt5/QtCore/qcompilerdetection.h \
-		/usr/include/qt5/QtCore/qglobalstatic.h \
-		/usr/include/qt5/QtCore/qatomic.h \
-		/usr/include/qt5/QtCore/qbasicatomic.h \
-		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
-		/usr/include/qt5/QtCore/qgenericatomic.h \
-		/usr/include/qt5/QtCore/qatomic_msvc.h \
-		/usr/include/qt5/QtCore/qatomic_integrity.h \
-		/usr/include/qt5/QtCore/qoldbasicatomic.h \
-		/usr/include/qt5/QtCore/qatomic_vxworks.h \
-		/usr/include/qt5/QtCore/qatomic_power.h \
-		/usr/include/qt5/QtCore/qatomic_alpha.h \
-		/usr/include/qt5/QtCore/qatomic_armv7.h \
-		/usr/include/qt5/QtCore/qatomic_armv6.h \
-		/usr/include/qt5/QtCore/qatomic_armv5.h \
-		/usr/include/qt5/QtCore/qatomic_bfin.h \
-		/usr/include/qt5/QtCore/qatomic_ia64.h \
-		/usr/include/qt5/QtCore/qatomic_mips.h \
-		/usr/include/qt5/QtCore/qatomic_s390.h \
-		/usr/include/qt5/QtCore/qatomic_sh4a.h \
-		/usr/include/qt5/QtCore/qatomic_sparc.h \
-		/usr/include/qt5/QtCore/qatomic_gcc.h \
-		/usr/include/qt5/QtCore/qatomic_x86.h \
-		/usr/include/qt5/QtCore/qatomic_cxx11.h \
-		/usr/include/qt5/QtCore/qatomic_unix.h \
-		/usr/include/qt5/QtCore/qmutex.h \
-		/usr/include/qt5/QtCore/qlogging.h \
-		/usr/include/qt5/QtCore/qflags.h \
-		/usr/include/qt5/QtCore/qtypeinfo.h \
-		/usr/include/qt5/QtCore/qtypetraits.h \
-		/usr/include/qt5/QtCore/qsysinfo.h \
-		/usr/include/qt5/QtCore/QObject \
-		/usr/include/qt5/QtCore/qobject.h \
-		/usr/include/qt5/QtCore/qobjectdefs.h \
-		/usr/include/qt5/QtCore/qnamespace.h \
-		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
-		/usr/include/qt5/QtCore/qstring.h \
-		/usr/include/qt5/QtCore/qchar.h \
-		/usr/include/qt5/QtCore/qbytearray.h \
-		/usr/include/qt5/QtCore/qrefcount.h \
-		/usr/include/qt5/QtCore/qarraydata.h \
-		/usr/include/qt5/QtCore/qstringbuilder.h \
-		/usr/include/qt5/QtCore/qlist.h \
-		/usr/include/qt5/QtCore/qalgorithms.h \
-		/usr/include/qt5/QtCore/qiterator.h \
-		/usr/include/qt5/QtCore/qcoreevent.h \
-		/usr/include/qt5/QtCore/qscopedpointer.h \
-		/usr/include/qt5/QtCore/qmetatype.h \
-		/usr/include/qt5/QtCore/qvarlengtharray.h \
-		/usr/include/qt5/QtCore/qcontainerfwd.h \
-		/usr/include/qt5/QtCore/qisenum.h \
-		/usr/include/qt5/QtCore/qobject_impl.h \
-		/usr/include/qt5/QtNetwork/QHostAddress \
-		/usr/include/qt5/QtNetwork/qhostaddress.h \
-		/usr/include/qt5/QtCore/qpair.h \
-		/usr/include/qt5/QtNetwork/qabstractsocket.h \
-		/usr/include/qt5/QtCore/qiodevice.h \
-		/usr/include/qt5/QtCore/qdebug.h \
-		/usr/include/qt5/QtCore/qhash.h \
-		/usr/include/qt5/QtCore/qmap.h \
-		/usr/include/qt5/QtCore/qtextstream.h \
-		/usr/include/qt5/QtCore/qlocale.h \
-		/usr/include/qt5/QtCore/qvariant.h \
-		/usr/include/qt5/QtCore/qstringlist.h \
-		/usr/include/qt5/QtCore/qdatastream.h \
-		/usr/include/qt5/QtCore/qregexp.h \
-		/usr/include/qt5/QtCore/qstringmatcher.h \
-		/usr/include/qt5/QtCore/qshareddata.h \
-		/usr/include/qt5/QtCore/qvector.h \
-		/usr/include/qt5/QtCore/qpoint.h \
-		/usr/include/qt5/QtCore/qset.h \
-		/usr/include/qt5/QtCore/qcontiguouscache.h \
-		/usr/include/qt5/QtCore/QMutex \
-		/usr/include/qt5/QtCore/QDebug \
-		/usr/include/qt5/QtCore/QLinkedList \
-		/usr/include/qt5/QtCore/qlinkedlist.h \
-		/usr/include/qt5/QtCore/QVector \
-		/usr/include/qt5/QtCore/QDataStream \
-		/usr/include/qt5/QtCore/QScopedPointer \
-		/usr/include/qt5/QtCore/QSharedPointer \
-		/usr/include/qt5/QtCore/qsharedpointer.h \
-		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
-		/usr/include/qt5/QtCore/QByteArray \
-		/usr/include/qt5/QtCore/QBitArray \
-		/usr/include/qt5/QtCore/qbitarray.h \
-		/usr/include/qt5/QtCore/qmath.h \
-		../ASN1/include/berOctetString.h \
-		../ASN1/include/berIdentifier.h \
-		../ASN1/include/asn1_global.h \
-		/usr/include/qt5/QtCore/QMetaObject \
-		/usr/include/qt5/QtCore/QMetaProperty \
-		/usr/include/qt5/QtCore/qmetaobject.h \
-		/usr/include/qt5/QtCore/QVariant \
-		../ASN1/include/DeclareCommonTypes.h \
-		../ASN1/include/berByteArrayOutputStream.h \
-		../ASN1/include/berByteArrayInputStream.h \
-		../ASN1/include/berBase.h \
-		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
-		../ASN1/include/storages/berOctetStringStorage.h \
-		../ASN1/include/storages/decoder.h \
-		../ASN1/include/berInteger.h \
-		../ASN1/include/storages/berIntegerStorage.h \
-		../ASN1/include/berObjectIdentifier.h \
-		../ASN1/include/storages/berObjectIdentifierStorage.h \
-		../ASN1/include/storages/containerStorage.h \
-		include/AcseAssociation.h \
-		../ositransport/connection.h \
-		../ositransport/ositransport_global.h \
-		/usr/include/qt5/QtNetwork/QTcpSocket \
-		/usr/include/qt5/QtNetwork/qtcpsocket.h \
-		/usr/include/qt5/QtNetwork/QTcpServer \
-		/usr/include/qt5/QtNetwork/qtcpserver.h \
-		/usr/include/qt5/QtNetwork/QHostInfo \
-		/usr/include/qt5/QtNetwork/qhostinfo.h \
-		/usr/include/qt5/QtCore/QThreadPool \
-		/usr/include/qt5/QtCore/qthreadpool.h \
-		/usr/include/qt5/QtCore/qthread.h \
-		/usr/include/qt5/QtCore/qrunnable.h \
-		../ositransport/tcpeasysocket.h \
-		../ositransport/clienttsap.h \
-		../ositransport/socketfactory.h \
-		../ASN1/include/berGraphicString.h \
-		include/presentation-asn1/contextList.h \
-		include/acse-asn1/applicationContextNameList.h \
-		include/acse-asn1/associateSourceDiagnostic.h \
-		../ASN1/include/berAny.h \
-		include/presentation-asn1/modeSelector.h \
-		include/presentation-asn1/ResultList.h \
-		include/presentation-asn1/ResultSubsequence.h \
-		include/presentation-asn1/userData.h \
-		include/presentation-asn1/fullyEncodedData.h \
-		include/presentation-asn1/PdvList.h \
-		../ASN1/include/berAnyNoDecode.h \
-		../ASN1/include/berBitString.h \
-		../ASN1/include/storages/berBitStringStorage.h \
-		include/presentation-asn1/CpaPpdu.h \
-		include/acse-asn1/AcseApdu.h \
-		include/acse-asn1/AArqApdu.h \
-		include/acse-asn1/APtitle.h \
-		include/acse-asn1/AEqualifier.h \
-		include/acse-asn1/authenticationValue.h \
-		include/acse-asn1/externalLinkV2.h \
-		include/acse-asn1/associationInformation.h \
-		include/acse-asn1/externalLinkV1.h \
-		include/acse-asn1/AAreApdu.h \
-		include/acse-asn1/RLrqApdu.h \
-		include/acse-asn1/RLreApdu.h \
-		include/presentation-asn1/CpType.h \
-		include/presentation-asn1/defaultContextName.h \
-		include/AcseAssociationListener.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/AcseAssociationListener.h -o debug/moc_AcseAssociationListener.cpp
 
 debug/moc_ClientAcseSap.cpp: include/osistack_global.h \
 		/usr/include/qt5/QtCore/qglobal.h \
@@ -3635,9 +3497,9 @@ debug/moc_ClientAcseSap.cpp: include/osistack_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -3645,6 +3507,7 @@ debug/moc_ClientAcseSap.cpp: include/osistack_global.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		../ositransport/clienttsap.h \
 		../ositransport/ositransport_global.h \
 		/usr/include/qt5/QtNetwork/QTcpSocket \
@@ -3794,9 +3657,9 @@ debug/moc_ServerAcseSap.cpp: include/osistack_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -3804,6 +3667,7 @@ debug/moc_ServerAcseSap.cpp: include/osistack_global.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		../ositransport/connection.h \
 		../ositransport/ositransport_global.h \
 		/usr/include/qt5/QtNetwork/QTcpSocket \
@@ -3817,11 +3681,10 @@ debug/moc_ServerAcseSap.cpp: include/osistack_global.h \
 		/usr/include/qt5/QtCore/qthread.h \
 		/usr/include/qt5/QtCore/qrunnable.h \
 		../ositransport/tcpeasysocket.h \
-		../ositransport/connectionlistener.h \
 		../ositransport/servertsap.h \
+		../ositransport/connectionlistener.h \
 		../ositransport/socketfactory.h \
 		../ositransport/connectionserver.h \
-		include/AcseAssociationListener.h \
 		include/AcseAssociation.h \
 		../ositransport/clienttsap.h \
 		../ASN1/include/berGraphicString.h \
@@ -4152,6 +4015,7 @@ debug/moc_berIdentifier.cpp: ../ASN1/include/asn1_global.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berIdentifier.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ASN1/include/berIdentifier.h -o debug/moc_berIdentifier.cpp
 
@@ -4356,8 +4220,8 @@ debug/moc_berAny.cpp: ../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berByteArrayInputStream.h \
 		../ASN1/include/berIdentifier.h \
-		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berBaseType.h \
+		../ASN1/include/berLength.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berAny.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ASN1/include/berAny.h -o debug/moc_berAny.cpp
@@ -4462,8 +4326,8 @@ debug/moc_berAnyNoDecode.cpp: ../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berByteArrayInputStream.h \
 		../ASN1/include/berIdentifier.h \
-		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berBaseType.h \
+		../ASN1/include/berLength.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berAnyNoDecode.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ASN1/include/berAnyNoDecode.h -o debug/moc_berAnyNoDecode.cpp
@@ -4567,10 +4431,10 @@ debug/moc_berBitString.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berBitStringStorage.h \
 		../ASN1/include/berBase.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berBitString.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ASN1/include/berBitString.h -o debug/moc_berBitString.cpp
@@ -4674,9 +4538,9 @@ debug/moc_berBoolean.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berBooleanStorage.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berBoolean.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ASN1/include/berBoolean.h -o debug/moc_berBoolean.cpp
@@ -4780,10 +4644,10 @@ debug/moc_berEnum.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berIntegerStorage.h \
 		../ASN1/include/berBase.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berEnum.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ASN1/include/berEnum.h -o debug/moc_berEnum.cpp
@@ -4887,10 +4751,10 @@ debug/moc_berInteger.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berIntegerStorage.h \
 		../ASN1/include/berBase.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ASN1/include/berInteger.h -o debug/moc_berInteger.cpp
@@ -4994,9 +4858,9 @@ debug/moc_berNull.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berNullStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berNull.h
@@ -5101,9 +4965,9 @@ debug/moc_berObjectIdentifier.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berObjectIdentifier.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ASN1/include/berObjectIdentifier.h -o debug/moc_berObjectIdentifier.cpp
@@ -5207,9 +5071,9 @@ debug/moc_berOctetString.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berOctetString.h
@@ -5314,10 +5178,10 @@ debug/moc_berReal.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berRealStorage.h \
 		../ASN1/include/berBase.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berReal.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ASN1/include/berReal.h -o debug/moc_berReal.cpp
@@ -5421,10 +5285,10 @@ debug/moc_berBMPString.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/berBase.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berBMPString.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ASN1/include/berBMPString.h -o debug/moc_berBMPString.cpp
@@ -5528,10 +5392,10 @@ debug/moc_berGeneralizedTime.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/berBase.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berGeneralizedTime.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ASN1/include/berGeneralizedTime.h -o debug/moc_berGeneralizedTime.cpp
@@ -5635,10 +5499,10 @@ debug/moc_berGeneralString.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/berBase.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berGeneralString.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ASN1/include/berGeneralString.h -o debug/moc_berGeneralString.cpp
@@ -5742,10 +5606,10 @@ debug/moc_berGraphicString.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/berBase.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berGraphicString.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ASN1/include/berGraphicString.h -o debug/moc_berGraphicString.cpp
@@ -5849,10 +5713,10 @@ debug/moc_berIA5String.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/berBase.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berIA5String.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ASN1/include/berIA5String.h -o debug/moc_berIA5String.cpp
@@ -5956,10 +5820,10 @@ debug/moc_berNumericString.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/berBase.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berNumericString.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ASN1/include/berNumericString.h -o debug/moc_berNumericString.cpp
@@ -6063,10 +5927,10 @@ debug/moc_berPrintableString.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/berBase.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berPrintableString.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ASN1/include/berPrintableString.h -o debug/moc_berPrintableString.cpp
@@ -6170,10 +6034,10 @@ debug/moc_berTeletexString.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/berBase.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berTeletexString.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ASN1/include/berTeletexString.h -o debug/moc_berTeletexString.cpp
@@ -6277,10 +6141,10 @@ debug/moc_berUniversalString.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/berBase.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berUniversalString.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ASN1/include/berUniversalString.h -o debug/moc_berUniversalString.cpp
@@ -6384,10 +6248,10 @@ debug/moc_berUTF8String.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/berBase.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berUTF8String.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ASN1/include/berUTF8String.h -o debug/moc_berUTF8String.cpp
@@ -6491,10 +6355,10 @@ debug/moc_berVideotexString.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/berBase.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berVideotexString.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ASN1/include/berVideotexString.h -o debug/moc_berVideotexString.cpp
@@ -6598,10 +6462,10 @@ debug/moc_berVisibleString.cpp: ../ASN1/include/berIdentifier.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/berBase.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berVisibleString.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../ASN1/include/berVisibleString.h -o debug/moc_berVisibleString.cpp
@@ -6705,11 +6569,11 @@ debug/moc_compositeValue.cpp: ../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berIdentifier.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/berBitString.h \
 		../ASN1/include/storages/berBitStringStorage.h \
 		../ASN1/include/berBase.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berVisibleString.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
@@ -7250,9 +7114,9 @@ build/debug/initIdentifiers.o: src/acse-asn1/initIdentifiers.cpp include/acse-as
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -7260,6 +7124,7 @@ build/debug/initIdentifiers.o: src/acse-asn1/initIdentifiers.cpp include/acse-as
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		../ASN1/include/berBitString.h \
 		../ASN1/include/storages/berBitStringStorage.h \
 		../ASN1/include/berGraphicString.h \
@@ -7409,9 +7274,9 @@ build/debug/AcseAssociation.o: src/AcseAssociation.cpp include/AcseAssociation.h
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -7419,6 +7284,7 @@ build/debug/AcseAssociation.o: src/AcseAssociation.cpp include/AcseAssociation.h
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		../ositransport/connection.h \
 		../ositransport/ositransport_global.h \
 		/usr/include/qt5/QtNetwork/QTcpSocket \
@@ -7463,165 +7329,6 @@ build/debug/AcseAssociation.o: src/AcseAssociation.cpp include/AcseAssociation.h
 		include/presentation-asn1/CpType.h \
 		include/presentation-asn1/defaultContextName.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/AcseAssociation.o src/AcseAssociation.cpp
-
-build/debug/AcseAssociationListener.o: src/AcseAssociationListener.cpp include/AcseAssociationListener.h \
-		include/osistack_global.h \
-		/usr/include/qt5/QtCore/qglobal.h \
-		/usr/include/qt5/QtCore/qconfig.h \
-		/usr/include/qt5/QtCore/qfeatures.h \
-		/usr/include/qt5/QtCore/qsystemdetection.h \
-		/usr/include/qt5/QtCore/qprocessordetection.h \
-		/usr/include/qt5/QtCore/qcompilerdetection.h \
-		/usr/include/qt5/QtCore/qglobalstatic.h \
-		/usr/include/qt5/QtCore/qatomic.h \
-		/usr/include/qt5/QtCore/qbasicatomic.h \
-		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
-		/usr/include/qt5/QtCore/qgenericatomic.h \
-		/usr/include/qt5/QtCore/qatomic_msvc.h \
-		/usr/include/qt5/QtCore/qatomic_integrity.h \
-		/usr/include/qt5/QtCore/qoldbasicatomic.h \
-		/usr/include/qt5/QtCore/qatomic_vxworks.h \
-		/usr/include/qt5/QtCore/qatomic_power.h \
-		/usr/include/qt5/QtCore/qatomic_alpha.h \
-		/usr/include/qt5/QtCore/qatomic_armv7.h \
-		/usr/include/qt5/QtCore/qatomic_armv6.h \
-		/usr/include/qt5/QtCore/qatomic_armv5.h \
-		/usr/include/qt5/QtCore/qatomic_bfin.h \
-		/usr/include/qt5/QtCore/qatomic_ia64.h \
-		/usr/include/qt5/QtCore/qatomic_mips.h \
-		/usr/include/qt5/QtCore/qatomic_s390.h \
-		/usr/include/qt5/QtCore/qatomic_sh4a.h \
-		/usr/include/qt5/QtCore/qatomic_sparc.h \
-		/usr/include/qt5/QtCore/qatomic_gcc.h \
-		/usr/include/qt5/QtCore/qatomic_x86.h \
-		/usr/include/qt5/QtCore/qatomic_cxx11.h \
-		/usr/include/qt5/QtCore/qatomic_unix.h \
-		/usr/include/qt5/QtCore/qmutex.h \
-		/usr/include/qt5/QtCore/qlogging.h \
-		/usr/include/qt5/QtCore/qflags.h \
-		/usr/include/qt5/QtCore/qtypeinfo.h \
-		/usr/include/qt5/QtCore/qtypetraits.h \
-		/usr/include/qt5/QtCore/qsysinfo.h \
-		/usr/include/qt5/QtCore/QObject \
-		/usr/include/qt5/QtCore/qobject.h \
-		/usr/include/qt5/QtCore/qobjectdefs.h \
-		/usr/include/qt5/QtCore/qnamespace.h \
-		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
-		/usr/include/qt5/QtCore/qstring.h \
-		/usr/include/qt5/QtCore/qchar.h \
-		/usr/include/qt5/QtCore/qbytearray.h \
-		/usr/include/qt5/QtCore/qrefcount.h \
-		/usr/include/qt5/QtCore/qarraydata.h \
-		/usr/include/qt5/QtCore/qstringbuilder.h \
-		/usr/include/qt5/QtCore/qlist.h \
-		/usr/include/qt5/QtCore/qalgorithms.h \
-		/usr/include/qt5/QtCore/qiterator.h \
-		/usr/include/qt5/QtCore/qcoreevent.h \
-		/usr/include/qt5/QtCore/qscopedpointer.h \
-		/usr/include/qt5/QtCore/qmetatype.h \
-		/usr/include/qt5/QtCore/qvarlengtharray.h \
-		/usr/include/qt5/QtCore/qcontainerfwd.h \
-		/usr/include/qt5/QtCore/qisenum.h \
-		/usr/include/qt5/QtCore/qobject_impl.h \
-		/usr/include/qt5/QtNetwork/QHostAddress \
-		/usr/include/qt5/QtNetwork/qhostaddress.h \
-		/usr/include/qt5/QtCore/qpair.h \
-		/usr/include/qt5/QtNetwork/qabstractsocket.h \
-		/usr/include/qt5/QtCore/qiodevice.h \
-		/usr/include/qt5/QtCore/qdebug.h \
-		/usr/include/qt5/QtCore/qhash.h \
-		/usr/include/qt5/QtCore/qmap.h \
-		/usr/include/qt5/QtCore/qtextstream.h \
-		/usr/include/qt5/QtCore/qlocale.h \
-		/usr/include/qt5/QtCore/qvariant.h \
-		/usr/include/qt5/QtCore/qstringlist.h \
-		/usr/include/qt5/QtCore/qdatastream.h \
-		/usr/include/qt5/QtCore/qregexp.h \
-		/usr/include/qt5/QtCore/qstringmatcher.h \
-		/usr/include/qt5/QtCore/qshareddata.h \
-		/usr/include/qt5/QtCore/qvector.h \
-		/usr/include/qt5/QtCore/qpoint.h \
-		/usr/include/qt5/QtCore/qset.h \
-		/usr/include/qt5/QtCore/qcontiguouscache.h \
-		/usr/include/qt5/QtCore/QMutex \
-		/usr/include/qt5/QtCore/QDebug \
-		/usr/include/qt5/QtCore/QLinkedList \
-		/usr/include/qt5/QtCore/qlinkedlist.h \
-		/usr/include/qt5/QtCore/QVector \
-		/usr/include/qt5/QtCore/QDataStream \
-		/usr/include/qt5/QtCore/QScopedPointer \
-		/usr/include/qt5/QtCore/QSharedPointer \
-		/usr/include/qt5/QtCore/qsharedpointer.h \
-		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
-		/usr/include/qt5/QtCore/QByteArray \
-		/usr/include/qt5/QtCore/QBitArray \
-		/usr/include/qt5/QtCore/qbitarray.h \
-		/usr/include/qt5/QtCore/qmath.h \
-		../ASN1/include/berOctetString.h \
-		../ASN1/include/berIdentifier.h \
-		../ASN1/include/asn1_global.h \
-		/usr/include/qt5/QtCore/QMetaObject \
-		/usr/include/qt5/QtCore/QMetaProperty \
-		/usr/include/qt5/QtCore/qmetaobject.h \
-		/usr/include/qt5/QtCore/QVariant \
-		../ASN1/include/DeclareCommonTypes.h \
-		../ASN1/include/berByteArrayOutputStream.h \
-		../ASN1/include/berByteArrayInputStream.h \
-		../ASN1/include/berBase.h \
-		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
-		../ASN1/include/storages/berOctetStringStorage.h \
-		../ASN1/include/storages/decoder.h \
-		../ASN1/include/berInteger.h \
-		../ASN1/include/storages/berIntegerStorage.h \
-		../ASN1/include/berObjectIdentifier.h \
-		../ASN1/include/storages/berObjectIdentifierStorage.h \
-		../ASN1/include/storages/containerStorage.h \
-		include/AcseAssociation.h \
-		../ositransport/connection.h \
-		../ositransport/ositransport_global.h \
-		/usr/include/qt5/QtNetwork/QTcpSocket \
-		/usr/include/qt5/QtNetwork/qtcpsocket.h \
-		/usr/include/qt5/QtNetwork/QTcpServer \
-		/usr/include/qt5/QtNetwork/qtcpserver.h \
-		/usr/include/qt5/QtNetwork/QHostInfo \
-		/usr/include/qt5/QtNetwork/qhostinfo.h \
-		/usr/include/qt5/QtCore/QThreadPool \
-		/usr/include/qt5/QtCore/qthreadpool.h \
-		/usr/include/qt5/QtCore/qthread.h \
-		/usr/include/qt5/QtCore/qrunnable.h \
-		../ositransport/tcpeasysocket.h \
-		../ositransport/clienttsap.h \
-		../ositransport/socketfactory.h \
-		../ASN1/include/berGraphicString.h \
-		include/presentation-asn1/contextList.h \
-		include/acse-asn1/applicationContextNameList.h \
-		include/acse-asn1/associateSourceDiagnostic.h \
-		../ASN1/include/berAny.h \
-		include/presentation-asn1/modeSelector.h \
-		include/presentation-asn1/ResultList.h \
-		include/presentation-asn1/ResultSubsequence.h \
-		include/presentation-asn1/userData.h \
-		include/presentation-asn1/fullyEncodedData.h \
-		include/presentation-asn1/PdvList.h \
-		../ASN1/include/berAnyNoDecode.h \
-		../ASN1/include/berBitString.h \
-		../ASN1/include/storages/berBitStringStorage.h \
-		include/presentation-asn1/CpaPpdu.h \
-		include/acse-asn1/AcseApdu.h \
-		include/acse-asn1/AArqApdu.h \
-		include/acse-asn1/APtitle.h \
-		include/acse-asn1/AEqualifier.h \
-		include/acse-asn1/authenticationValue.h \
-		include/acse-asn1/externalLinkV2.h \
-		include/acse-asn1/associationInformation.h \
-		include/acse-asn1/externalLinkV1.h \
-		include/acse-asn1/AAreApdu.h \
-		include/acse-asn1/RLrqApdu.h \
-		include/acse-asn1/RLreApdu.h \
-		include/presentation-asn1/CpType.h \
-		include/presentation-asn1/defaultContextName.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/AcseAssociationListener.o src/AcseAssociationListener.cpp
 
 build/debug/ServerAcseSap.o: src/ServerAcseSap.cpp include/ServerAcseSap.h \
 		include/osistack_global.h \
@@ -7726,9 +7433,9 @@ build/debug/ServerAcseSap.o: src/ServerAcseSap.cpp include/ServerAcseSap.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -7736,6 +7443,7 @@ build/debug/ServerAcseSap.o: src/ServerAcseSap.cpp include/ServerAcseSap.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		../ositransport/connection.h \
 		../ositransport/ositransport_global.h \
 		/usr/include/qt5/QtNetwork/QTcpSocket \
@@ -7749,11 +7457,10 @@ build/debug/ServerAcseSap.o: src/ServerAcseSap.cpp include/ServerAcseSap.h \
 		/usr/include/qt5/QtCore/qthread.h \
 		/usr/include/qt5/QtCore/qrunnable.h \
 		../ositransport/tcpeasysocket.h \
-		../ositransport/connectionlistener.h \
 		../ositransport/servertsap.h \
+		../ositransport/connectionlistener.h \
 		../ositransport/socketfactory.h \
 		../ositransport/connectionserver.h \
-		include/AcseAssociationListener.h \
 		include/AcseAssociation.h \
 		../ositransport/clienttsap.h \
 		../ASN1/include/berGraphicString.h \
@@ -7890,9 +7597,9 @@ build/debug/ClientAcseSap.o: src/ClientAcseSap.cpp include/ClientAcseSap.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berInteger.h \
@@ -7900,6 +7607,7 @@ build/debug/ClientAcseSap.o: src/ClientAcseSap.cpp include/ClientAcseSap.h \
 		../ASN1/include/berObjectIdentifier.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
 		../ASN1/include/storages/containerStorage.h \
+		../ASN1/include/storages/unionStorage.h \
 		../ositransport/clienttsap.h \
 		../ositransport/ositransport_global.h \
 		/usr/include/qt5/QtNetwork/QTcpSocket \
@@ -8244,9 +7952,9 @@ build/debug/InitIdentifiers.o: ../ASN1/src/InitIdentifiers.cpp ../ASN1/include/b
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berBase.h \
 		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/storages/decoder.h \
 		../ASN1/include/berReal.h \
@@ -8263,6 +7971,8 @@ build/debug/InitIdentifiers.o: ../ASN1/src/InitIdentifiers.cpp ../ASN1/include/b
 		../ASN1/include/storages/berNullStorage.h \
 		../ASN1/include/berBitString.h \
 		../ASN1/include/storages/berBitStringStorage.h \
+		../ASN1/include/berAny.h \
+		../ASN1/include/berAnyNoDecode.h \
 		../ASN1/include/berGeneralizedTime.h \
 		../ASN1/include/berBMPString.h \
 		../ASN1/include/berGeneralString.h \
@@ -8375,7 +8085,8 @@ build/debug/berIdentifier.o: ../ASN1/src/berIdentifier.cpp ../ASN1/include/berId
 		/usr/include/qt5/QtCore/QVariant \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
-		../ASN1/include/berByteArrayInputStream.h
+		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/berIdentifier.o ../ASN1/src/berIdentifier.cpp
 
 build/debug/berLength.o: ../ASN1/src/berLength.cpp ../ASN1/include/berLength.h \
@@ -8579,8 +8290,8 @@ build/debug/berBase.o: ../ASN1/src/berBase.cpp ../ASN1/include/berBase.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
 		../ASN1/include/berIdentifier.h \
-		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h
+		../ASN1/include/storages/berBaseType.h \
+		../ASN1/include/berLength.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/berBase.o ../ASN1/src/berBase.cpp
 
 build/debug/berBitString.o: ../ASN1/src/types/berBitString.cpp ../ASN1/include/berBitString.h \
@@ -8683,10 +8394,10 @@ build/debug/berBitString.o: ../ASN1/src/types/berBitString.cpp ../ASN1/include/b
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berBitStringStorage.h \
 		../ASN1/include/berBase.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/berBitString.o ../ASN1/src/types/berBitString.cpp
 
@@ -8790,9 +8501,9 @@ build/debug/berBoolean.o: ../ASN1/src/types/berBoolean.cpp ../ASN1/include/berBo
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berBooleanStorage.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/berBoolean.o ../ASN1/src/types/berBoolean.cpp
 
@@ -8896,10 +8607,10 @@ build/debug/berInteger.o: ../ASN1/src/types/berInteger.cpp ../ASN1/include/berIn
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berIntegerStorage.h \
 		../ASN1/include/berBase.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/berInteger.o ../ASN1/src/types/berInteger.cpp
 
@@ -9003,9 +8714,9 @@ build/debug/berObjectIdentifier.o: ../ASN1/src/types/berObjectIdentifier.cpp ../
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berObjectIdentifierStorage.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/berObjectIdentifier.o ../ASN1/src/types/berObjectIdentifier.cpp
 
@@ -9109,10 +8820,10 @@ build/debug/berReal.o: ../ASN1/src/types/berReal.cpp ../ASN1/include/berReal.h \
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berRealStorage.h \
 		../ASN1/include/berBase.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/berReal.o ../ASN1/src/types/berReal.cpp
 
@@ -9216,10 +8927,10 @@ build/debug/berVisibleString.o: ../ASN1/src/types/berVisibleString.cpp ../ASN1/i
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berOctetStringStorage.h \
 		../ASN1/include/berBase.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/berVisibleString.o ../ASN1/src/types/berVisibleString.cpp
 
@@ -9324,8 +9035,8 @@ build/debug/berBitStringStorage.o: ../ASN1/src/storages/berBitStringStorage.cpp 
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
 		../ASN1/include/berIdentifier.h \
-		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h
+		../ASN1/include/storages/berBaseType.h \
+		../ASN1/include/berLength.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/berBitStringStorage.o ../ASN1/src/storages/berBitStringStorage.cpp
 
 build/debug/berBooleanStorage.o: ../ASN1/src/storages/berBooleanStorage.cpp ../ASN1/include/storages/berBooleanStorage.h \
@@ -9535,8 +9246,8 @@ build/debug/berIntegerStorage.o: ../ASN1/src/storages/berIntegerStorage.cpp ../A
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
 		../ASN1/include/berIdentifier.h \
-		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berBaseType.h \
+		../ASN1/include/berLength.h \
 		../ASN1/include/berInteger.h \
 		../ASN1/include/storages/decoder.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/berIntegerStorage.o ../ASN1/src/storages/berIntegerStorage.cpp
@@ -9642,8 +9353,8 @@ build/debug/berNullStorage.o: ../ASN1/src/storages/berNullStorage.cpp ../ASN1/in
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
 		../ASN1/include/berIdentifier.h \
-		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h
+		../ASN1/include/storages/berBaseType.h \
+		../ASN1/include/berLength.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/berNullStorage.o ../ASN1/src/storages/berNullStorage.cpp
 
 build/debug/berObjectIdentifierStorage.o: ../ASN1/src/storages/berObjectIdentifierStorage.cpp ../ASN1/include/storages/berObjectIdentifierStorage.h \
@@ -9746,9 +9457,9 @@ build/debug/berObjectIdentifierStorage.o: ../ASN1/src/storages/berObjectIdentifi
 		../ASN1/include/DeclareCommonTypes.h \
 		../ASN1/include/berByteArrayInputStream.h \
 		../ASN1/include/berIdentifier.h \
+		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/berLength.h \
 		../ASN1/include/berObjectIdentifier.h \
-		../ASN1/include/storages/berBaseType.h \
 		../ASN1/include/storages/decoder.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/berObjectIdentifierStorage.o ../ASN1/src/storages/berObjectIdentifierStorage.cpp
 
@@ -9853,8 +9564,8 @@ build/debug/berOctetStringStorage.o: ../ASN1/src/storages/berOctetStringStorage.
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
 		../ASN1/include/berIdentifier.h \
-		../ASN1/include/berLength.h \
-		../ASN1/include/storages/berBaseType.h
+		../ASN1/include/storages/berBaseType.h \
+		../ASN1/include/berLength.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/berOctetStringStorage.o ../ASN1/src/storages/berOctetStringStorage.cpp
 
 build/debug/berRealStorage.o: ../ASN1/src/storages/berRealStorage.cpp ../ASN1/include/storages/berRealStorage.h \
@@ -9958,8 +9669,8 @@ build/debug/berRealStorage.o: ../ASN1/src/storages/berRealStorage.cpp ../ASN1/in
 		../ASN1/include/berByteArrayOutputStream.h \
 		../ASN1/include/berByteArrayInputStream.h \
 		../ASN1/include/berIdentifier.h \
-		../ASN1/include/berLength.h \
 		../ASN1/include/storages/berBaseType.h \
+		../ASN1/include/berLength.h \
 		../ASN1/include/berReal.h \
 		../ASN1/include/storages/decoder.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/berRealStorage.o ../ASN1/src/storages/berRealStorage.cpp
@@ -10169,9 +9880,7 @@ build/debug/connection.o: ../ositransport/connection.cpp ../ositransport/connect
 		/usr/include/qt5/QtCore/qthreadpool.h \
 		/usr/include/qt5/QtCore/qthread.h \
 		/usr/include/qt5/QtCore/qrunnable.h \
-		../ositransport/tcpeasysocket.h \
-		../ositransport/clienttsap.h \
-		../ositransport/socketfactory.h
+		../ositransport/tcpeasysocket.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/connection.o ../ositransport/connection.cpp
 
 build/debug/connectionlistener.o: ../ositransport/connectionlistener.cpp ../ositransport/connectionlistener.h \
@@ -10770,9 +10479,6 @@ build/debug/moc_CpaPpdu.o: debug/moc_CpaPpdu.cpp
 
 build/debug/moc_AcseAssociation.o: debug/moc_AcseAssociation.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/moc_AcseAssociation.o debug/moc_AcseAssociation.cpp
-
-build/debug/moc_AcseAssociationListener.o: debug/moc_AcseAssociationListener.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/moc_AcseAssociationListener.o debug/moc_AcseAssociationListener.cpp
 
 build/debug/moc_ClientAcseSap.o: debug/moc_ClientAcseSap.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/debug/moc_ClientAcseSap.o debug/moc_ClientAcseSap.cpp

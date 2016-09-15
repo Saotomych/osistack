@@ -33,7 +33,6 @@ INCLUDEPATH += $(JENKINS_HOME)/jobs/osistack/workspace/include/presentation-asn1
 
 SOURCES += src/acse-asn1/InitIdentifiers.cpp \
 		src/AcseAssociation.cpp \
-		src/AcseAssociationListener.cpp \
 		src/ServerAcseSap.cpp \
 		src/ClientAcseSap.cpp \
 		../ASN1/src/berByteArrayOutputStream.cpp \
@@ -90,7 +89,6 @@ HEADERS += \
 		include/presentation-asn1/modeSelector.h \
 		include/presentation-asn1/CpaPpdu.h \
 		include/AcseAssociation.h \
-		include/AcseAssociationListener.h \
 		include/ClientAcseSap.h \
 		include/ServerAcseSap.h \
 		../ASN1/include/DeclareCommonTypes.h \

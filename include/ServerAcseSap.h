@@ -10,9 +10,7 @@
 
 #include "osistack_global.h"
 #include <connection.h>
-#include <connectionlistener.h>
 #include <servertsap.h>
-#include "AcseAssociationListener.h"
 #include "AcseAssociation.h"
 #include "ClientAcseSap.h"
 #include "berOctetString.h"
@@ -29,19 +27,12 @@ class OSISTACK_SHAREDEXPORT CServerAcseSap: public QObject
 
 	Q_OBJECT
 
-private:
-
-	CAcseAssociationListener* m_pAssociationListener;
-	CConnectionListener* m_pConnectionListener;
-
 public:
-
-	CServerTSAP* m_pServerTSAP;
 
 	QByteArray m_pSelLocal; // = CClientAcseSap::P_SEL_DEFAULT;
 
 	/**
-	 * Use this constructor to create a server ACSE SAP that listens on a fixed port.
+	 * @brief This constructor to create a server ACSE SAP that listens on a fixed port.
 	 *
 	 * @param port
 	 *            the local port listen on
@@ -49,14 +40,11 @@ public:
 	 *            the backlog
 	 * @param bindAddr
 	 *            the InetAddress to bind to
-	 * @param associationListener
-	 *            the AssociationListener that will be notified when remote clients have associated. Once constructed
-	 *            the AcseSAP contains a public TSAP that can be accessed to set its configuration.
 	 */
-	CServerAcseSap(quint16 port, quint32 backlog, QHostAddress bindAddr, CAcseAssociationListener* associationListener);
+	CServerAcseSap(quint16 port, quint32 backlog, QHostAddress bindAddr);
 
 	/**
-	 * Use this constructor to create a server ACSE SAP that listens on a fixed port. The server socket is created with
+	 * @brief This constructor to create a server ACSE SAP that listens on a fixed port. The server socket is created with
 	 * the given socket factory.
 	 *
 	 * @param port
@@ -65,30 +53,57 @@ public:
 	 *            the backlog
 	 * @param bindAddr
 	 *            the InetAddress to bind to
-	 * @param associationListener
-	 *            the AssociationListener that will be notified when remote clients have associated. Once constructed
-	 *            the AcseSAP contains a public TSAP that can be accessed to set its configuration.
 	 * @param serverSocketFactory
 	 *            the server socket factory to create the socket
 	 */
 	CServerAcseSap(quint16 port, quint32 backlog, QHostAddress bindAddr,
-			CAcseAssociationListener* associationListener,
 			CSocketFactory* serverSocketFactory);
 
 	/**
-	 * Start listening for incoming connections. Only for server SAPs.
-	 *
-	 * @throws IOException
-	 *             if an error occures starting to listen
+	 * @brief Start listening for incoming connections. Only for server SAPs.
 	 */
 	void startListening();
+
+	/**
+	 * @brief Stop listening for incoming connections. Only for server SAPs.
+	 */
 	void stopListening();
+
+	/**
+	 * @brief Set the CConnection timeout for waiting for the first byte of a new message.
+	 *
+	 * @param messageTimeout. Default is 0 (unlimited).
+	 *            in milliseconds
+	 */
 	void setMessageTimeout(quint32 messageTimeout);
+
+	/**
+	 * @brief Set the CConnection timeout for receiving data once the beginning of a message has been received.
+	 *
+	 * @param messageFragmentTimeout. Default is 60000 (60 seconds).
+	 *            in milliseconds
+	 */
 	void setMessageFragmentTimeout(quint32 messageFragmentTimeout);
 
+	/**
+	 * @brief creates new ACSE Association for client or server
+	 * @param pconn
+	 * 			that's a connection to attach to association
+	 * @return new ACSE association
+	 */
+	CAcseAssociation* createNewAcseAssociation(CConnection* pconn);
+
+	/**
+	 * @brief takes connection listener for connect signals to slots, is used for server application
+	 * @return connection listener pointer
+	 */
 	CConnectionListener* getConnectionListener();
 
-	CAcseAssociation* createNewAcseAssociation(CConnection* pconn);
+private:
+
+	CServerTSAP* m_pServerTSAP;
+
+	CConnectionListener* m_pConnectionListener;
 
 public slots:
 	void slotServerAcseAcceptConnection(const CConnection* that);

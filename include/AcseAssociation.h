@@ -27,19 +27,124 @@
 #include "presentation-asn1/CpType.h"
 #include "presentation-asn1/fullyEncodedData.h"
 
+/**
+ * @class CAcseAssociation
+ * 			controls ACSE connection and snd/receive ACSE data
+ */
+
 class OSISTACK_SHAREDEXPORT CAcseAssociation: public QObject
 {
 	Q_OBJECT
 
-public:
+public: // class API
+	/**
+	 * @brief CAcseAssociation constructor
+	 * @param tConnection
+	 * @param SelLocalBerOctetString
+	 */
+	CAcseAssociation(CConnection* tConnection, CBerOctetString& SelLocalBerOctetString);
+
+	/**
+	 * @brief accept the client session after the signalCnReady and send answer to client
+	 * @param payload
+	 * 			TODO what is the all payload params?
+	 */
+	void acceptSession(CBerByteArrayOutputStream& payload);
+
+
+	/**
+	 * @brief Starts an Application Association by sending an association request and waiting for an association accept message
+	 *
+	 * @param payload
+	 *            payload that can be sent with the association request
+	 * @param authenticationParameter
+	 * @param sSelRemote
+	 * 			remote service selector
+	 * @param sSelLocal
+	 * 			local service selector
+	 * @param pSelRemote
+	 * 			presentation remote selector
+	 * @param apTitleCalled
+	 * 			called title
+	 * @param apTitleCalling
+	 * 			calling title
+	 * @param aeQualifierCalled
+	 * @param aeQualifierCalling
+	 */
+	void startAssociation(
+			CBerByteArrayOutputStream& payload,
+			QString& authenticationParameter,
+			QByteArray& sSelRemote,
+			QByteArray& sSelLocal,
+			QByteArray& pSelRemote,
+			QVector<qint32>& apTitleCalled,
+			QVector<qint32>& apTitleCalling,
+			quint32 aeQualifierCalled,
+			quint32 aeQualifierCalling);
+
+
+	/**
+	 * @brief sends data to remote side
+	 */
+	void send(CBerByteArrayOutputStream& payload);
+
+	/**
+	 * @brief Listens for a new PDU and writes it into the given buffer. Decodes all ACSE and lower layer headers. The
+	 * resulting buffer's position points to the beginning of the ACSE SDU. The limit will point to the byte after the
+	 * last byte of the ACSE SDU.
+	 *
+	 * @param pduBuffer
+	 *            buffer to write the received pdu into
+	 */
+	void receive(QByteArray& pduBuffer);
+
+	/**
+	 * @brief parse data from client as establishing connection frame
+	 * @param iStream
+	 * 			server application's stream with the received data frame
+	 * @param payloadSize
+	 * 			expected payload size
+	 * @return payload byte array
+	 */
+	QByteArray parseConnectionEstablished(QDataStream& iStream, quint32 payloadSize);
+
+	/**
+	 * @brief Disconnects by sending a disconnect request at the Transport Layer and then closing the socket.
+	 */
+	void disconnect();
+
+	/**
+	 * @brief Closes the connection simply by closing the socket.
+	 */
+	void close();
+
+	/**
+	 * @brief parse data from client with ACSE connection request frame
+	 * @param InputStream
+	 * @return payload byte array
+	 */
+	QByteArray listenForCn(QDataStream& InputStream);
+
+
+	/**
+	 * @brief get the timeout for waiting for the first byte of a new message.
+	 * @return timeout value
+	 */
+	quint32 getMessageTimeout();
+
+	/**
+	 * @brief set the timeout for waiting for the first byte of a new message.
+	 * @param tout
+	 * 			timeout value
+	 */
+	void setMessageTimeout(quint32 tout);
+
+protected:
 
 	bool m_connected;
 	CConnection* m_tConnection;
-	QByteArray m_associateResponseAPDU;
 	quint32 m_currentCallingSessionSelector;
 	CBerOctetString PSelLocal;
-
-private:
 
 	static CContextList context_list;
 	static CBerInteger acsePresentationContextId;
@@ -63,6 +168,11 @@ private:
 
 	static CUserData getPresentationUserDataField(qint32 userDataLength);
 
+	void sendSessionLayer(
+			QLinkedList<QByteArray>& ssduList,
+			QLinkedList<quint32>& ssduOffsets,
+			QLinkedList<quint32>& ssduLengths);
+
 	void ISO8327Header(
 				QByteArray& spduHeader,
 				QByteArray& sSelRemote,
@@ -70,99 +180,18 @@ private:
 				quint8 ssduLength
 			);
 
-	QByteArray parseServerAnswer(QDataStream& iStream);
+	QByteArray parseConnectionRequest(QDataStream& iStream);
+
 	quint32 receiveDataParser(QDataStream& iStream);
 
-public:
+	void sendAcceptSession(QLinkedList<QByteArray>& ssdu, QLinkedList<quint32>& ssduOffsets, QLinkedList<quint32>& ssduLengths);
 
-	CAcseAssociation(CConnection* tConnection, CBerOctetString& SelLocalBerOctetString);
-
-	void accept(CBerByteArrayOutputStream& payload);
-
-	void writeSessionAccept(QLinkedList<QByteArray>& ssdu, QLinkedList<quint32>& ssduOffsets, QLinkedList<quint32>& ssduLengths);
-
-	QByteArray getAssociateResponseAPdu();
-
-	/**
-	 * Starts an Application Association by sending an association request and waiting for an association accept message
-	 *
-	 * @param payload
-	 *            payload that can be sent with the association request
-	 * @param port
-	 * @param address
-	 * @param tSAP
-	 * @param aeQualifierCalling
-	 * @param aeQualifierCalled
-	 * @param apTitleCalling
-	 * @param apTitleCalled
-	 * @throws IOException
-	 */
-	void startAssociation(
-			CBerByteArrayOutputStream& payload,
-			QString& authenticationParameter,
-			QByteArray& sSelRemote,
-			QByteArray& sSelLocal,
-			QByteArray& pSelRemote,
-			QVector<qint32>& apTitleCalled,
-			QVector<qint32>& apTitleCalling,
-			quint32 aeQualifierCalled,
-			quint32 aeQualifierCalling);
-
-	/**
-	 * Starts a session layer connection, sends a CONNECT (CN), waits for a ACCEPT (AC) and throws an IOException if not
-	 * successful
-	 *
-	 * @throws IOException
-	 */
 	void startSConnection(
 			QLinkedList<QByteArray>& ssduList,
 			QLinkedList<quint32>& ssduOffsets,
 			QLinkedList<quint32>& ssduLengths,
 			QByteArray& sSelRemote,
 			QByteArray& sSelLocal);
-
-	void send(CBerByteArrayOutputStream& payload);
-
-	/**
-	 * Listens for a new PDU and writes it into the given buffer. Decodes all ACSE and lower layer headers. The
-	 * resulting buffer's position points to the beginning of the ACSE SDU. The limit will point to the byte after the
-	 * last byte of the ACSE SDU.
-	 *
-	 * @param pduBuffer
-	 *            buffer to write the received pdu into
-	 * @throws DecodingException
-	 *             if a decoding error occurs
-	 * @throws IOException
-	 *             if a non recoverable error occurs. Afterwards the association should be closed by the user
-	 * @throws TimeoutException
-	 *             if a timeout occurs
-	 */
-	void receive(QByteArray& pduBuffer);
-	QByteArray parseClientAnswer(QDataStream& iStream, quint32 payloadSize);
-
-	/**
-	 * Disconnects by sending a disconnect request at the Transport Layer and then closing the socket.
-	 */
-	void disconnect();
-
-	/**
-	 * Closes the connection simply by closing the socket.
-	 */
-	void close();
-
-	QByteArray listenForCn(QDataStream& InputStream);
-	quint32 getMessageTimeout();
-	void setMessageTimeout(quint32 tout);
-
-
-private:
-
-	void sendSessionLayer(
-			QLinkedList<QByteArray>& ssduList,
-			QLinkedList<quint32>& ssduOffsets,
-			QLinkedList<quint32>& ssduLengths);
-
-//	quint64 extractInteger(QByteArray buffer, quint32 size);
 
 	/* Statics */
 public:
@@ -189,7 +218,5 @@ signals:
 	void signalAcseIOError(QString strErr);
 
 };
-
-
 
 #endif /* INCLUDE_ACSEASSOCIATION_H_ */

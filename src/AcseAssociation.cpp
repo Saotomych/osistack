@@ -33,7 +33,7 @@ QDataStream& CAcseAssociation::decodePConResponse(QDataStream& ppdu)
 	return ppdu;
 }
 
-void CAcseAssociation::accept(CBerByteArrayOutputStream& payload)
+void CAcseAssociation::acceptSession(CBerByteArrayOutputStream& payload)
 {
 	quint32 payloadLength = payload.size();
 
@@ -94,10 +94,10 @@ void CAcseAssociation::accept(CBerByteArrayOutputStream& payload)
 	ssduOffsets.push_back(0);
 	ssduLengths.push_back(payload.size());
 
-	writeSessionAccept(ssduList, ssduOffsets, ssduLengths);
+	sendAcceptSession(ssduList, ssduOffsets, ssduLengths);
 }
 
-void CAcseAssociation::writeSessionAccept(QLinkedList<QByteArray>& ssdu, QLinkedList<quint32>& ssduOffsets, QLinkedList<quint32>& ssduLengths)
+void CAcseAssociation::sendAcceptSession(QLinkedList<QByteArray>& ssdu, QLinkedList<quint32>& ssduOffsets, QLinkedList<quint32>& ssduLengths)
 {
 	QByteArray sduAcceptHeader(20, 0);
 	quint32 idx = 0;
@@ -168,13 +168,6 @@ void CAcseAssociation::writeSessionAccept(QLinkedList<QByteArray>& ssdu, QLinked
 	ssduLengths.push_front(sduAcceptHeader.size());
 
 	m_tConnection->send(ssdu, ssduOffsets, ssduLengths);
-}
-
-QByteArray CAcseAssociation::getAssociateResponseAPdu()
-{
-	QByteArray returnBuffer = m_associateResponseAPDU;
-	m_associateResponseAPDU.clear();
-	return returnBuffer;
 }
 
 void CAcseAssociation::startAssociation(
@@ -706,8 +699,7 @@ void CAcseAssociation::receive(QByteArray& pduBuffer)
 	}
 
 	// decode PPDU header
-#warning "magic number 0x20 is datablock size"
-	CBerAnyNoDecode noDecode(0x20);
+	CBerAnyNoDecode noDecode(0);
 	NsPdvList::SubchoicePresentationDataValues spdv( &noDecode,
 			(CBerOctetString*) nullptr, (CBerBitString*) nullptr);
 	CBerInteger int31(31);
@@ -748,7 +740,7 @@ void CAcseAssociation::close()
 	}
 }
 
-QByteArray CAcseAssociation::parseClientAnswer(QDataStream& iStream, quint32 payloadSize)
+QByteArray CAcseAssociation::parseConnectionEstablished(QDataStream& iStream, quint32 payloadSize)
 {
 	// Decode answer
 	quint8 	SPDUType,
@@ -845,16 +837,13 @@ QByteArray CAcseAssociation::parseClientAnswer(QDataStream& iStream, quint32 pay
 
 		acse.decode(InputStream, true);
 
-		m_associateResponseAPDU.clear();
-		m_associateResponseAPDU = InputStream.get();
-
 		m_connected = true;
 
 		return InputStream.get();
 	}
 }
 
-QByteArray CAcseAssociation::parseServerAnswer(QDataStream& iStream)
+QByteArray CAcseAssociation::parseConnectionRequest(QDataStream& iStream)
 {
 	QByteArray retArray;
 
@@ -1027,7 +1016,7 @@ QByteArray CAcseAssociation::listenForCn(QDataStream& InputStream)
 		return ret;
 	}
 
-	QByteArray retArray = parseServerAnswer(InputStream);
+	QByteArray retArray = parseConnectionRequest(InputStream);
 	if ( retArray.size() > 0)
 	{
 		emit signalAcseCnReady(this);

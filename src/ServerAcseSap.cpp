@@ -7,11 +7,9 @@
 
 #include "ServerAcseSap.h"
 
-CServerAcseSap::CServerAcseSap(quint16 port, quint32 backlog, QHostAddress bindAddr, CAcseAssociationListener* associationListener):
+CServerAcseSap::CServerAcseSap(quint16 port, quint32 backlog, QHostAddress bindAddr):
 	m_pServerTSAP(nullptr)
 {
-	m_pAssociationListener = associationListener;
-
 	m_pServerTSAP = new CServerTSAP(port, backlog, bindAddr);
 	m_pServerTSAP->setMessageTimeout(500);
 	m_pServerTSAP->setMessageFragmentTimeout(500);
@@ -27,12 +25,9 @@ CServerAcseSap::CServerAcseSap(quint16 port, quint32 backlog, QHostAddress bindA
 }
 
 CServerAcseSap::CServerAcseSap(quint16 port, quint32 backlog, QHostAddress bindAddr,
-		CAcseAssociationListener* associationListener,
 		CSocketFactory* serverSocketFactory):
 		m_pServerTSAP(nullptr)
 {
-
-	m_pAssociationListener = associationListener;
 
 	m_pServerTSAP = new CServerTSAP(port, backlog, bindAddr, serverSocketFactory);
 	m_pServerTSAP->setMessageTimeout(500);
@@ -55,26 +50,11 @@ CAcseAssociation* CServerAcseSap::createNewAcseAssociation(CConnection* pconn)
 		CBerOctetString berStr(m_pSelLocal);
 		CAcseAssociation* acseAssoc = new CAcseAssociation(pconn, berStr);
 
-//		QByteArray pduBuffer;
-//
-//		CBerByteArrayOutputStream acceptData(pduBuffer, 0);
-//		acseAssoc->accept(acceptData);
-//
 		// signals from Connection to CAcseAssociation
 		connect(pconn, SIGNAL(signalConnectionClosed(const CConnection*)),
 				acseAssoc, SLOT(slotAcseConnectionClosed(const CConnection*)));
 		connect(pconn, SIGNAL(signalTSduReady(const CConnection*)),
 				acseAssoc, SLOT(slotAcseTSduReady(const CConnection*)));
-
-		// signals from AcseAssociation to AcseAssociationListener
-		connect( acseAssoc, SIGNAL(signalAcseAssociationClosed(CAcseAssociation*)),
-				m_pAssociationListener, SLOT(slotAcseAssociationClosed(CAcseAssociation*)) );
-		connect( acseAssoc, SIGNAL(signalAcseCnReady(CAcseAssociation*)),
-				m_pAssociationListener, SLOT(slotAcseCnReady(CAcseAssociation*)) );
-		connect( acseAssoc, SIGNAL(signalAcseTSduReady(CAcseAssociation*)),
-				m_pAssociationListener, SLOT(slotAcseTSduReady(CAcseAssociation*)) );
-		connect( acseAssoc, SIGNAL(signalAcseIOError(QString)),
-				m_pAssociationListener, SLOT(slotAcseIOError(QString)) );
 
 		return acseAssoc;
 	}
@@ -96,7 +76,7 @@ CAcseAssociation* CServerAcseSap::createNewAcseAssociation(CConnection* pconn)
 void CServerAcseSap::startListening()
 {
 
-	if (m_pAssociationListener == nullptr || m_pServerTSAP == nullptr) {
+	if (m_pServerTSAP == nullptr) {
 		emit signalIllegalClassMember("CServerAcseSap::startListening: AcseSAP is unable to listen because it was not initialized.");
 		return;
 	}
@@ -142,7 +122,7 @@ void CServerAcseSap::slotServerAcseAcceptConnection(const CConnection* pconn)
 {
 	qDebug() << "CServerAcseSap::slotServerAcseAcceptConnection";
 
-//	Q_CHECK_PTR(pconn);
+	Q_CHECK_PTR(pconn);
 
 	CAcseAssociation* assoc = createNewAcseAssociation( const_cast<CConnection*> (pconn) );
 
