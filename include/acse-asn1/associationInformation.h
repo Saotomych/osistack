@@ -32,7 +32,7 @@ public:
 	QByteArray* getCode() { return &m_Code; }
 	CBerIdentifier getIdentifier() { return c_Identifier; }
 
-	CBerIdentifier getIdSeqOf() { return CBerIdentifier(); }
+	CBerIdentifier getIdSeqOf() { return CExternalLinkV1::getBerIdentifier(); }
 
 	QLinkedList<CExternalLinkV1>* getSeqOf() { return m_pSeqOf; }
 

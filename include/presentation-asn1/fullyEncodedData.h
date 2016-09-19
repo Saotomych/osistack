@@ -30,7 +30,7 @@ protected:
 	QByteArray* getCode() { return &m_Code; }
 	CBerIdentifier getIdentifier() { return c_Identifier; }
 
-	CBerIdentifier getIdSeqOf() { return CBerIdentifier(); }
+	CBerIdentifier getIdSeqOf() { return CPdvList::getBerIdentifier(); }
 
 	QLinkedList<CPdvList>* getSeqOf() { return m_pSeqOf; }
 

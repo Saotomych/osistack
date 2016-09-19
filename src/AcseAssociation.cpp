@@ -881,11 +881,11 @@ QByteArray CAcseAssociation::parseConnectionRequest(QDataStream& iStream)
 	qDebug() << "--------------------------------------";
 
 	QVector<qint32> bitStringCalled;
-	CBerObjectIdentifier calledId(bitStringCalled, false);
+	CBerObjectIdentifier calledId(bitStringCalled);
 	CApTitle calledApTitle( &calledId );
 
 	QVector<qint32> bitStringCalling;
-	CBerObjectIdentifier callingId(bitStringCalling, true);
+	CBerObjectIdentifier callingId(bitStringCalling);
 	CApTitle callingApTitle( &callingId );
 
 	CBerAnyNoDecode noDecode;
