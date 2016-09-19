@@ -45,6 +45,12 @@ public:
 		return CBerIdentifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::PRIMITIVE, 16);
 	}
 
+	CApplicationContextName():
+		is_copy(false),
+		c_Identifier(getBerIdentifier()),
+		m_pAppContextName(nullptr)
+	{}
+
 	explicit CApplicationContextName(CBerObjectIdentifier* pObjectIdentifier):
 		is_copy(false),
 		c_Identifier(getBerIdentifier()),
@@ -143,6 +149,13 @@ public:
 	{
 		return CBerIdentifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16);
 	}
+
+	CApplicationContextNameList():
+		is_copy(false),
+		c_Identifier(getBerIdentifier()),
+		c_IdOID(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
+		m_pSeqOf(nullptr)
+	{}
 
 	explicit CApplicationContextNameList(QLinkedList<CBerObjectIdentifier>* pObjectIdentifierList):
 		is_copy(false),

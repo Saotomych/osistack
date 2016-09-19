@@ -79,6 +79,17 @@ public:
 		return CBerIdentifier();
 	}
 
+	CAssociateSourceDiagnostic():
+		is_copy(false),
+		c_Identifier(getBerIdentifier()),
+		c_IdAcseServiceUser(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 1),
+		c_IdAcseServiceProvider(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 2),
+		m_pAcseServiceUser(nullptr),
+		m_pAcseServiceProvider(nullptr)
+	{
+		qDebug() << "CAssociateSourceDiagnostic null constructor";
+	}
+
 	CAssociateSourceDiagnostic(CBerInteger* pAcseServiceUser, CBerInteger* pAcseServiceProvider):
 		is_copy(false),
 		c_Identifier(getBerIdentifier()),

@@ -101,6 +101,38 @@ public:
 
 protected:
 
+	inline void create_object_by_id(CBerIdentifier& id)
+	{
+		if ( c_IdProtocolVersion == id )
+			{ m_pProtocolVersion = new CBerBitString(); is_copy=true; return; }
+		if ( c_IdApplicationContextName == id )
+			{ m_pApplicationContextName = new CApplicationContextName(); is_copy=true; return; }
+		if ( c_IdResult == id )
+			{ m_pResult = new CBerInteger(); is_copy=true; return; }
+		if ( c_IdResultSourceDiagnostic == id )
+			{ m_pResultSourceDiagnostic = new CAssociateSourceDiagnostic(); is_copy=true; return; }
+		if ( c_IdApTitle == id )
+			{ m_pApTitle = new CApTitle(); is_copy=true; return; }
+		if ( c_IdRespondingAeQualifier == id )
+			{ m_pRespondingAeQualifier = new CAeQualifier(); is_copy=true; return; }
+		if ( c_IdRespondingApInvocationIdentifier == id )
+			{ m_pRespondingApInvocationIdentifier = new CBerInteger(); is_copy=true; return; }
+		if ( c_IdRespondingAeInvocationIdentifier == id )
+			{ m_pRespondingAeInvocationIdentifier = new CBerInteger(); is_copy=true; return; }
+		if ( c_IdResponderAcseRequrements == id )
+			{ m_pResponderAcseRequrements = new CBerBitString(); is_copy=true; return; }
+		if ( c_IdMechanismName == id )
+			{ m_pMechanismName = new CBerObjectIdentifier(); is_copy=true; return; }
+		if ( c_IdRespondingAuthenticationValue == id )
+			{ m_pRespondingAuthenticationValue = new CAuthenticationValue(); is_copy=true; return; }
+		if ( c_IdApplicationContextNameList == id )
+			{ m_pApplicationContextNameList = new CApplicationContextNameList(); is_copy=true; return; }
+		if ( c_IdImplementationInformation == id )
+			{ m_pImplementationInformation = new CBerGraphicString(); is_copy=true; return; }
+		if ( c_IdUserInformation == id )
+			{ m_pUserInformation = new CAssociationInformation(); is_copy=true; return; }
+	}
+
 	void create_objects(const CAAreApdu& rhs)
 	{
 		std::unique_ptr<CBerBitString> p1

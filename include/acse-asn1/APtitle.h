@@ -47,6 +47,12 @@ public:
 		return CBerIdentifier();
 	}
 
+	CApTitle():
+		is_copy(false),
+		m_pApTitleForm2(nullptr),
+		c_Identifier(getBerIdentifier())
+	{ }
+
 	CApTitle(CBerObjectIdentifier* pApTitleForm2):
 		is_copy(false),
 		m_pApTitleForm2(pApTitleForm2),

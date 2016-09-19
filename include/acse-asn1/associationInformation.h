@@ -47,6 +47,12 @@ public:
 		return CBerIdentifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16);
 	}
 
+	CAssociationInformation():
+		is_copy(false),
+		c_Identifier(getBerIdentifier()),
+		m_pSeqOf(nullptr)
+	{}
+
 	CAssociationInformation(QLinkedList<CExternalLinkV1>* pExternalListV1):
 		is_copy(false),
 		c_Identifier(getBerIdentifier()),

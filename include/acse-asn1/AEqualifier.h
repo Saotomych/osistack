@@ -46,6 +46,12 @@ public:
 		return CBerIdentifier();
 	}
 
+	CAeQualifier():
+		is_copy(false),
+		m_pInteger(nullptr),
+		c_Identifier(getBerIdentifier())
+	{ }
+
 	CAeQualifier(CBerInteger* pInteger):
 		is_copy(false),
 		m_pInteger(pInteger),
