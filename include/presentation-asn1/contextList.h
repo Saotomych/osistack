@@ -249,6 +249,7 @@ class OSISTACK_SHAREDEXPORT CContextList: public QObject, public IBerBaseType
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
+	Q_PROPERTY(CBerIdentifier IdOI READ getIdObjectIdentifierList)
 	Q_PROPERTY(QLinkedList<CContextListSubSeq>* OI READ getObjectIdentifierList)
 
 	bool is_copy;
@@ -265,6 +266,8 @@ public:
 	QByteArray* getCode() { return &m_Code; }
 
 	CBerLength getLength() { CBerLength t; return t; }
+
+	CBerIdentifier getIdObjectIdentifierList() { return CContextListSubSeq::getBerIdentifier(); }
 
 	QLinkedList<CContextListSubSeq>* getObjectIdentifierList() { return m_pSeqOf; }
 
