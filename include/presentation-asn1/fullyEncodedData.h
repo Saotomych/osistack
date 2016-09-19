@@ -16,6 +16,7 @@ class OSISTACK_SHAREDEXPORT CFullyEncodedData: public QObject, public IBerBaseTy
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
+	Q_PROPERTY(CBerIdentifier idseqof READ getIdSeqOf)
 	Q_PROPERTY(QLinkedList<CPdvList>* seqof READ getSeqOf)
 
 	bool is_copy;
@@ -28,6 +29,9 @@ protected:
 
 	QByteArray* getCode() { return &m_Code; }
 	CBerIdentifier getIdentifier() { return c_Identifier; }
+
+	CBerIdentifier getIdSeqOf() { return CBerIdentifier(); }
+
 	QLinkedList<CPdvList>* getSeqOf() { return m_pSeqOf; }
 
 public:
@@ -38,20 +42,25 @@ public:
 	static quint32 s_metaTypeIdentifier;
 	static quint32 s_metaTypeListId;
 
+	static CBerIdentifier getBerIdentifier()
+	{
+		return CBerIdentifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16);
+	}
+
 	CFullyEncodedData():
 		is_copy(false),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
+		c_Identifier(getBerIdentifier()),
 		m_pSeqOf(nullptr)
 	{}
 
 	CFullyEncodedData(QLinkedList<CPdvList>* pExternalListV1):
 		is_copy(false),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
+		c_Identifier(getBerIdentifier()),
 		m_pSeqOf(pExternalListV1)
 	{}
 
 	CFullyEncodedData(const CFullyEncodedData& rhs): QObject(),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16)
+		c_Identifier(getBerIdentifier())
 	{
 		m_Code = rhs.m_Code;
 

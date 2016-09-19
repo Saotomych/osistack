@@ -19,9 +19,13 @@ class OSISTACK_SHAREDEXPORT CAcseApdu: public QObject, public IBerBaseType
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
+	Q_PROPERTY(CBerIdentifier IdAarqApdu READ getIdAarqApdu)
 	Q_PROPERTY(IBerBaseType* AarqApdu READ getAarqApdu)
+	Q_PROPERTY(CBerIdentifier IdAareApdu READ getIdAareApdu)
 	Q_PROPERTY(IBerBaseType* AareApdu READ getAareApdu)
+	Q_PROPERTY(CBerIdentifier IdRlrqApdu READ getIdRlrqApdu)
 	Q_PROPERTY(IBerBaseType* RlrqApdu READ getRlrqApdu)
+	Q_PROPERTY(CBerIdentifier IdRlreApdu READ getIdRlreApdu)
 	Q_PROPERTY(IBerBaseType* RlreApdu READ getRlreApdu)
 
 	bool is_copy;
@@ -33,6 +37,11 @@ protected:
 public:
 
 	QByteArray* getCode() { return &m_Code; }
+
+	CBerIdentifier getIdAarqApdu() {return CAArqApdu::getBerIdentifier();}
+	CBerIdentifier getIdAareApdu() {return CAAreApdu::getBerIdentifier();}
+	CBerIdentifier getIdRlrqApdu() {return CRLrqApdu::getBerIdentifier();}
+	CBerIdentifier getIdRlreApdu() {return CRLreApdu::getBerIdentifier();}
 
 	IBerBaseType* getAarqApdu() {return m_pAarqApdu;}
 	IBerBaseType* getAareApdu() {return m_pAareApdu;}
@@ -84,102 +93,12 @@ public:
 
 	CBerIdentifier getIdentifier() { return c_Identifier; }
 
-//	virtual quint32 encode(CBerByteArrayOutputStream& berOStream, bool)
-//	{
-//		if (m_Code != nullptr) {
-//			berOStream.write(m_Code);
-//			return m_Code.size();
-//		}
-//
-//		quint32 codeLength = 0;
-//
-//		if (m_pRlreApdu != nullptr) {
-//			codeLength += m_pRlreApdu->encode(berOStream, true);
-//			return codeLength;
-//
-//		}
-//
-//		if (m_pRlrqApdu != nullptr) {
-//			codeLength += m_pRlrqApdu->encode(berOStream, true);
-//			return codeLength;
-//
-//		}
-//
-//		if (m_pAareApdu != nullptr) {
-//			codeLength += m_pAareApdu->encode(berOStream, true);
-//			return codeLength;
-//
-//		}
-//
-//		if (m_pAarqApdu != nullptr) {
-//			codeLength += m_pAarqApdu->encode(berOStream, true);
-//			return codeLength;
-//		}
-//
-//		return codeLength;
-//	}
-//
-//	virtual quint32 decode(CBerByteArrayInputStream& iStream, bool explct)
-//	{
-//		CDecoder< CBerBaseStorage > codec;
-//		return codec.decode(iStream, this, explct);
-//	}
-//
-//	// Alternative decoder by Identifier
-//	quint32 decode(CBerByteArrayInputStream& iStream, CBerIdentifier* berIdentifier)
-//	{
-//		quint32 codeLength = 0;
-//
-//		CBerIdentifier defaultId;
-//
-//		CBerIdentifier* workIdentifier = berIdentifier;
-//
-//		if (berIdentifier == nullptr)
-//		{
-//			workIdentifier = &defaultId;
-//			codeLength += workIdentifier->decode(iStream);
-//		}
-//
-//		CAArqApdu AarqApdu;
-//		if (*workIdentifier == AarqApdu.getIdentifier())
-//		{
-//			codeLength += decode(iStream, true);
-//			return codeLength;
-//		}
-//
-//		CAAreApdu AareApdu;
-//		if (*workIdentifier == AareApdu.getIdentifier())
-//		{
-//			codeLength += decode(iStream, true);
-//			return codeLength;
-//		}
-//
-//		CRLrqApdu RlrqApdu;
-//		if (*workIdentifier == RlrqApdu.getIdentifier())
-//		{
-//			codeLength += decode(iStream, true);
-//			return codeLength;
-//		}
-//
-//		CRLreApdu RlreApdu;
-//		if (*workIdentifier == RlreApdu.getIdentifier())
-//		{
-//			codeLength += decode(iStream, true);
-//			return codeLength;
-//		}
-//
-//		if (berIdentifier != nullptr)
-//		{
-//			qDebug() << "CAcseApdu decode: Error decoding CAcseApdu: Identifier matches to no item";
-//			return 0;
-//		}
-//
-//		qDebug() << "CAcseApdu decode: Error decoding CAcseApdu: NO Identifier";
-//
-//		return 0;
-//	}
-//
 	static quint32 s_metaTypeIdentifier;
+
+	static CBerIdentifier getBerIdentifier()
+	{
+		return CBerIdentifier();
+	}
 
 	CAcseApdu():
 		is_copy(false),

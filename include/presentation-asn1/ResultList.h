@@ -16,6 +16,7 @@ class OSISTACK_SHAREDEXPORT CResultList: public QObject, public IBerBaseType
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
+	Q_PROPERTY(CBerIdentifier idOI READ getIdObjectIdentifierList)
 	Q_PROPERTY(QLinkedList<CResultSubsequence>* OI READ getObjectIdentifierList)
 
 	bool is_copy;
@@ -28,6 +29,9 @@ protected:
 
 	QByteArray* getCode() { return &m_Code; }
 	CBerIdentifier getIdentifier() { return c_Identifier; }
+
+	CBerIdentifier getIdObjectIdentifierList() { return CBerIdentifier(); }
+
 	QLinkedList<CResultSubsequence>* getObjectIdentifierList() { return m_pSeqOf; }
 
 public:
@@ -35,26 +39,30 @@ public:
 	typedef CContainerStorage< CResultList, QLinkedList<CResultSubsequence>, CResultSubsequence > TLocalStorage;
 	ASN1_CODEC( TLocalStorage )
 
-	static CBerIdentifier s_Identifier;
 	static quint32 s_metaTypeIdentifier;
 	static quint32 s_metaTypeListId;
 
+	static CBerIdentifier getBerIdentifier()
+	{
+		return CBerIdentifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16);
+	}
+
 	explicit CResultList(QLinkedList<CResultSubsequence>* pResultSubsequenceList):
 		is_copy(false),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
+		c_Identifier(getBerIdentifier()),
 		m_pSeqOf(pResultSubsequenceList)
 	{}
 
 	explicit CResultList(QByteArray code):
 		is_copy(false),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
+		c_Identifier(getBerIdentifier()),
 		m_pSeqOf(nullptr)
 	{
 		m_Code = code;
 	}
 
 	CResultList(const CResultList& rhs): QObject(),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16)
+		c_Identifier(getBerIdentifier())
 	{
 		m_Code = rhs.m_Code;
 

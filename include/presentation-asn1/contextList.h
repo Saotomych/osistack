@@ -18,7 +18,7 @@ class OSISTACK_SHAREDEXPORT CContextListSubSeqOfTransferSyntaxName: public QObje
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
-	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
+	Q_PROPERTY(CBerIdentifier Identifier READ getIdOID)
 	Q_PROPERTY(QLinkedList<CBerObjectIdentifier>* OI READ getObjectIdentifierList)
 
 	bool is_copy;
@@ -45,9 +45,14 @@ public:
 	static quint32 s_metaTypeIdentifier;
 	static quint32 s_metaTypeListId;
 
+	static CBerIdentifier getBerIdentifier()
+	{
+		return CBerIdentifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16);
+	}
+
 	explicit CContextListSubSeqOfTransferSyntaxName(QByteArray code):
 		is_copy(false),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
+		c_Identifier(getBerIdentifier()),
 		m_Code(code),
 		c_IdOID(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
 		m_pSeqOf(nullptr)
@@ -55,13 +60,13 @@ public:
 
 	explicit CContextListSubSeqOfTransferSyntaxName(QLinkedList<CBerObjectIdentifier>* pObjectIdentifierList):
 		is_copy(false),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
+		c_Identifier(getBerIdentifier()),
 		c_IdOID(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
 		m_pSeqOf(pObjectIdentifierList)
 	{}
 
 	CContextListSubSeqOfTransferSyntaxName(const CContextListSubSeqOfTransferSyntaxName& rhs): QObject(),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
+		c_Identifier(getBerIdentifier()),
 		c_IdOID(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16)
 	{
 		m_Code = rhs.m_Code;
@@ -107,8 +112,11 @@ class OSISTACK_SHAREDEXPORT CContextListSubSeq: public QObject, public IBerBaseT
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
+	Q_PROPERTY(CBerIdentifier IdPresentationContextIdentifier READ getIdPresentationContextIdentifier)
 	Q_PROPERTY(IBerBaseType* PresentationContextIdentifier READ getPresentationContextIdentifier)
+	Q_PROPERTY(CBerIdentifier IdAbstractSyntaxName READ getIdAbstractSyntaxName)
 	Q_PROPERTY(IBerBaseType* AbstractSyntaxName READ getAbstractSyntaxName)
+	Q_PROPERTY(CBerIdentifier IdTransferSyntaxNameList READ getIdTransferSyntaxNameList)
 	Q_PROPERTY(IBerBaseType* TransferSyntaxNameList READ getTransferSyntaxNameList)
 
 	bool is_copy;
@@ -117,6 +125,11 @@ public:
 
 	QByteArray* getCode() { return &m_Code; }
 	CBerIdentifier getIdentifier() { return c_Identifier; }
+
+	CBerIdentifier getIdPresentationContextIdentifier() { return CBerInteger::getBerIdentifier(); }
+	CBerIdentifier getIdAbstractSyntaxName() { return CBerObjectIdentifier::getBerIdentifier(); }
+	CBerIdentifier getIdTransferSyntaxNameList() { return CContextListSubSeqOfTransferSyntaxName::getBerIdentifier(); }
+
 	IBerBaseType* getPresentationContextIdentifier() { return m_pPresentationContextIdentifier; }
 	IBerBaseType* getAbstractSyntaxName() { return m_pAbstractSyntaxName; }
 	IBerBaseType* getTransferSyntaxNameList() { return m_pTransferSyntaxNameList; }
@@ -162,9 +175,14 @@ public:
 
 	static quint32 s_metaTypeIdentifier;
 
+	static CBerIdentifier getBerIdentifier()
+	{
+		return CBerIdentifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16);
+	}
+
 	CContextListSubSeq(CBerInteger* pPresentationContextIdentifier, CBerObjectIdentifier* pAbstractSyntaxName, CContextListSubSeqOfTransferSyntaxName* pTransferSyntaxNameList):
 		is_copy(false),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
+		c_Identifier(getBerIdentifier()),
 		m_pPresentationContextIdentifier(pPresentationContextIdentifier),
 		m_pAbstractSyntaxName(pAbstractSyntaxName),
 		m_pTransferSyntaxNameList(pTransferSyntaxNameList)
@@ -172,7 +190,7 @@ public:
 
 	CContextListSubSeq(QByteArray code):
 		is_copy(false),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
+		c_Identifier(getBerIdentifier()),
 		m_Code(code),
 		m_pPresentationContextIdentifier(nullptr),
 		m_pAbstractSyntaxName(nullptr),
@@ -180,7 +198,7 @@ public:
 	{}
 
 	CContextListSubSeq(const CContextListSubSeq& rhs): QObject(),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16)
+		c_Identifier(getBerIdentifier())
 	{
 		create_objects(rhs);
 
@@ -256,9 +274,14 @@ public:
 	static quint32 s_metaTypeIdentifier;
 	static quint32 s_metaTypeListId;
 
+	static CBerIdentifier getBerIdentifier()
+	{
+		return CBerIdentifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16);
+	}
+
 	explicit CContextList(QByteArray code):
 		is_copy(false),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
+		c_Identifier(getBerIdentifier()),
 		c_emptyId(),
 		m_Code(code),
 		m_pSeqOf(nullptr)
@@ -266,13 +289,13 @@ public:
 
 	explicit CContextList(QLinkedList<CContextListSubSeq>* pObjectIdentifierList):
 		is_copy(false),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
+		c_Identifier(getBerIdentifier()),
 		c_emptyId(),
 		m_pSeqOf(pObjectIdentifierList)
 	{}
 
 	CContextList(const CContextList& rhs): QObject(),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16)
+		c_Identifier(getBerIdentifier())
 	{
 		m_Code = rhs.m_Code;
 

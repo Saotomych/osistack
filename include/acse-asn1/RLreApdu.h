@@ -74,11 +74,14 @@ public:
 
 	static quint32 s_metaTypeIdentifier;
 
-	CBerIdentifier getIdentifier() { return c_Identifier; }
+	static CBerIdentifier getBerIdentifier()
+	{
+		return CBerIdentifier(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::CONSTRUCTED, 3);
+	}
 
 	CRLreApdu():
 		is_copy(false),
-		c_Identifier(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::CONSTRUCTED, 3),
+		c_Identifier(getBerIdentifier()),
 		c_IdReason(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0),
 		c_IdUserInformation(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 30),
 		m_pReason(nullptr),
@@ -87,7 +90,7 @@ public:
 
 	CRLreApdu(CBerInteger* pReason, CAssociationInformation* pUserInformation):
 		is_copy(false),
-		c_Identifier(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::CONSTRUCTED, 3),
+		c_Identifier(getBerIdentifier()),
 		c_IdReason(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0),
 		c_IdUserInformation(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 30),
 		m_pReason(pReason),
@@ -96,7 +99,7 @@ public:
 
 	CRLreApdu(const CRLreApdu& rhs):
 		QObject(),
-		c_Identifier(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::CONSTRUCTED, 3),
+		c_Identifier(getBerIdentifier()),
 		c_IdReason(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0),
 		c_IdUserInformation(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 30)
 	{
@@ -134,6 +137,8 @@ public:
 	{
 		delete_all_objects();
 	}
+
+	CBerIdentifier getIdentifier() { return c_Identifier; }
 
 };
 

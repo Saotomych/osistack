@@ -80,9 +80,14 @@ public:
 	static CBerIdentifier s_Identifier;
 	static quint32 s_metaTypeIdentifier;
 
+	static CBerIdentifier getBerIdentifier()
+	{
+		return CBerIdentifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16);
+	}
+
 	CResultSubsequence(CBerInteger* pResult, CBerObjectIdentifier* pTransferSyntaxName, CBerInteger* pProviderReason):
 		is_copy(false),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
+		c_Identifier(getBerIdentifier()),
 		c_IdResult(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0),
 		c_IdTransferSyntaxName(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 1),
 		c_IdProviderReason(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 2),
@@ -92,7 +97,7 @@ public:
 	{}
 
 	CResultSubsequence(const CResultSubsequence& rhs): QObject(),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
+		c_Identifier(getBerIdentifier()),
 		c_IdResult(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0),
 		c_IdTransferSyntaxName(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 1),
 		c_IdProviderReason(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 2)

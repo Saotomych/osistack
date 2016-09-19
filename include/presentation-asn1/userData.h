@@ -149,9 +149,14 @@ public:
 
 	static quint32 s_metaTypeIdentifier;
 
+	static CBerIdentifier getBerIdentifier()
+	{
+		return CBerIdentifier();
+	}
+
 	CUserData():
 		is_copy(false),
-		c_Identifier(),
+		c_Identifier(getBerIdentifier()),
 		c_IdSimpleEncodedData(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::PRIMITIVE, 0),
 		c_IdFullyEncodedData(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::CONSTRUCTED, 1),
 		m_pSimpleEncodedData(nullptr),
@@ -160,7 +165,7 @@ public:
 
 	CUserData(CBerOctetString* pReason, CFullyEncodedData* pUserInformation):
 		is_copy(false),
-		c_Identifier(),
+		c_Identifier(getBerIdentifier()),
 		c_IdSimpleEncodedData(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::PRIMITIVE, 0),
 		c_IdFullyEncodedData(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::CONSTRUCTED, 1),
 		m_pSimpleEncodedData(pReason),
@@ -168,7 +173,7 @@ public:
 	{}
 
 	CUserData(const CUserData& rhs):QObject(),
-		c_Identifier(),
+		c_Identifier(getBerIdentifier()),
 		c_IdSimpleEncodedData(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::PRIMITIVE, 0),
 		c_IdFullyEncodedData(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::CONSTRUCTED, 1)
 	{

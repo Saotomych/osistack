@@ -94,9 +94,14 @@ namespace NsExternalLinkV1
 
 		static quint32 s_metaTypeIdentifier;
 
+		static CBerIdentifier getBerIdentifier()
+		{
+			return CBerIdentifier();
+		}
+
 		SubChoiceEncoding(CBerAnyNoDecode* pSingleAsn1Type, CBerOctetString* pOctetAligned, CBerBitString* pArbitrary):
 			is_copy(false),
-			c_Identifier(),
+			c_Identifier(getBerIdentifier()),
 			c_IdSingleAsn1Type(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 0),
 			c_IdOctetAligned(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 1),
 			c_IdArbitrary(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 2),
@@ -106,7 +111,7 @@ namespace NsExternalLinkV1
 		{}
 
 		SubChoiceEncoding(const SubChoiceEncoding& rhs): QObject(),
-			c_Identifier(),
+			c_Identifier(getBerIdentifier()),
 			c_IdSingleAsn1Type(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 0),
 			c_IdOctetAligned(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 1),
 			c_IdArbitrary(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 2)
@@ -165,8 +170,11 @@ private:
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
+	Q_PROPERTY(CBerIdentifier Idoid READ getIdDirectReference)
 	Q_PROPERTY(IBerBaseType* oid READ getDirectReference)
+	Q_PROPERTY(CBerIdentifier Idinteger READ getIdIndirectReference)
 	Q_PROPERTY(IBerBaseType* integer READ getIndirectReference)
+	Q_PROPERTY(CBerIdentifier Idsubchoice READ getIdEncoding)
 	Q_PROPERTY(IBerBaseType* subchoice READ getEncoding)
 
 	bool is_copy;
@@ -176,6 +184,10 @@ public:
 	QByteArray* getCode() { return &m_Code; }
 	CBerIdentifier getIdentifier() { return c_Identifier; }
 	CBerLength getLength() { CBerLength len; return len; }
+
+	CBerIdentifier getIdDirectReference() { return CBerObjectIdentifier::getBerIdentifier(); }
+	CBerIdentifier getIdIndirectReference() { return CBerInteger::getBerIdentifier(); }
+	CBerIdentifier getIdEncoding() { return NsExternalLinkV1::SubChoiceEncoding::getBerIdentifier(); }
 
 	IBerBaseType* getDirectReference() { return m_pDirectReference; }
 	IBerBaseType* getIndirectReference() { return m_pIndirectReference; }
@@ -223,9 +235,14 @@ public:
 
 	static quint32 s_metaTypeIdentifier;
 
+	static CBerIdentifier getBerIdentifier()
+	{
+		return CBerIdentifier(CBerIdentifier::UNIVERSAL_CLASS,CBerIdentifier::CONSTRUCTED, 8);
+	}
+
 	CExternalLinkV1():
 		is_copy(false),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS,CBerIdentifier::CONSTRUCTED, 8),
+		c_Identifier(getBerIdentifier()),
 		m_pDirectReference(nullptr),
 		m_pIndirectReference(nullptr),
 		m_pEncoding(nullptr)
@@ -233,14 +250,14 @@ public:
 
 	CExternalLinkV1(CBerObjectIdentifier* pDirectReference, CBerInteger* pIndirectReference, NsExternalLinkV1::SubChoiceEncoding* pEncoding):
 		is_copy(false),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS,CBerIdentifier::CONSTRUCTED, 8),
+		c_Identifier(getBerIdentifier()),
 		m_pDirectReference(pDirectReference),
 		m_pIndirectReference(pIndirectReference),
 		m_pEncoding(pEncoding)
 	{}
 
 	CExternalLinkV1(const CExternalLinkV1& rhs): QObject(),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS,CBerIdentifier::CONSTRUCTED, 8)
+		c_Identifier(getBerIdentifier())
 	{
 		create_objects(rhs);
 

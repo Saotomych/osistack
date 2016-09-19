@@ -18,8 +18,11 @@ class OSISTACK_SHAREDEXPORT CAuthenticationValue: public QObject, public IBerBas
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
+	Q_PROPERTY(CBerIdentifier Idgraphstr READ getIdGraphString)
 	Q_PROPERTY(IBerBaseType* graphstr READ getGraphString)
+	Q_PROPERTY(CBerIdentifier Idbitstr READ getIdBitString)
 	Q_PROPERTY(IBerBaseType* bitstr READ getBitString)
+	Q_PROPERTY(CBerIdentifier Idextlink READ getIdExternalLink)
 	Q_PROPERTY(IBerBaseType* extlink READ getExternalLink)
 
 	bool is_copy;
@@ -32,6 +35,11 @@ public:
 
 	QByteArray* getCode() { return &m_Code; }
 	CBerIdentifier getIdentifier() { return c_Identifier; }
+
+	CBerIdentifier getIdGraphString() { return CBerGraphicString::getBerIdentifier(); }
+	CBerIdentifier getIdBitString() { return CBerBitString::getBerIdentifier(); }
+	CBerIdentifier getIdExternalLink() { return CExternalLinkV2::getBerIdentifier(); }
+
 	IBerBaseType* getGraphString() { return m_pGraphString; }
 	IBerBaseType* getBitString() { return m_pBitString; }
 	IBerBaseType* getExternalLink() { return m_pExternalLink; }
@@ -66,8 +74,8 @@ protected:
 	QByteArray m_Code;
 
 	CBerGraphicString* m_pGraphString;
-	CExternalLinkV2* m_pExternalLink;
 	CBerBitString* m_pBitString;
+	CExternalLinkV2* m_pExternalLink;
 
 public:
 
@@ -75,16 +83,21 @@ public:
 
 	static quint32 s_metaTypeIdentifier;
 
+	static CBerIdentifier getBerIdentifier()
+	{
+		return CBerIdentifier();
+	}
+
 	CAuthenticationValue():
 		is_copy(false),
-		c_Identifier(),
+		c_Identifier(getBerIdentifier()),
 		m_pGraphString(nullptr),
-		m_pExternalLink(nullptr),
-		m_pBitString(nullptr)
+		m_pBitString(nullptr),
+		m_pExternalLink(nullptr)
 	{}
 
 	CAuthenticationValue(CBerGraphicString* pGraphString, CExternalLinkV2* pExternalLink, CBerBitString* pBitString):
-		c_Identifier()
+		c_Identifier(getBerIdentifier())
 	{
 		m_pGraphString = pGraphString;
 		m_pExternalLink = pExternalLink;
@@ -94,7 +107,7 @@ public:
 	}
 
 	CAuthenticationValue(const CAuthenticationValue& rhs): QObject(),
-		c_Identifier()
+		c_Identifier(getBerIdentifier())
 	{
 		create_objects(rhs);
 

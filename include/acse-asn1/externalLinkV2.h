@@ -18,8 +18,11 @@ class OSISTACK_SHAREDEXPORT CExternalLinkV2: public QObject, public IBerBaseType
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
+	Q_PROPERTY(CBerIdentifier Idany READ getIdAny)
 	Q_PROPERTY(IBerBaseType* any READ getAny)
+	Q_PROPERTY(CBerIdentifier Idoctstr READ getIdOctetString)
 	Q_PROPERTY(IBerBaseType* octstr READ getOctetString)
+	Q_PROPERTY(CBerIdentifier Idbitstr READ getIdBitStr)
 	Q_PROPERTY(IBerBaseType* bitstr READ getBitString)
 
 	bool is_copy;
@@ -28,6 +31,11 @@ public:
 
 	QByteArray* getCode() { return &m_Code; }
 	CBerIdentifier getIdentifier() { return c_Identifier; }
+
+	CBerIdentifier getIdAny() { return CBerAny::getBerIdentifier(); }
+	CBerIdentifier getIdOctetString() { return CBerOctetString::getBerIdentifier(); }
+	CBerIdentifier getIdBitStr() { return CBerBitString::getBerIdentifier(); }
+
 	IBerBaseType* getAny() { return m_pAny; }
 	IBerBaseType* getOctetString() { return m_pOctetString; }
 	IBerBaseType* getBitString() { return m_pBitString; }
@@ -74,16 +82,21 @@ public:
 
 	static quint32 s_metaTypeIdentifier;
 
+	static CBerIdentifier getBerIdentifier()
+	{
+		return CBerIdentifier();
+	}
+
 	CExternalLinkV2(CBerAny* pAny, CBerOctetString* pOctetString, CBerBitString* pBitString):
 		is_copy(false),
-		c_Identifier(),
+		c_Identifier(getBerIdentifier()),
 		m_pAny(pAny),
 		m_pOctetString(pOctetString),
 		m_pBitString(pBitString)
 	{}
 
 	CExternalLinkV2(const CExternalLinkV2& rhs): QObject(),
-		c_Identifier()
+		c_Identifier(getBerIdentifier())
 	{
 		create_objects(rhs);
 

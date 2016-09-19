@@ -220,9 +220,14 @@ public:
 
 	static quint32 s_metaTypeIdentifier;
 
+	static CBerIdentifier getBerIdentifier()
+	{
+		return CBerIdentifier(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::CONSTRUCTED, 0);
+	}
+
 	CAArqApdu():
 		is_copy(false),
-		c_Identifier(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::CONSTRUCTED, 0),
+		c_Identifier(getBerIdentifier()),
 		c_IdProtocolVersion(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0),
 		c_IdApplicationContextName(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 1),
 		c_IdCalledApTitle(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 2),
@@ -275,7 +280,7 @@ public:
 			CBerGraphicString* pImplementationInformation,
 			CAssociationInformation* pUserInformation	):
 				is_copy(false),
-				c_Identifier(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::CONSTRUCTED, 0),
+				c_Identifier(getBerIdentifier()),
 				c_IdProtocolVersion(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0),
 				c_IdApplicationContextName(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 1),
 				c_IdCalledApTitle(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 2),
@@ -311,7 +316,7 @@ public:
 	{}
 
 	CAArqApdu(const CAArqApdu& rhs): QObject(),
-		c_Identifier(CBerIdentifier::APPLICATION_CLASS, CBerIdentifier::CONSTRUCTED, 0),
+		c_Identifier(getBerIdentifier()),
 		c_IdProtocolVersion(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0),
 		c_IdApplicationContextName(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 1),
 		c_IdCalledApTitle(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 2),

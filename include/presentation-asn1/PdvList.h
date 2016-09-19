@@ -90,9 +90,14 @@ namespace NsPdvList
 
 		static quint32 s_metaTypeIdentifier;
 
+		static CBerIdentifier getBerIdentifier()
+		{
+			return CBerIdentifier();
+		}
+
 		SubchoicePresentationDataValues(CBerAnyNoDecode* pSingleAsn1Type, CBerOctetString* pOctetAligned, CBerBitString* pArbitrary):
 			is_copy(false),
-			c_Identifier(),
+			c_Identifier(getBerIdentifier()),
 			m_pSingleAsn1Type(pSingleAsn1Type),
 			m_pOctetAligned(pOctetAligned),
 			m_pArbitrary(pArbitrary),
@@ -102,7 +107,7 @@ namespace NsPdvList
 		{}
 
 		SubchoicePresentationDataValues(const SubchoicePresentationDataValues& rhs): QObject(),
-			c_Identifier(),
+			c_Identifier(getBerIdentifier()),
 			c_IdSingleAsn1Type(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 0),
 			c_IdOctetAligned(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 1),
 			c_IdArbitrary(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 2)
@@ -159,8 +164,11 @@ class OSISTACK_SHAREDEXPORT CPdvList: public QObject, public IBerBaseType
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
+	Q_PROPERTY(CBerIdentifier idTransferSyntaxName READ getIdTransferSyntaxName)
 	Q_PROPERTY(IBerBaseType* transferSyntaxName READ getTransferSyntaxName)
+	Q_PROPERTY(CBerIdentifier idPresentationContextIdentifier READ getIdPresentationContextIdentifier)
 	Q_PROPERTY(IBerBaseType* presentationContextIdentifier READ getPresentationContextIdentifier)
+	Q_PROPERTY(CBerIdentifier idSPDV READ getIdSPDV)
 	Q_PROPERTY(IBerBaseType* SPDV READ getSPDV)
 
 	bool is_copy;
@@ -178,6 +186,10 @@ protected:
 	CBerIdentifier getIdentifier() { return c_Identifier; }
 	QByteArray* getCode() { return &m_Code; }
 
+	CBerIdentifier getIdTransferSyntaxName() { return CBerObjectIdentifier::getBerIdentifier(); }
+	CBerIdentifier getIdPresentationContextIdentifier() { return CBerInteger::getBerIdentifier(); }
+	CBerIdentifier getIdSPDV() { return NsPdvList::SubchoicePresentationDataValues::getBerIdentifier(); }
+
 	IBerBaseType* getTransferSyntaxName() { return m_transferSyntaxName; }
 	IBerBaseType* getPresentationContextIdentifier() { return m_presentationContextIdentifier; }
 	IBerBaseType* getSPDV() { return m_pSPDV; }
@@ -188,18 +200,23 @@ public:
 
 	static quint32 s_metaTypeIdentifier;
 
+	static CBerIdentifier getBerIdentifier()
+	{
+		return CBerIdentifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16);
+	}
+
 	CPdvList(CBerObjectIdentifier* transferSyntaxName,
 			CBerInteger* presentationContextIdentifier,
 			NsPdvList::SubchoicePresentationDataValues* pSPDV):
 		is_copy(false),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
+		c_Identifier(getBerIdentifier()),
 		m_transferSyntaxName(transferSyntaxName),
 		m_presentationContextIdentifier(presentationContextIdentifier),
 		m_pSPDV(pSPDV)
 	{ }
 
 	CPdvList(const CPdvList& rhs): QObject(),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16)
+		c_Identifier(getBerIdentifier())
 	{
 		m_Code = rhs.m_Code;
 

@@ -42,10 +42,15 @@ public:
 
 	static quint32 s_metaTypeIdentifier;
 
+	static CBerIdentifier getBerIdentifier()
+	{
+		return CBerIdentifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 17);
+	}
+
 	CModeSelector(CBerInteger* pModeValue):
 		is_copy(false),
 		m_pModeValue(pModeValue),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 17),
+		c_Identifier(getBerIdentifier()),
 		c_IdModValue(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0)
 	{
 	}
@@ -53,14 +58,14 @@ public:
 	CModeSelector(QByteArray& code):
 		is_copy(false),
 		m_pModeValue(nullptr),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 17),
+		c_Identifier(getBerIdentifier()),
 		c_IdModValue(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0)
 	{
 		m_Code = code;
 	}
 
 	CModeSelector(const CModeSelector& rhs): QObject(),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 17),
+		c_Identifier(getBerIdentifier()),
 		c_IdModValue(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0)
 	{
 		m_Code = rhs.m_Code;

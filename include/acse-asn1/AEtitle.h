@@ -16,6 +16,7 @@ class OSISTACK_SHAREDEXPORT CAeTitle: public QObject, public IBerBaseType
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
+	Q_PROPERTY(CBerIdentifier IdOI READ getIdAeTitleForm2)
 	Q_PROPERTY(IBerBaseType* OI READ getAeTitleForm2)
 
 	bool is_copy;
@@ -31,16 +32,24 @@ public:
 
 	QByteArray* getCode() { return &m_Code; }
 	CBerIdentifier getIdentifier() { return c_Identifier; }
+
+	CBerIdentifier getIdAeTitleForm2() { return CBerObjectIdentifier::getBerIdentifier(); }
+
 	IBerBaseType* getAeTitleForm2() { return m_pAeTitleForm2; }
 
 	ASN1_CODEC(CBerBaseStorage)
 
 	static quint32 s_metaTypeIdentifier;
 
+	static CBerIdentifier getBerIdentifier()
+	{
+		return CBerIdentifier();
+	}
+
 	CAeTitle(CBerObjectIdentifier* pApTitleForm2):
 		is_copy(false),
 		m_pAeTitleForm2(pApTitleForm2),
-		c_Identifier()
+		c_Identifier(getBerIdentifier())
 	{ }
 
 	CAeTitle(const CAeTitle& rhs): QObject()

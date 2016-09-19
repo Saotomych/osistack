@@ -16,6 +16,7 @@ class OSISTACK_SHAREDEXPORT CApplicationContextName: public QObject, public IBer
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
 	Q_PROPERTY(QByteArray* Code READ getCode)
+	Q_PROPERTY(CBerIdentifier IdOI READ getIdObjectIdentifier)
 	Q_PROPERTY(IBerBaseType* OI READ getObjectIdentifier)
 
 	bool is_copy;
@@ -30,27 +31,35 @@ public:
 
 	CBerIdentifier getIdentifier() { return c_Identifier; }
 	QByteArray* getCode() { return &m_Code; }
+
+	CBerIdentifier getIdObjectIdentifier() { return CBerObjectIdentifier::getBerIdentifier(); }
+
 	IBerBaseType* getObjectIdentifier() { return m_pAppContextName; }
 
 	ASN1_CODEC(CBerBaseStorage)
 
 	static quint32 s_metaTypeIdentifier;
 
+	static CBerIdentifier getBerIdentifier()
+	{
+		return CBerIdentifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::PRIMITIVE, 16);
+	}
+
 	explicit CApplicationContextName(CBerObjectIdentifier* pObjectIdentifier):
 		is_copy(false),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::PRIMITIVE, 16),
+		c_Identifier(getBerIdentifier()),
 		m_pAppContextName(pObjectIdentifier)
 	{}
 
 	explicit CApplicationContextName(QByteArray& code):
 		is_copy(false),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::PRIMITIVE, 16),
+		c_Identifier(getBerIdentifier()),
 		m_Code(code),
 		m_pAppContextName(nullptr)
 	{}
 
 	CApplicationContextName(const CApplicationContextName& rhs): QObject(),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::PRIMITIVE, 16)
+		c_Identifier(getBerIdentifier())
 	{
 		m_Code = rhs.m_Code;
 
@@ -130,15 +139,20 @@ public:
 	static quint32 s_metaTypeIdentifier;
 	static quint32 s_metaTypeListId;
 
+	static CBerIdentifier getBerIdentifier()
+	{
+		return CBerIdentifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16);
+	}
+
 	explicit CApplicationContextNameList(QLinkedList<CBerObjectIdentifier>* pObjectIdentifierList):
 		is_copy(false),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
+		c_Identifier(getBerIdentifier()),
 		c_IdOID(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
 		m_pSeqOf(pObjectIdentifierList)
 	{}
 
 	CApplicationContextNameList(const CApplicationContextNameList& rhs): QObject(),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
+		c_Identifier(getBerIdentifier()),
 		c_IdOID(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16)
 	{
 		m_Code = rhs.m_Code;

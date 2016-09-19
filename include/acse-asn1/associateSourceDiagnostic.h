@@ -74,9 +74,14 @@ public:
 
 	static quint32 s_metaTypeIdentifier;
 
+	static CBerIdentifier getBerIdentifier()
+	{
+		return CBerIdentifier();
+	}
+
 	CAssociateSourceDiagnostic(CBerInteger* pAcseServiceUser, CBerInteger* pAcseServiceProvider):
 		is_copy(false),
-		c_Identifier(),
+		c_Identifier(getBerIdentifier()),
 		c_IdAcseServiceUser(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 1),
 		c_IdAcseServiceProvider(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 2),
 		m_pAcseServiceUser(pAcseServiceUser),
@@ -87,7 +92,7 @@ public:
 
 	CAssociateSourceDiagnostic(QByteArray& code):
 		is_copy(false),
-		c_Identifier(),
+		c_Identifier(getBerIdentifier()),
 		c_IdAcseServiceUser(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 1),
 		c_IdAcseServiceProvider(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 2),
 		m_pAcseServiceUser(nullptr),
@@ -99,7 +104,7 @@ public:
 
 	CAssociateSourceDiagnostic(QByteArray code):
 		is_copy(false),
-		c_Identifier(),
+		c_Identifier(getBerIdentifier()),
 		c_IdAcseServiceUser(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 1),
 		c_IdAcseServiceProvider(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 2),
 		m_pAcseServiceUser(nullptr),
@@ -110,7 +115,7 @@ public:
 	}
 
 	CAssociateSourceDiagnostic(const CAssociateSourceDiagnostic& rhs): QObject(),
-		c_Identifier(),
+		c_Identifier(getBerIdentifier()),
 		c_IdAcseServiceUser(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 1),
 		c_IdAcseServiceProvider(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 2)
 	{

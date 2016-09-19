@@ -33,6 +33,7 @@ class OSISTACK_SHAREDEXPORT CSubSecNormalModeParameters: public QObject, public 
 	Q_PROPERTY(IBerBaseType* PresentationRequirements READ getPresentationRequirements)
 	Q_PROPERTY(CBerIdentifier IdUserSessionRequirements READ getIdUserSessionRequirements)
 	Q_PROPERTY(IBerBaseType* UserSessionRequirements READ getUserSessionRequirements)
+	Q_PROPERTY(CBerIdentifier IdUserData READ getIdUserData)
 	Q_PROPERTY(IBerBaseType* UserData READ getUserData)
 
 	bool is_copy;
@@ -47,6 +48,7 @@ public:
 	CBerIdentifier getIdPresentationContextDefinitionResultList() {return c_IdPresentationContextDefinitionResultList;}
 	CBerIdentifier getIdPresentationRequirements() {return c_IdPresentationRequirements;}
 	CBerIdentifier getIdUserSessionRequirements() {return c_IdUserSessionRequirements;}
+	CBerIdentifier getIdUserData() {return CUserData::getBerIdentifier(); }
 
 	IBerBaseType* getProtocolVersion() {return m_pProtocolVersion;}
 	IBerBaseType* getRespondingPresentationSelector() {return m_pRespondingPresentationSelector;}
@@ -118,9 +120,14 @@ public:
 	static CBerIdentifier s_Identifier;
 	static quint32 s_metaTypeIdentifier;
 
+	static CBerIdentifier getBerIdentifier()
+	{
+		return CBerIdentifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16);
+	}
+
 	CSubSecNormalModeParameters():
 		is_copy(false),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
+		c_Identifier(getBerIdentifier()),
 		c_IdProtocolVersion(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0),
 		c_IdRespondingPresentationSelector(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 3),
 		c_IdPresentationContextDefinitionResultList(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 5),
@@ -144,7 +151,7 @@ public:
 			CUserData* pUserData
 	):
 		is_copy(false),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
+		c_Identifier(getBerIdentifier()),
 		c_IdProtocolVersion(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0),
 		c_IdRespondingPresentationSelector(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 3),
 		c_IdPresentationContextDefinitionResultList(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 5),
@@ -159,7 +166,7 @@ public:
 	{}
 
 	CSubSecNormalModeParameters(const CSubSecNormalModeParameters& rhs): QObject(),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
+		c_Identifier(getBerIdentifier()),
 		c_IdProtocolVersion(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0),
 		c_IdRespondingPresentationSelector(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 3),
 		c_IdPresentationContextDefinitionResultList(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 5),
@@ -213,6 +220,7 @@ class CCpaPpdu: public QObject, public IBerBaseType
 {
 	Q_OBJECT
 	Q_PROPERTY(CBerIdentifier Identifier READ getIdentifier)
+	Q_PROPERTY(QByteArray* Code READ getCode)
 	Q_PROPERTY(CBerIdentifier IdPresentationContextIdentifier READ getIdPresentationContextIdentifier)
 	Q_PROPERTY(IBerBaseType* presentationContextIdentifier READ getPresentationContextIdentifier)
 	Q_PROPERTY(CBerIdentifier IdSPDV READ getIdSPDV)
@@ -232,6 +240,7 @@ protected:
 	CModeSelector* m_pModeSelector;
 	NsCpaPpdu::CSubSecNormalModeParameters* m_pSSNMP;
 
+	QByteArray* getCode() { return &m_Code; }
 	CBerIdentifier getIdentifier() { return c_Identifier; }
 
 	CBerIdentifier getIdPresentationContextIdentifier() { return c_IdModeSelector; }
@@ -247,9 +256,14 @@ public:
 	static CBerIdentifier s_Identifier;
 	static quint32 s_metaTypeIdentifier;
 
+	static CBerIdentifier getBerIdentifier()
+	{
+		return CBerIdentifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 17);
+	}
+
 	CCpaPpdu():
 		is_copy(false),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 17),
+		c_Identifier(getBerIdentifier()),
 		c_IdModeSelector(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 0),
 		c_IdSSNMP(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 2),
 		m_pModeSelector(nullptr),
@@ -259,7 +273,7 @@ public:
 	CCpaPpdu(CModeSelector* presentationContextIdentifier,
 			NsCpaPpdu::CSubSecNormalModeParameters* pSPDV):
 		is_copy(false),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 17),
+		c_Identifier(getBerIdentifier()),
 		c_IdModeSelector(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 0),
 		c_IdSSNMP(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 2),
 		m_pModeSelector(presentationContextIdentifier),
@@ -267,7 +281,7 @@ public:
 	{ }
 
 	CCpaPpdu(const CCpaPpdu& rhs): QObject(),
-		c_Identifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 17),
+		c_Identifier(getBerIdentifier()),
 		c_IdModeSelector(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 0),
 		c_IdSSNMP(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 2)
 	{
