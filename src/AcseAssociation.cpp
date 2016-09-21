@@ -875,11 +875,6 @@ QByteArray CAcseAssociation::parseConnectionRequest(QDataStream& iStream)
 	qDebug() << out.toHex();
 
 // Create empty structure for decoding
-
-	qDebug() << "--------------------------------------";
-	qDebug() << "Server -> Client";
-	qDebug() << "--------------------------------------";
-
 	QVector<qint32> bitStringCalled;
 	CBerObjectIdentifier calledId(bitStringCalled);
 	CApTitle calledApTitle( &calledId );
@@ -967,17 +962,21 @@ QByteArray CAcseAssociation::parseConnectionRequest(QDataStream& iStream)
 	CBerObjectIdentifier oid2;
 	CBerObjectIdentifier oid3;
 	CBerObjectIdentifier oid4;
+	CBerObjectIdentifier oid5;
+	CBerObjectIdentifier oid6;
+	QLinkedList<CBerObjectIdentifier> tsnl1;
+	CContextListSubSeqOfTransferSyntaxName tsn1(&tsnl1);
+	tsnl1.push_back(oid5);
+	QLinkedList<CBerObjectIdentifier> tsnl2;
+	CContextListSubSeqOfTransferSyntaxName tsn2(&tsnl2);
+	tsnl2.push_back(oid6);
 	CBerInteger int1;
-	CBerInteger int3;
-	CContextListSubSeq appCN1(&int1, &oid1, nullptr);
-	CContextListSubSeq appCN2(nullptr, &oid2, nullptr);
-	CContextListSubSeq appCN3(&int3, &oid3, nullptr);
-	CContextListSubSeq appCN4(nullptr, &oid4, nullptr);
+	CBerInteger int2;
+	CContextListSubSeq appCN1(&int1, &oid1, &tsn1);
+	CContextListSubSeq appCN2(&int2, &oid2, &tsn2);
 	QLinkedList<CContextListSubSeq> appCNList;
 	appCNList.push_back(appCN1);
 	appCNList.push_back(appCN2);
-	appCNList.push_back(appCN3);
-	appCNList.push_back(appCN4);
 	CContextList contextList(&appCNList);
 
 	NsCpType::CSubSeqNormalModeParameters normalModeParameter(
@@ -997,7 +996,9 @@ QByteArray CAcseAssociation::parseConnectionRequest(QDataStream& iStream)
 
 	acse.decode(berIStream, true);
 
-	retArray = berIStream.get();
+	quint32 fakeLength = 0;
+	retArray += *(lastBerIdentifier::get(berIStream, fakeLength).getCode()) + berIStream.get();
+	lastBerIdentifier::reset();
 
 	m_connected = true;
 

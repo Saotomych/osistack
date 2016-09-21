@@ -38,7 +38,21 @@ protected:
 	IBerBaseType* getTransferSyntaxName() { return m_pTransferSyntaxName; }
 	IBerBaseType* getProviderReason() { return m_pProviderReason; }
 
-	void create_objects(const CResultSubsequence& rhs)
+	inline IBerBaseType* create_object_by_id(const CBerIdentifier& id)
+	{
+		qDebug() << "INFO: CResultSubsequence create member by id = " << id.getCode()->toHex();
+
+		if ( c_IdResult == id )
+			{ m_pResult = new CBerInteger(); is_copy = true; return m_pResult; }
+		if ( c_IdTransferSyntaxName == id )
+			{ m_pTransferSyntaxName = new CBerObjectIdentifier(); is_copy = true; return m_pTransferSyntaxName; }
+		if ( c_IdProviderReason == id )
+			{ m_pProviderReason = new CBerInteger(); is_copy = true; return m_pProviderReason; }
+
+		return nullptr;
+	}
+
+	inline void create_objects(const CResultSubsequence& rhs)
 	{
 		std::unique_ptr<CBerInteger> p1
 				( (rhs.m_pResult != nullptr) ? new CBerInteger(*rhs.m_pResult): nullptr );
@@ -52,7 +66,7 @@ protected:
 		m_pProviderReason = p3.release();
 	}
 
-	void delete_all_objects()
+	inline void delete_all_objects()
 	{
 		if (is_copy)
 		{
@@ -84,6 +98,17 @@ public:
 	{
 		return CBerIdentifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16);
 	}
+
+	CResultSubsequence():
+		is_copy(false),
+		c_Identifier(getBerIdentifier()),
+		c_IdResult(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0),
+		c_IdTransferSyntaxName(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 1),
+		c_IdProviderReason(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 2),
+		m_pResult(nullptr),
+		m_pTransferSyntaxName(nullptr),
+		m_pProviderReason(nullptr)
+	{}
 
 	CResultSubsequence(CBerInteger* pResult, CBerObjectIdentifier* pTransferSyntaxName, CBerInteger* pProviderReason):
 		is_copy(false),

@@ -39,15 +39,30 @@ namespace NsPdvList
 
 		QByteArray* getCode() { return &m_Code; }
 		CBerIdentifier getIdentifier() { return c_Identifier; }
-		IBerBaseType* getAny() { return m_pSingleAsn1Type; }
-		IBerBaseType* getOctetString() { return m_pOctetAligned; }
-		IBerBaseType* getBitString() { return m_pArbitrary; }
 
 		CBerIdentifier getIdAny() { return c_IdSingleAsn1Type; }
 		CBerIdentifier getIdOctetString() { return c_IdOctetAligned; }
 		CBerIdentifier getIdBitString() { return c_IdArbitrary; }
 
-		void create_objects(const SubchoicePresentationDataValues& rhs)
+		IBerBaseType* getAny() { return m_pSingleAsn1Type; }
+		IBerBaseType* getOctetString() { return m_pOctetAligned; }
+		IBerBaseType* getBitString() { return m_pArbitrary; }
+
+		inline IBerBaseType* create_object_by_id(const CBerIdentifier& id)
+		{
+			qDebug() << "INFO: NsPdvList::SubchoicePresentationDataValues create member by id = " << id.getCode()->toHex();
+
+			if ( c_IdSingleAsn1Type == id )
+				{ m_pSingleAsn1Type = new CBerAnyNoDecode(); is_copy = true; return m_pSingleAsn1Type; }
+			if ( c_IdOctetAligned == id )
+				{ m_pOctetAligned = new CBerOctetString(); is_copy = true; return m_pOctetAligned; }
+			if ( c_IdArbitrary == id )
+				{ m_pArbitrary = new CBerBitString(); is_copy = true; return m_pArbitrary; }
+
+			return nullptr;
+		}
+
+		inline void create_objects(const SubchoicePresentationDataValues& rhs)
 		{
 			std::unique_ptr<CBerAnyNoDecode> p1
 					( (rhs.m_pSingleAsn1Type != nullptr) ? new CBerAnyNoDecode(*rhs.m_pSingleAsn1Type): nullptr );
@@ -61,7 +76,7 @@ namespace NsPdvList
 			m_pArbitrary = p3.release();
 		}
 
-		void delete_all_objects()
+		inline void delete_all_objects()
 		{
 			if (is_copy)
 			{
@@ -94,6 +109,17 @@ namespace NsPdvList
 		{
 			return CBerIdentifier();
 		}
+
+		SubchoicePresentationDataValues():
+			is_copy(false),
+			c_Identifier(getBerIdentifier()),
+			m_pSingleAsn1Type(nullptr),
+			m_pOctetAligned(nullptr),
+			m_pArbitrary(nullptr),
+			c_IdSingleAsn1Type(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 0),
+			c_IdOctetAligned(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 1),
+			c_IdArbitrary(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 2)
+		{}
 
 		SubchoicePresentationDataValues(CBerAnyNoDecode* pSingleAsn1Type, CBerOctetString* pOctetAligned, CBerBitString* pArbitrary):
 			is_copy(false),
@@ -194,6 +220,20 @@ protected:
 	IBerBaseType* getPresentationContextIdentifier() { return m_presentationContextIdentifier; }
 	IBerBaseType* getSPDV() { return m_pSPDV; }
 
+	inline IBerBaseType* create_object_by_id(const CBerIdentifier& id)
+	{
+		qDebug() << "INFO: CPdvList create member by id = " << id.getCode()->toHex();
+
+		if ( getIdTransferSyntaxName() == id )
+			{ m_transferSyntaxName = new CBerObjectIdentifier(); is_copy = true; return m_transferSyntaxName; }
+		if ( getIdPresentationContextIdentifier() == id )
+			{ m_presentationContextIdentifier = new CBerInteger(); is_copy = true; return m_presentationContextIdentifier; }
+		if ( getIdSPDV() == id )
+			{ m_pSPDV = new NsPdvList::SubchoicePresentationDataValues(); is_copy = true; return m_pSPDV; }
+
+		return nullptr;
+	}
+
 public:
 
 	ASN1_CODEC(CBerBaseStorage)
@@ -204,6 +244,14 @@ public:
 	{
 		return CBerIdentifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16);
 	}
+
+	CPdvList():
+		is_copy(false),
+		c_Identifier(getBerIdentifier()),
+		m_transferSyntaxName(nullptr),
+		m_presentationContextIdentifier(nullptr),
+		m_pSPDV(nullptr)
+	{ }
 
 	CPdvList(CBerObjectIdentifier* transferSyntaxName,
 			CBerInteger* presentationContextIdentifier,

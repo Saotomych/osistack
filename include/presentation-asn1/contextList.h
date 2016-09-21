@@ -30,11 +30,29 @@ protected:
 	CBerIdentifier c_IdOID;
 	QLinkedList<CBerObjectIdentifier>* m_pSeqOf;
 
+	inline IBerBaseType* create_object_by_id(const CBerIdentifier&)
+	{
+		std::runtime_error("CContextListSubSeqOfTransferSyntaxName is Container class");
+		return nullptr;
+	}
+
+public:
+	inline QLinkedList<CBerObjectIdentifier>* create_container_by_id(const CBerIdentifier& id)
+	{
+		qDebug() << "INFO: CContextListSubSeqOfTransferSyntaxName create member by id = " << id.getCode()->toHex();
+
+		if ( getIdOID() == id )
+			{ m_pSeqOf = new QLinkedList<CBerObjectIdentifier>; is_copy = true;	return m_pSeqOf; }
+
+		std::runtime_error("CContextListSubSeqOfTransferSyntaxName can't create any container");
+		return nullptr;
+	}
+
 public:
 
 	CBerIdentifier getIdentifier() { return c_Identifier; }
 	QByteArray* getCode() { return &m_Code; }
-	CBerIdentifier getIdOID() { return c_IdOID; }
+	CBerIdentifier getIdOID() { return CBerObjectIdentifier::getBerIdentifier(); }
 	QLinkedList<CBerObjectIdentifier>* getObjectIdentifierList() { return m_pSeqOf; }
 
 	typedef CContainerStorage< CContextListSubSeqOfTransferSyntaxName,
@@ -56,6 +74,13 @@ public:
 		m_Code(code),
 		c_IdOID(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
 		m_pSeqOf(nullptr)
+	{}
+
+	CContextListSubSeqOfTransferSyntaxName():
+		is_copy(false),
+		c_Identifier(getBerIdentifier()),
+		c_IdOID(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16),
+		m_pSeqOf()
 	{}
 
 	explicit CContextListSubSeqOfTransferSyntaxName(QLinkedList<CBerObjectIdentifier>* pObjectIdentifierList):
@@ -136,7 +161,21 @@ public:
 
 protected:
 
-	void create_objects(const CContextListSubSeq& rhs)
+	inline IBerBaseType* create_object_by_id(const CBerIdentifier& id)
+	{
+		qDebug() << "INFO: CContextListSubSeq create member by id = " << id.getCode()->toHex();
+
+		if ( getIdPresentationContextIdentifier() == id )
+			{ m_pPresentationContextIdentifier = new CBerInteger(); is_copy = true;	return m_pPresentationContextIdentifier; }
+		if ( getIdAbstractSyntaxName() == id )
+			{ m_pAbstractSyntaxName = new CBerObjectIdentifier(); is_copy = true; return m_pAbstractSyntaxName; }
+		if ( getIdTransferSyntaxNameList() == id )
+			{ m_pTransferSyntaxNameList = new CContextListSubSeqOfTransferSyntaxName(); is_copy = true; return m_pTransferSyntaxNameList; }
+
+		return nullptr;
+	}
+
+	inline void create_objects(const CContextListSubSeq& rhs)
 	{
 		std::unique_ptr<CBerInteger> p1
 				( (rhs.m_pPresentationContextIdentifier != nullptr) ? new CBerInteger(*rhs.m_pPresentationContextIdentifier): nullptr );
@@ -150,7 +189,7 @@ protected:
 		m_pTransferSyntaxNameList = p3.release();
 	}
 
-	void delete_all_objects()
+	inline void delete_all_objects()
 	{
 		if (is_copy)
 		{
@@ -179,6 +218,14 @@ public:
 	{
 		return CBerIdentifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16);
 	}
+
+	CContextListSubSeq():
+		is_copy(false),
+		c_Identifier(getBerIdentifier()),
+		m_pPresentationContextIdentifier(nullptr),
+		m_pAbstractSyntaxName(nullptr),
+		m_pTransferSyntaxNameList(nullptr)
+	{}
 
 	CContextListSubSeq(CBerInteger* pPresentationContextIdentifier, CBerObjectIdentifier* pAbstractSyntaxName, CContextListSubSeqOfTransferSyntaxName* pTransferSyntaxNameList):
 		is_copy(false),
@@ -260,6 +307,24 @@ protected:
 	QByteArray m_Code;
 	QLinkedList<CContextListSubSeq>* m_pSeqOf;
 
+	inline IBerBaseType* create_object_by_id(const CBerIdentifier&)
+	{
+		std::runtime_error("CContextList is Container class");
+		return nullptr;
+	}
+
+public:
+	inline QLinkedList<CContextListSubSeq>* create_container_by_id(const CBerIdentifier& id)
+	{
+		qDebug() << "INFO: CContextList create member by id = " << id.getCode()->toHex();
+
+		if ( getIdObjectIdentifierList() == id )
+			{ m_pSeqOf = new QLinkedList<CContextListSubSeq>; is_copy = true; return m_pSeqOf; }
+
+		std::runtime_error("CContextList can't create any container");
+		return nullptr;
+	}
+
 public:
 
 	CBerIdentifier getIdentifier() { return c_Identifier; }
@@ -287,6 +352,13 @@ public:
 		c_Identifier(getBerIdentifier()),
 		c_emptyId(),
 		m_Code(code),
+		m_pSeqOf(nullptr)
+	{}
+
+	explicit CContextList():
+		is_copy(false),
+		c_Identifier(getBerIdentifier()),
+		c_emptyId(),
 		m_pSeqOf(nullptr)
 	{}
 

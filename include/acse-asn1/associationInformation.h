@@ -27,6 +27,24 @@ protected:
 
 	QLinkedList<CExternalLinkV1>* m_pSeqOf;
 
+	inline IBerBaseType* create_object_by_id(const CBerIdentifier&)
+	{
+		std::runtime_error("CAssociationInformation is Container class");
+		return nullptr;
+	}
+
+public:
+	inline QLinkedList<CExternalLinkV1>* create_container_by_id(const CBerIdentifier& id)
+	{
+		qDebug() << "INFO: CAssociationInformation create member by id = " << id.getCode()->toHex();
+
+		if ( getIdSeqOf() == id )
+			{ m_pSeqOf = new QLinkedList<CExternalLinkV1>; is_copy = true; return m_pSeqOf; }
+
+		std::runtime_error("CAssociationInformation can't create any container");
+		return nullptr;
+	}
+
 public:
 
 	QByteArray* getCode() { return &m_Code; }

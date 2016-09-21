@@ -27,6 +27,16 @@ protected:
 
 	CBerObjectIdentifier* m_pAppContextName;
 
+	inline IBerBaseType* create_object_by_id(const CBerIdentifier& id)
+	{
+		qDebug() << "INFO: CApplicationContextName create member by id = " << id.getCode()->toHex();
+
+		if ( getIdObjectIdentifier() == id )
+			{ m_pAppContextName = new CBerObjectIdentifier(); is_copy = true; return m_pAppContextName; }
+
+		return nullptr;
+	}
+
 public:
 
 	CBerIdentifier getIdentifier() { return c_Identifier; }
@@ -132,11 +142,29 @@ protected:
 	CBerIdentifier c_IdOID;
 	QLinkedList<CBerObjectIdentifier>* m_pSeqOf;
 
+	inline IBerBaseType* create_object_by_id(const CBerIdentifier&)
+	{
+		std::runtime_error("ERROR! CApplicationContextNameList is Container class!");
+		return nullptr;
+	}
+
+public:
+	inline QLinkedList<CBerObjectIdentifier>* create_container_by_id(const CBerIdentifier& id)
+	{
+		qDebug() << "INFO: CApplicationContextNameList create member by id = " << id.getCode()->toHex();
+
+		if ( getIdOID() == id )
+			{ m_pSeqOf = new QLinkedList<CBerObjectIdentifier>; is_copy = true; return m_pSeqOf; }
+
+		std::runtime_error("CApplicationContextNameList can't create any container");
+		return nullptr;
+	}
+
 public:
 
 	CBerIdentifier getIdentifier() { return c_Identifier; }
 	QByteArray* getCode() { return &m_Code; }
-	CBerIdentifier getIdOID() { return c_IdOID; }
+	CBerIdentifier getIdOID() { return CBerObjectIdentifier::getBerIdentifier(); }
 	QLinkedList<CBerObjectIdentifier>* getObjectIdentifierList() { return m_pSeqOf; }
 
 	typedef CContainerStorage< CApplicationContextNameList, QLinkedList<CBerObjectIdentifier>, CBerObjectIdentifier > TLocalStorage;

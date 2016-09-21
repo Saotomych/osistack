@@ -69,7 +69,31 @@ protected:
 	IBerBaseType* getUserSessionRequirements() {return m_pUserSessionRequirements;}
 	IBerBaseType* getUserData() {return m_pUserData;}
 
-	void create_objects(const CSubSeqNormalModeParameters& rhs)
+	inline IBerBaseType* create_object_by_id(const CBerIdentifier& id)
+	{
+		qDebug() << "INFO: NsCpType::CSubSeqNormalModeParameters create member by id = " << id.getCode()->toHex();
+
+		if ( c_IdProtocolVersion == id )
+			{ m_pProtocolVersion = new CBerBitString(); is_copy = true; return m_pProtocolVersion; }
+		if ( c_IdCallingPresentationSelector == id )
+			{ m_pCallingPresentationSelector = new CBerOctetString(); is_copy = true; return m_pCallingPresentationSelector; }
+		if ( c_IdCalledPresentationSelector == id )
+			{ m_pCalledPresentationSelector = new CBerOctetString(); is_copy = true; return m_pCalledPresentationSelector; }
+		if ( c_IdPresentationContextDefinitionList == id )
+			{ m_pPresentationContextDefinitionList = new CContextList(); is_copy = true; return m_pPresentationContextDefinitionList; }
+		if ( c_IdDefaultContextName == id )
+			{ m_pDefaultContextName = new CDefaultContextName(); is_copy = true; return m_pDefaultContextName; }
+		if ( c_IdPresentationRequirements == id )
+			{ m_pPresentationRequirements = new CBerBitString(); is_copy = true; return m_pPresentationRequirements; }
+		if ( c_IdUserSessionRequirements == id )
+			{ m_pUserSessionRequirements = new  CBerBitString(); is_copy = true; return m_pUserSessionRequirements; }
+		if ( CUserData::getBerIdentifier() == id )
+			{ m_pUserData = new CUserData(); is_copy = true; return m_pUserData; }
+
+		return nullptr;
+	}
+
+	inline void create_objects(const CSubSeqNormalModeParameters& rhs)
 	{
 		std::unique_ptr<CBerBitString> p1
 				( (rhs.m_pProtocolVersion != nullptr) ? new CBerBitString(*rhs.m_pProtocolVersion): nullptr );
@@ -99,7 +123,7 @@ protected:
 
 	}
 
-	void delete_all_objects()
+	inline void delete_all_objects()
 	{
 		if (is_copy)
 		{
@@ -147,6 +171,27 @@ public:
 	{
 		return CBerIdentifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16);
 	}
+
+	CSubSeqNormalModeParameters():
+		is_copy(false),
+		c_Identifier(getBerIdentifier()),
+		c_clearId(),
+		c_IdProtocolVersion(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0),
+		c_IdCallingPresentationSelector(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 1),
+		c_IdCalledPresentationSelector(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 2),
+		c_IdPresentationContextDefinitionList(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 4),
+		c_IdDefaultContextName(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 6),
+		c_IdPresentationRequirements(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 8),
+		c_IdUserSessionRequirements(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 9),
+		m_pProtocolVersion(nullptr),
+		m_pCallingPresentationSelector(nullptr),
+		m_pCalledPresentationSelector(nullptr),
+		m_pPresentationContextDefinitionList(nullptr),
+		m_pDefaultContextName(nullptr),
+		m_pPresentationRequirements(nullptr),
+		m_pUserSessionRequirements(nullptr),
+		m_pUserData(nullptr)
+	{}
 
 	CSubSeqNormalModeParameters(
 		CBerBitString* pProtocolVersion,
@@ -258,10 +303,24 @@ protected:
 
 	CBerIdentifier getIdentifier() { return c_Identifier; }
 	QByteArray* getCode() { return &m_Code; }
+
 	CBerIdentifier getIdModeSelector() { return c_IdModeSelector; }
-	IBerBaseType* getModeSelector() { return m_pModeSelector; }
 	CBerIdentifier getIdNMP() { return c_IdNMP; }
+
+	IBerBaseType* getModeSelector() { return m_pModeSelector; }
 	IBerBaseType* getNMP() { return m_pNMP; }
+
+	inline IBerBaseType* create_object_by_id(const CBerIdentifier& id)
+	{
+		qDebug() << "INFO: CCpType create member by id = " << id.getCode()->toHex();
+
+		if ( c_IdModeSelector == id )
+			{ m_pModeSelector = new CModeSelector(); is_copy = true; return m_pModeSelector; }
+		if ( c_IdNMP == id )
+			{ m_pNMP = new NsCpType::CSubSeqNormalModeParameters(); is_copy = true; return m_pNMP; }
+
+		return nullptr;
+	}
 
 public:
 

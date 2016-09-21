@@ -36,6 +36,16 @@ protected:
 	CBerIdentifier getIdModeValue() { return c_IdModValue; }
 	IBerBaseType* getModeValue() { return m_pModeValue; }
 
+	inline IBerBaseType* create_object_by_id(const CBerIdentifier& id)
+	{
+		qDebug() << "INFO: CModeSelector create member by id = " << id.getCode()->toHex();
+
+		if ( c_IdModValue == id )
+			{ m_pModeValue = new CBerInteger(); is_copy = true; return m_pModeValue; }
+
+		return nullptr;
+	}
+
 public:
 
 	ASN1_CODEC(CBerBaseStorage)
@@ -47,7 +57,15 @@ public:
 		return CBerIdentifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 17);
 	}
 
-	CModeSelector(CBerInteger* pModeValue):
+	CModeSelector():
+		is_copy(false),
+		m_pModeValue(nullptr),
+		c_Identifier(getBerIdentifier()),
+		c_IdModValue(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0)
+	{
+	}
+
+	explicit CModeSelector(CBerInteger* pModeValue):
 		is_copy(false),
 		m_pModeValue(pModeValue),
 		c_Identifier(getBerIdentifier()),

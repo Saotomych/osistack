@@ -50,7 +50,23 @@ public:
 
 protected:
 
-	void create_objects(const CAcseApdu& rhs)
+	inline IBerBaseType* create_object_by_id(const CBerIdentifier& id)
+	{
+		qDebug() << "INFO: CAcseApdu create member by id = " << id.getCode()->toHex();
+
+		if ( getIdAarqApdu() == id )
+			{ m_pAarqApdu = new CAArqApdu(); is_copy = true; return m_pAarqApdu; }
+		if ( getIdAareApdu() == id )
+			{ m_pAareApdu = new CAAreApdu(); is_copy = true; return m_pAareApdu; }
+		if ( getIdRlrqApdu() == id )
+			{ m_pRlrqApdu = new CRLrqApdu(); is_copy = true; return m_pRlrqApdu; }
+		if ( getIdRlreApdu() == id )
+			{ m_pRlreApdu = new CRLreApdu(); is_copy = true; return m_pRlreApdu; }
+
+		return nullptr;
+	}
+
+	inline void create_objects(const CAcseApdu& rhs)
 	{
 		std::unique_ptr<CAArqApdu> p1
 				( (rhs.m_pAarqApdu != nullptr) ? new CAArqApdu(*rhs.m_pAarqApdu): nullptr );
@@ -67,7 +83,7 @@ protected:
 		m_pRlreApdu = p4.release();
 	}
 
-	void delete_all_objects()
+	inline void delete_all_objects()
 	{
 		if (is_copy)
 		{

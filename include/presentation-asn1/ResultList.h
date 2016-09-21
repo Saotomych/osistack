@@ -34,6 +34,24 @@ protected:
 
 	QLinkedList<CResultSubsequence>* getObjectIdentifierList() { return m_pSeqOf; }
 
+	inline IBerBaseType* create_object_by_id(const CBerIdentifier&)
+	{
+		std::runtime_error("CResultList is Container class");
+		return nullptr;
+	}
+
+public:
+	inline QLinkedList<CResultSubsequence>* create_container_by_id(const CBerIdentifier& id)
+	{
+		qDebug() << "INFO: CResultList create member by id = " << id.getCode()->toHex();
+
+		if ( getIdObjectIdentifierList() == id )
+			{ m_pSeqOf = new QLinkedList<CResultSubsequence>(); is_copy = true; return m_pSeqOf; }
+
+		std::runtime_error("CResultList can't create any container");
+		return nullptr;
+	}
+
 public:
 
 	typedef CContainerStorage< CResultList, QLinkedList<CResultSubsequence>, CResultSubsequence > TLocalStorage;
@@ -46,6 +64,12 @@ public:
 	{
 		return CBerIdentifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16);
 	}
+
+	CResultList():
+		is_copy(false),
+		c_Identifier(getBerIdentifier()),
+		m_pSeqOf(nullptr)
+	{}
 
 	explicit CResultList(QLinkedList<CResultSubsequence>* pResultSubsequenceList):
 		is_copy(false),

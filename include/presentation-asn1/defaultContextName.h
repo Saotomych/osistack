@@ -28,13 +28,25 @@ protected:
 	QByteArray* getCode() { return &m_Code; }
 	CBerIdentifier getIdentifier() { return c_Identifier; }
 
-	CBerIdentifier getIdAbstractSyntaxName() { return CBerObjectIdentifier::getBerIdentifier(); }
-	CBerIdentifier getIdTransferSyntaxName() { return CBerObjectIdentifier::getBerIdentifier(); }
+	CBerIdentifier getIdAbstractSyntaxName() { return CBerIdentifier(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 0); }
+	CBerIdentifier getIdTransferSyntaxName() { return CBerIdentifier(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 1); }
 
 	IBerBaseType* getAbstractSyntaxName() { return m_pAbstractSyntaxName; }
 	IBerBaseType* getTransferSyntaxName() { return m_pTransferSyntaxName; }
 
-	void create_objects(const CDefaultContextName& rhs)
+	inline IBerBaseType* create_object_by_id(const CBerIdentifier& id)
+	{
+		qDebug() << "INFO: CDefaultContextName create member by id = " << id.getCode()->toHex();
+
+		if ( getIdAbstractSyntaxName() == id )
+			{ m_pAbstractSyntaxName = new CBerObjectIdentifier(); is_copy = true; return m_pAbstractSyntaxName; }
+		if ( getIdTransferSyntaxName() == id )
+			{ m_pTransferSyntaxName = new CBerObjectIdentifier(); is_copy = true; return m_pTransferSyntaxName; }
+
+		return nullptr;
+	}
+
+	inline void create_objects(const CDefaultContextName& rhs)
 	{
 		std::unique_ptr<CBerObjectIdentifier> p1
 				( (rhs.m_pAbstractSyntaxName != nullptr) ? new CBerObjectIdentifier(*rhs.m_pAbstractSyntaxName): nullptr );
@@ -45,7 +57,7 @@ protected:
 		m_pTransferSyntaxName = p2.release();
 	}
 
-	void delete_all_objects()
+	inline void delete_all_objects()
 	{
 		if (is_copy)
 		{
@@ -71,6 +83,13 @@ public:
 	{
 		return CBerIdentifier(CBerIdentifier::UNIVERSAL_CLASS, CBerIdentifier::CONSTRUCTED, 16);
 	}
+
+	CDefaultContextName():
+		is_copy(false),
+		c_Identifier(getBerIdentifier()),
+		m_pAbstractSyntaxName(nullptr),
+		m_pTransferSyntaxName(nullptr)
+	{}
 
 	CDefaultContextName(CBerObjectIdentifier* pAbstractSyntaxName, CBerObjectIdentifier* pTransferSyntaxName):
 		is_copy(false),

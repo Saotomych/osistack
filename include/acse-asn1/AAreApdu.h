@@ -101,39 +101,43 @@ public:
 
 protected:
 
-	inline void create_object_by_id(CBerIdentifier& id)
+	inline IBerBaseType* create_object_by_id(const CBerIdentifier& id)
 	{
+		qDebug() << "INFO: CAAreApdu create member by id = " << id.getCode()->toHex();
+
 		if ( c_IdProtocolVersion == id )
-			{ m_pProtocolVersion = new CBerBitString(); is_copy=true; return; }
+			{ m_pProtocolVersion = new CBerBitString(); is_copy=true; return m_pProtocolVersion; }
 		if ( c_IdApplicationContextName == id )
-			{ m_pApplicationContextName = new CApplicationContextName(); is_copy=true; return; }
+			{ m_pApplicationContextName = new CApplicationContextName(); is_copy=true; return m_pApplicationContextName; }
 		if ( c_IdResult == id )
-			{ m_pResult = new CBerInteger(); is_copy=true; return; }
+			{ m_pResult = new CBerInteger(); is_copy=true; return m_pResult; }
 		if ( c_IdResultSourceDiagnostic == id )
-			{ m_pResultSourceDiagnostic = new CAssociateSourceDiagnostic(); is_copy=true; return; }
+			{ m_pResultSourceDiagnostic = new CAssociateSourceDiagnostic(); is_copy=true; return m_pResultSourceDiagnostic; }
 		if ( c_IdApTitle == id )
-			{ m_pApTitle = new CApTitle(); is_copy=true; return; }
+			{ m_pApTitle = new CApTitle(); is_copy=true; return m_pApTitle; }
 		if ( c_IdRespondingAeQualifier == id )
-			{ m_pRespondingAeQualifier = new CAeQualifier(); is_copy=true; return; }
+			{ m_pRespondingAeQualifier = new CAeQualifier(); is_copy=true; return m_pRespondingAeQualifier; }
 		if ( c_IdRespondingApInvocationIdentifier == id )
-			{ m_pRespondingApInvocationIdentifier = new CBerInteger(); is_copy=true; return; }
+			{ m_pRespondingApInvocationIdentifier = new CBerInteger(); is_copy=true; return m_pRespondingApInvocationIdentifier; }
 		if ( c_IdRespondingAeInvocationIdentifier == id )
-			{ m_pRespondingAeInvocationIdentifier = new CBerInteger(); is_copy=true; return; }
+			{ m_pRespondingAeInvocationIdentifier = new CBerInteger(); is_copy=true; return m_pRespondingAeInvocationIdentifier; }
 		if ( c_IdResponderAcseRequrements == id )
-			{ m_pResponderAcseRequrements = new CBerBitString(); is_copy=true; return; }
+			{ m_pResponderAcseRequrements = new CBerBitString(); is_copy=true; return m_pResponderAcseRequrements; }
 		if ( c_IdMechanismName == id )
-			{ m_pMechanismName = new CBerObjectIdentifier(); is_copy=true; return; }
+			{ m_pMechanismName = new CBerObjectIdentifier(); is_copy=true; return m_pMechanismName; }
 		if ( c_IdRespondingAuthenticationValue == id )
-			{ m_pRespondingAuthenticationValue = new CAuthenticationValue(); is_copy=true; return; }
+			{ m_pRespondingAuthenticationValue = new CAuthenticationValue(); is_copy=true; return m_pRespondingAuthenticationValue; }
 		if ( c_IdApplicationContextNameList == id )
-			{ m_pApplicationContextNameList = new CApplicationContextNameList(); is_copy=true; return; }
+			{ m_pApplicationContextNameList = new CApplicationContextNameList(); is_copy=true; return m_pApplicationContextNameList; }
 		if ( c_IdImplementationInformation == id )
-			{ m_pImplementationInformation = new CBerGraphicString(); is_copy=true; return; }
+			{ m_pImplementationInformation = new CBerGraphicString(); is_copy=true; return m_pImplementationInformation; }
 		if ( c_IdUserInformation == id )
-			{ m_pUserInformation = new CAssociationInformation(); is_copy=true; return; }
+			{ m_pUserInformation = new CAssociationInformation(); is_copy=true; return m_pUserInformation; }
+
+		return nullptr;
 	}
 
-	void create_objects(const CAAreApdu& rhs)
+	inline void create_objects(const CAAreApdu& rhs)
 	{
 		std::unique_ptr<CBerBitString> p1
 				( (rhs.m_pProtocolVersion != nullptr) ? new CBerBitString(*rhs.m_pProtocolVersion): nullptr );
@@ -181,7 +185,7 @@ protected:
 
 	}
 
-	void delete_all_objects()
+	inline void delete_all_objects()
 	{
 		if (is_copy)
 		{

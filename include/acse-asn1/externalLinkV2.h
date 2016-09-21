@@ -42,7 +42,21 @@ public:
 
 protected:
 
-	void create_objects(const CExternalLinkV2& rhs)
+	inline IBerBaseType* create_object_by_id(const CBerIdentifier& id)
+	{
+		qDebug() << "INFO: CExternalLinkV2 create member by id = " << id.getCode()->toHex();
+
+		if ( getIdAny() == id )
+			{ m_pAny = new CBerAny(); is_copy = true; return m_pAny; }
+		if ( getIdOctetString() == id )
+			{ m_pOctetString = new CBerOctetString(); is_copy = true; return m_pOctetString; }
+		if ( getIdBitStr() == id )
+			{ m_pBitString = new CBerBitString(); is_copy = true; return m_pBitString; }
+
+		return nullptr;
+	}
+
+	inline void create_objects(const CExternalLinkV2& rhs)
 	{
 		std::unique_ptr<CBerAny> p1
 				( (rhs.m_pAny != nullptr) ? new CBerAny(*rhs.m_pAny): nullptr );
@@ -56,7 +70,7 @@ protected:
 		m_pBitString = p3.release();
 	}
 
-	void delete_all_objects()
+	inline void delete_all_objects()
 	{
 		if (is_copy)
 		{
@@ -86,6 +100,14 @@ public:
 	{
 		return CBerIdentifier();
 	}
+
+	CExternalLinkV2():
+		is_copy(false),
+		c_Identifier(getBerIdentifier()),
+		m_pAny(nullptr),
+		m_pOctetString(nullptr),
+		m_pBitString(nullptr)
+	{}
 
 	CExternalLinkV2(CBerAny* pAny, CBerOctetString* pOctetString, CBerBitString* pBitString):
 		is_copy(false),

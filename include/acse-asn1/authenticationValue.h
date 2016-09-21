@@ -46,7 +46,21 @@ public:
 
 protected:
 
-	void create_objects(const CAuthenticationValue& rhs)
+	inline IBerBaseType* create_object_by_id(const CBerIdentifier& id)
+	{
+		qDebug() << "INFO: CAuthenticationValue create member by id = " << id.getCode()->toHex();
+
+		if ( getIdGraphString() == id )
+			{ m_pGraphString = new CBerGraphicString(); is_copy = true; return m_pGraphString; }
+		if ( getIdBitString() == id )
+			{ m_pBitString = new CBerBitString(); is_copy = true; return m_pBitString; }
+		if ( getIdExternalLink() == id )
+			{ m_pExternalLink = new CExternalLinkV2(); is_copy = true; return m_pExternalLink; }
+
+		return nullptr;
+	}
+
+	inline void create_objects(const CAuthenticationValue& rhs)
 	{
 		std::unique_ptr<CBerGraphicString> p1
 				( (rhs.m_pGraphString != nullptr) ? new CBerGraphicString(*rhs.m_pGraphString): nullptr );
@@ -60,7 +74,7 @@ protected:
 		m_pExternalLink = p3.release();
 	}
 
-	void delete_all_objects()
+	inline void delete_all_objects()
 	{
 		if (is_copy)
 		{

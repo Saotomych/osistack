@@ -59,7 +59,27 @@ public:
 
 protected:
 
-	void create_objects(const CSubSecNormalModeParameters& rhs)
+	inline IBerBaseType* create_object_by_id(const CBerIdentifier& id)
+	{
+		qDebug() << "INFO: NsCpaPpdu::CSubSecNormalModeParameters create member by id = " << id.getCode()->toHex();
+
+		if ( c_IdProtocolVersion == id )
+			{ m_pProtocolVersion = new CBerBitString(); is_copy = true; return m_pProtocolVersion; }
+		if ( c_IdRespondingPresentationSelector == id )
+			{ m_pRespondingPresentationSelector = new CBerOctetString(); is_copy = true; return m_pRespondingPresentationSelector; }
+		if ( c_IdPresentationContextDefinitionResultList == id )
+			{ m_pPresentationContextDefinitionResultList = new CResultList(); is_copy = true; return m_pPresentationContextDefinitionResultList; }
+		if ( c_IdPresentationRequirements == id )
+			{ m_pPresentationRequirements = new CBerBitString(); is_copy = true; return m_pPresentationRequirements; }
+		if ( c_IdUserSessionRequirements == id )
+			{ m_pUserSessionRequirements = new CBerBitString(); is_copy = true; return m_pUserSessionRequirements; }
+		if ( getIdUserData() == id )
+			{ m_pUserData = new CUserData(); is_copy = true; return m_pUserData; }
+
+		return nullptr;
+	}
+
+	inline void create_objects(const CSubSecNormalModeParameters& rhs)
 	{
 		std::unique_ptr<CBerBitString> p1
 				( (rhs.m_pProtocolVersion != nullptr) ? new CBerBitString(*rhs.m_pProtocolVersion): nullptr );
@@ -82,7 +102,7 @@ protected:
 		m_pUserData = p6.release();
 	}
 
-	void delete_all_objects()
+	inline void delete_all_objects()
 	{
 		if (is_copy)
 		{
@@ -248,6 +268,18 @@ protected:
 
 	IBerBaseType* getPresentationContextIdentifier() { return m_pModeSelector; }
 	IBerBaseType* getSPDV() { return m_pSSNMP; }
+
+	inline IBerBaseType* create_object_by_id(const CBerIdentifier& id)
+	{
+		qDebug() << "INFO: CCpaPpdu create member by id = " << id.getCode()->toHex();
+
+		if ( c_IdModeSelector == id )
+			{ m_pModeSelector = new CModeSelector(); is_copy = true; return m_pModeSelector; }
+		if ( c_IdSSNMP == id )
+			{ m_pSSNMP = new NsCpaPpdu::CSubSecNormalModeParameters(); is_copy = true; return m_pSSNMP; }
+
+		return nullptr;
+	}
 
 public:
 

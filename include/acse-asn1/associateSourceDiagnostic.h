@@ -37,7 +37,19 @@ public:
 
 protected:
 
-	void create_objects(const CAssociateSourceDiagnostic& rhs)
+	inline IBerBaseType* create_object_by_id(const CBerIdentifier& id)
+	{
+		qDebug() << "INFO: CAssociateSourceDiagnostic create member by id = " << id.getCode()->toHex();
+
+		if ( id == c_IdAcseServiceUser)
+			{ m_pAcseServiceUser = new CBerInteger(); is_copy = true; return m_pAcseServiceUser; }
+		if ( id == c_IdAcseServiceProvider)
+			{ m_pAcseServiceProvider = new CBerInteger(); is_copy = true; return m_pAcseServiceProvider; }
+
+		return nullptr;
+	}
+
+	inline void create_objects(const CAssociateSourceDiagnostic& rhs)
 	{
 		std::unique_ptr<CBerInteger> p1
 				( (rhs.m_pAcseServiceUser != nullptr) ? new CBerInteger(*rhs.m_pAcseServiceUser): nullptr );
@@ -48,7 +60,7 @@ protected:
 		m_pAcseServiceProvider = p2.release();
 	}
 
-	void delete_all_objects()
+	inline void delete_all_objects()
 	{
 		if (is_copy)
 		{

@@ -51,7 +51,21 @@ namespace NsExternalLinkV1
 
 	protected:
 
-		void create_objects(const SubChoiceEncoding& rhs)
+		inline IBerBaseType* create_object_by_id(const CBerIdentifier& id)
+		{
+			qDebug() << "INFO: NsExternalLinkV1::SubChoiceEncoding create member by id = " << id.getCode()->toHex();
+
+			if ( c_IdSingleAsn1Type == id )
+				{ m_pSingleAsn1Type = new CBerAnyNoDecode(); is_copy = true; return m_pSingleAsn1Type; }
+			if ( c_IdOctetAligned == id )
+				{ m_pOctetAligned = new CBerOctetString(); is_copy = true; return m_pOctetAligned; }
+			if ( c_IdArbitrary == id )
+				{ m_pArbitrary = new CBerBitString(); is_copy = true; return m_pArbitrary; }
+
+			return nullptr;
+		}
+
+		inline void create_objects(const SubChoiceEncoding& rhs)
 		{
 			std::unique_ptr<CBerAnyNoDecode> p1
 					( (rhs.m_pSingleAsn1Type != nullptr) ? new CBerAnyNoDecode(*rhs.m_pSingleAsn1Type): nullptr );
@@ -65,7 +79,7 @@ namespace NsExternalLinkV1
 			m_pArbitrary = p3.release();
 		}
 
-		void delete_all_objects()
+		inline void delete_all_objects()
 		{
 			if (is_copy)
 			{
@@ -98,6 +112,17 @@ namespace NsExternalLinkV1
 		{
 			return CBerIdentifier();
 		}
+
+		SubChoiceEncoding():
+			is_copy(false),
+			c_Identifier(getBerIdentifier()),
+			c_IdSingleAsn1Type(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::CONSTRUCTED, 0),
+			c_IdOctetAligned(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 1),
+			c_IdArbitrary(CBerIdentifier::CONTEXT_CLASS, CBerIdentifier::PRIMITIVE, 2),
+			m_pSingleAsn1Type(nullptr),
+			m_pOctetAligned(nullptr),
+			m_pArbitrary(nullptr)
+		{}
 
 		SubChoiceEncoding(CBerAnyNoDecode* pSingleAsn1Type, CBerOctetString* pOctetAligned, CBerBitString* pArbitrary):
 			is_copy(false),
@@ -195,7 +220,21 @@ public:
 
 protected:
 
-	void create_objects(const CExternalLinkV1& rhs)
+	inline IBerBaseType* create_object_by_id(const CBerIdentifier& id)
+	{
+		qDebug() << "INFO: NsExternalLinkV1::CExternalLinkV1 create member by id = " << id.getCode()->toHex();
+
+		if (getIdDirectReference() == id )
+			{ m_pDirectReference = new CBerObjectIdentifier(); is_copy = true; return m_pDirectReference; }
+		if ( getIdIndirectReference() == id )
+			{ m_pIndirectReference = new CBerInteger(); is_copy = true; return m_pIndirectReference; }
+		if ( getIdEncoding() == id )
+			{ m_pEncoding = new NsExternalLinkV1::SubChoiceEncoding(); is_copy = true; return m_pEncoding; }
+
+		return nullptr;
+	}
+
+	inline void create_objects(const CExternalLinkV1& rhs)
 	{
 		std::unique_ptr<CBerObjectIdentifier> p1
 				( (rhs.m_pDirectReference != nullptr) ? new CBerObjectIdentifier(*rhs.m_pDirectReference): nullptr );
@@ -209,7 +248,7 @@ protected:
 		m_pEncoding = p3.release();
 	}
 
-	void delete_all_objects()
+	inline void delete_all_objects()
 	{
 		if (is_copy)
 		{

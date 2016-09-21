@@ -99,7 +99,47 @@ public:
 
 protected:
 
-	void create_objects(const CAArqApdu& rhs)
+	inline IBerBaseType* create_object_by_id(const CBerIdentifier& id)
+	{
+		qDebug() << "INFO: CAArqApdu create member by id = " << id.getCode()->toHex();
+
+		if ( c_IdProtocolVersion == id )
+			{ m_pProtocolVersion = new CBerBitString(); is_copy=true; return m_pProtocolVersion; }
+		if ( c_IdApplicationContextName == id )
+			{ m_pApplicationContextName = new CApplicationContextName(); is_copy=true; return m_pApplicationContextName; }
+		if ( c_IdCalledApTitle == id )
+			{ m_pCalledApTitle = new CApTitle(); is_copy=true; return m_pCalledApTitle; }
+		if ( c_IdCalledAeQualifier == id )
+			{ m_pCalledAeQualifier = new CAeQualifier(); is_copy=true; return m_pCalledAeQualifier; }
+		if ( c_IdCalledApInvocationIdentifier == id )
+			{ m_pCalledApInvocationIdentifier = new CBerInteger(); is_copy=true; return m_pCalledApInvocationIdentifier; }
+		if ( c_IdCalledAeInvocationIdentifier == id )
+			{ m_pCalledAeInvocationIdentifier = new CBerInteger(); is_copy=true; return m_pCalledAeInvocationIdentifier; }
+		if ( c_IdCallingApTitle == id )
+			{ m_pCallingApTitle = new CApTitle(); is_copy=true; return m_pCallingApTitle; }
+		if ( c_IdCallingAeQualifier == id )
+			{ m_pCallingAeQualifier = new CAeQualifier(); is_copy=true; return m_pCallingAeQualifier; }
+		if ( c_IdCallingApInvocationIdentifier == id )
+			{ m_pCallingApInvocationIdentifier = new CBerInteger(); is_copy=true; return m_pCallingApInvocationIdentifier; }
+		if ( c_IdCallingAeInvocationIdentifier == id )
+			{ m_pCallingAeInvocationIdentifier = new CBerInteger(); is_copy=true; return m_pCallingAeInvocationIdentifier; }
+		if ( c_IdSenderAcseRequerements == id )
+			{ m_pSenderAcseRequerements = new CBerBitString(); is_copy=true; return m_pSenderAcseRequerements; }
+		if ( c_IdMechanismName == id )
+			{ m_pMechanismName = new CBerObjectIdentifier(); is_copy=true; return m_pMechanismName; }
+		if ( c_IdCallingAuthenticationValue == id )
+			{ m_pCallingAuthenticationValue = new CAuthenticationValue(); is_copy=true; return m_pCallingAuthenticationValue; }
+		if ( c_IdApplicationContextNameList == id )
+			{ m_pApplicationContextNameList = new CApplicationContextNameList(); is_copy=true; return m_pApplicationContextNameList; }
+		if ( c_IdImplementationInformation == id )
+			{ m_pImplementationInformation = new CBerGraphicString(); is_copy=true; return m_pImplementationInformation; }
+		if ( c_IdUserInformation == id )
+			{ m_pUserInformation = new CAssociationInformation(); is_copy=true; return m_pUserInformation; }
+
+		return nullptr;
+	}
+
+	inline void create_objects(const CAArqApdu& rhs)
 	{
 		std::unique_ptr<CBerBitString> p1
 				( (rhs.m_pProtocolVersion != nullptr) ? new CBerBitString(*rhs.m_pProtocolVersion): nullptr );
@@ -153,7 +193,7 @@ protected:
 
 	}
 
-	void delete_all_objects()
+	inline void delete_all_objects()
 	{
 		if (is_copy)
 		{

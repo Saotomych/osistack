@@ -34,6 +34,24 @@ protected:
 
 	QLinkedList<CPdvList>* getSeqOf() { return m_pSeqOf; }
 
+	inline IBerBaseType* create_object_by_id(const CBerIdentifier&)
+	{
+		std::runtime_error("CFullyEncodedData is Container class");
+		return nullptr;
+	}
+
+public:
+	inline QLinkedList<CPdvList>* create_container_by_id(const CBerIdentifier& id)
+	{
+		qDebug() << "INFO: CFullyEncodedData create member by id = " << id.getCode()->toHex();
+
+		if ( getIdSeqOf() == id )
+			{ m_pSeqOf = new QLinkedList<CPdvList>; is_copy = true; return m_pSeqOf; }
+
+		std::runtime_error("CFullyEncodedData can't create any container");
+		return nullptr;
+	}
+
 public:
 
 	typedef CContainerStorage<CFullyEncodedData, QLinkedList<CPdvList>, CPdvList> LocalStorage;

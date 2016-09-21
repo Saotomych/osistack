@@ -36,7 +36,19 @@ public:
 
 protected:
 
-	void create_objects(const CRLreApdu& rhs)
+	inline IBerBaseType* create_object_by_id(const CBerIdentifier& id)
+	{
+		qDebug() << "INFO: CRLreApdu create member by id = " << id.getCode()->toHex();
+
+		if ( c_IdReason == id )
+			{ m_pReason = new CBerInteger(); is_copy = true; return m_pReason; }
+		if ( c_IdUserInformation == id )
+			{ m_pUserInformation = new CAssociationInformation(); is_copy = true; return m_pUserInformation; }
+
+		return nullptr;
+	}
+
+	inline void create_objects(const CRLreApdu& rhs)
 	{
 		std::unique_ptr<CBerInteger> p1
 				( (rhs.m_pReason != nullptr) ? new CBerInteger(*rhs.m_pReason): nullptr );
@@ -47,7 +59,7 @@ protected:
 		m_pUserInformation = p2.release();
 	}
 
-	void delete_all_objects()
+	inline void delete_all_objects()
 	{
 		if (is_copy)
 		{

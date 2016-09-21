@@ -29,6 +29,16 @@ protected:
 
 	const CBerIdentifier c_Identifier;
 
+	inline IBerBaseType* create_object_by_id(const CBerIdentifier& id)
+	{
+		qDebug() << "INFO: CApTitle create member by id = " << id.getCode()->toHex();
+
+		if ( getIdApTitleForm2() == id )
+			{ m_pApTitleForm2 = new CBerObjectIdentifier(); is_copy = true; return m_pApTitleForm2; }
+
+		return nullptr;
+	}
+
 public:
 
 	QByteArray* getCode() { return &m_Code; }
