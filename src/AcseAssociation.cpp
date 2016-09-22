@@ -54,7 +54,7 @@ void CAcseAssociation::acceptSession(CBerByteArrayOutputStream& payload)
 	CAcseApdu acse(nullptr, &aare, nullptr, nullptr);
 	CBerByteArrayOutputStream berOStream(100, true);
 
-	quint32 codeLength = acse.encode(berOStream, true);
+	quint32 codeLength = acse.startEncode(berOStream);
 
 	CBerAnyNoDecode band(codeLength);
 
@@ -80,7 +80,7 @@ void CAcseAssociation::acceptSession(CBerByteArrayOutputStream& payload)
 
 	CCpaPpdu cpaPpdu(&normalModeSelector, &normalModeParameters);
 
-	cpaPpdu.encode(berOStream, true);
+	cpaPpdu.startEncode(berOStream);
 
 	QLinkedList<QByteArray> ssduList;
 	QLinkedList<quint32> ssduOffsets;
@@ -260,7 +260,7 @@ void CAcseAssociation::startAssociation(
 	// Serialize
 	CBerByteArrayOutputStream berOStream(200, true);
 
-	acse.encode(berOStream, true);
+	acse.startEncode(berOStream);
 
 	quint32 acseHeaderLength = berOStream.getByteArray().size();
 
@@ -303,7 +303,7 @@ void CAcseAssociation::startAssociation(
 
 	CCpType cpType( &normalModeSelector, &normalModeParameter);
 
-	cpType.encode(berOStream, true);
+	cpType.startEncode(berOStream);
 
 	QByteArray outarr = berOStream.getByteArray();
 
@@ -642,7 +642,7 @@ void CAcseAssociation::send(CBerByteArrayOutputStream& payload)
 	CUserData userData( nullptr, &fullyEncodedData );
 
 	CBerByteArrayOutputStream berOStream(200,true);
-	userData.encode(berOStream, true);
+	userData.startEncode(berOStream);
 
 	QLinkedList<QByteArray> ssduList;
 	QLinkedList<quint32> ssduOffsets;
