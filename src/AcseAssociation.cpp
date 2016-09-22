@@ -25,10 +25,10 @@ QDataStream& CAcseAssociation::decodePConResponse(QDataStream& ppdu)
 {
 	CCpaPpdu cpaPpdu;
 	CBerByteArrayInputStream iStream(ppdu);
-	cpaPpdu.decode(iStream, true);
+	cpaPpdu.startDecode(iStream);
 
 	CAcseApdu acseApdu;
-	acseApdu.decode(iStream, (CBerIdentifier*)nullptr);
+	acseApdu.startDecode(iStream);
 
 	return ppdu;
 }
@@ -703,7 +703,7 @@ void CAcseAssociation::receive(QByteArray& pduBuffer)
 	lastBerIdentifier::reset();
 
 	CUserData userData;
-	if (userData.decode( iStream, true) == 0)
+	if (userData.startDecode( iStream) == 0)
 	{
 		qDebug() <<  "CAcseAssociation::receive: error decoding PPDU header";
 		return;
@@ -760,10 +760,10 @@ QByteArray CAcseAssociation::parseConnectionEstablished(QDataStream& iStream, qu
 		CBerByteArrayInputStream InputStream(iStream);
 
 		CCpaPpdu cpaPpdu;
-		cpaPpdu.decode(InputStream, true);
+		cpaPpdu.startDecode(InputStream);
 
 		CAcseApdu acse;
-		acse.decode(InputStream, true);
+		acse.startDecode(InputStream);
 
 		m_connected = true;
 
@@ -808,9 +808,9 @@ QByteArray CAcseAssociation::parseConnectionRequest(QDataStream& iStream)
 	CCpType cpType;
 	CAcseApdu acse;
 
-	cpType.decode(berIStream, true);
+	cpType.startDecode(berIStream);
 
-	acse.decode(berIStream, true);
+	acse.startDecode(berIStream);
 
 	quint32 fakeLength = 0;
 	retArray += *(lastBerIdentifier::get(berIStream, fakeLength).getCode()) + berIStream.get();
