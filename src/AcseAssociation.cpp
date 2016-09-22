@@ -699,26 +699,18 @@ void CAcseAssociation::receive(QByteArray& pduBuffer)
 	}
 
 	// decode PPDU header
-	CBerAnyNoDecode noDecode(0);
-	NsPdvList::SubchoicePresentationDataValues spdv( &noDecode,
-			(CBerOctetString*) nullptr, (CBerBitString*) nullptr);
-	CBerInteger int31(31);
-	CPdvList pdvList( (CBerObjectIdentifier*) nullptr, &int31, &spdv);
-
-	QLinkedList<CPdvList> listPdvList;
-	listPdvList.push_back(pdvList);
-
-	CFullyEncodedData fullyEncodedData(&listPdvList);
-	CUserData userData( nullptr, &fullyEncodedData );
-
 	CBerByteArrayInputStream iStream( pduBuffer, 4);
-	if (userData.decode( iStream, false) == 0)
+	lastBerIdentifier::reset();
+
+	CUserData userData;
+	if (userData.decode( iStream, true) == 0)
 	{
 		qDebug() <<  "CAcseAssociation::receive: error decoding PPDU header";
 		return;
 	}
 
-	pduBuffer = iStream.get();
+	quint32 fakeLen = 0;
+	pduBuffer = *(lastBerIdentifier::get(iStream, fakeLen).getCode()) + iStream.get();
 
 }
 
@@ -761,80 +753,16 @@ QByteArray CAcseAssociation::parseConnectionEstablished(QDataStream& iStream, qu
 	{
 		receiveDataParser(iStream);	// Это парсит client
 
-		// Decode to stack
-
-		// CpaPpdu
-
-//		CBerAnyNoDecode band(codeLength);
-		CBerAnyNoDecode band(0);
-
-		NsPdvList::SubchoicePresentationDataValues presDataValues(
-				&band,
-				(CBerOctetString*) nullptr,
-				(CBerBitString*) nullptr );
-
-		CBerInteger acsePresentationContextId;
-		CPdvList pdvList(
-				(CBerObjectIdentifier*) nullptr,
-				&acsePresentationContextId,
-				&presDataValues);
-
-		QLinkedList<CPdvList> listPdvList;
-		listPdvList.push_back(pdvList);
-
-		CFullyEncodedData fullyEncodedData(&listPdvList);
-
-		CUserData userData( (CBerOctetString*) nullptr, &fullyEncodedData);
-
-		CBerOctetString PSelLocal;
-		CBerInteger iR1, iR2;
-		CBerObjectIdentifier OIR1, OIR2;
-		CResultSubsequence r1(&iR1, &OIR1, nullptr);
-		CResultSubsequence r2(&iR2, &OIR2, nullptr);
-		QLinkedList<CResultSubsequence> listR;
-		listR.push_back(r1);
-		listR.push_back(r2);
-		CResultList presentationResultList(&listR);
-
-		NsCpaPpdu::CSubSecNormalModeParameters normalModeParameters(nullptr, &PSelLocal, &presentationResultList,
-				(CBerBitString*) nullptr, (CBerBitString*) nullptr, &userData);
-
-		CBerInteger modeSelector;
-		CModeSelector normalModeSelector(&modeSelector);
-		CCpaPpdu cpaPpdu(&normalModeSelector, &normalModeParameters);
-
-		// ACSE
-
-		CBerAnyNoDecode berAny(payloadSize);
-		NsExternalLinkV1::SubChoiceEncoding subChEncoding( &berAny, (CBerOctetString*) nullptr, (CBerBitString*) nullptr );
-
-		CBerObjectIdentifier directReference;
-		CBerInteger indirectReference;
-		CExternalLinkV1 external(&directReference, &indirectReference, &subChEncoding);
-
-		QLinkedList<CExternalLinkV1> listExternal;
-		listExternal.push_back(external);
-
-		CAssociationInformation userInformation(&listExternal);
-
-		CBerObjectIdentifier applicationContextName;
-		CApplicationContextName acn(&applicationContextName);
-
-		CBerInteger aareAccepted;
-		CBerInteger acseServiceUser;
-		CAssociateSourceDiagnostic associateSourceDiagnostic(&acseServiceUser, (CBerInteger*)nullptr);
-		CAAreApdu aare(nullptr, &acn, &aareAccepted, &associateSourceDiagnostic, nullptr,
-				nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, &userInformation);
-		CAcseApdu acse(nullptr, &aare, nullptr, nullptr);
-
-		// ACSE Ready
+		// Decode request to stack CPA PPDU & ACSE APDU
 
 		CBerByteArrayOutputStream berOStream(100, true);
 
 		CBerByteArrayInputStream InputStream(iStream);
 
+		CCpaPpdu cpaPpdu;
 		cpaPpdu.decode(InputStream, true);
 
+		CAcseApdu acse;
 		acse.decode(InputStream, true);
 
 		m_connected = true;
@@ -876,124 +804,6 @@ QByteArray CAcseAssociation::parseConnectionRequest(QDataStream& iStream)
 	CBerByteArrayInputStream berIStream(iStream);
 	QByteArray out = berIStream.get();
 	qDebug() << out.toHex();
-
-// Create empty structure for decoding
-//	QVector<qint32> bitStringCalled;
-//	CBerObjectIdentifier calledId(bitStringCalled);
-//	CApTitle calledApTitle( &calledId );
-//
-//	QVector<qint32> bitStringCalling;
-//	CBerObjectIdentifier callingId(bitStringCalling);
-//	CApTitle callingApTitle( &callingId );
-//
-//	CBerAnyNoDecode noDecode;
-//	NsExternalLinkV1::SubChoiceEncoding encoding( &noDecode, nullptr, nullptr );
-//
-//	CBerObjectIdentifier directReference;
-//	CBerInteger indirectReference;
-//	CExternalLinkV1 externalLink( &directReference, &indirectReference, &encoding);
-//
-//	QLinkedList<CExternalLinkV1> externalList;
-//	externalList.push_back(externalLink);
-//
-//	CAssociationInformation userInformation( &externalList );
-//
-//	QByteArray code;
-//	CBerBitString SenderAcseRequirements(code);
-//
-//	CBerGraphicString auString;
-//	CAuthenticationValue AuthenticationValue( &auString, nullptr, nullptr);
-//
-//	CBerObjectIdentifier MechanismName;
-//
-//	CBerInteger aeIntCalled;
-//	CAeQualifier aeQaCalled( &aeIntCalled );
-//	CBerInteger aeIntCalling;
-//	CAeQualifier aeQaCalling( &aeIntCalling );
-//
-//	CBerObjectIdentifier applicationContextName;
-//	CApplicationContextName acn( &applicationContextName );
-//
-//	CAArqApdu aarq(
-//			(CBerBitString*) nullptr,
-//			&acn,
-//			&calledApTitle,
-//			&aeQaCalled,
-//			(CBerInteger*) nullptr,
-//			(CBerInteger*) nullptr,
-//			&callingApTitle,
-//			&aeQaCalling,
-//			(CBerInteger*) nullptr,
-//			(CBerInteger*) nullptr,
-//			(CBerBitString*) nullptr, // &SenderAcseRequirements,
-//			(CBerObjectIdentifier*) nullptr, //&MechanismName,
-//			(CAuthenticationValue*) nullptr, //&AuthenticationValue,
-//			(CApplicationContextNameList*) nullptr,
-//			(CBerGraphicString*) nullptr,
-//			&userInformation);
-//
-//	CAcseApdu acse( &aarq, nullptr, nullptr, nullptr );
-//
-//// ------------------------------------------------------------------------
-////	getPresentationUserDataField
-//// ------------------------------------------------------------------------
-//	CBerAnyNoDecode band;
-//
-//	NsPdvList::SubchoicePresentationDataValues presDataValues(
-//			&band,
-//			(CBerOctetString*) nullptr,
-//			(CBerBitString*) nullptr );
-//
-//	CPdvList pdvList(
-//			(CBerObjectIdentifier*) nullptr,
-//			&acsePresentationContextId,
-//			&presDataValues);
-//
-//	QLinkedList<CPdvList> listPdvList;
-//	listPdvList.push_back(pdvList);
-//
-//	CFullyEncodedData fullyEncodedData(&listPdvList);
-//
-//	CUserData userData( (CBerOctetString*) nullptr, &fullyEncodedData);
-//
-//// ------------------------------------------------------------------------
-//
-//	QByteArray selRemote;
-//	CBerOctetString SelRemoteBerOctetString(selRemote);
-//
-//	CBerObjectIdentifier oid1;
-//	CBerObjectIdentifier oid2;
-//	CBerObjectIdentifier oid3;
-//	CBerObjectIdentifier oid4;
-//	CBerObjectIdentifier oid5;
-//	CBerObjectIdentifier oid6;
-//	QLinkedList<CBerObjectIdentifier> tsnl1;
-//	CContextListSubSeqOfTransferSyntaxName tsn1(&tsnl1);
-//	tsnl1.push_back(oid5);
-//	QLinkedList<CBerObjectIdentifier> tsnl2;
-//	CContextListSubSeqOfTransferSyntaxName tsn2(&tsnl2);
-//	tsnl2.push_back(oid6);
-//	CBerInteger int1;
-//	CBerInteger int2;
-//	CContextListSubSeq appCN1(&int1, &oid1, &tsn1);
-//	CContextListSubSeq appCN2(&int2, &oid2, &tsn2);
-//	QLinkedList<CContextListSubSeq> appCNList;
-//	appCNList.push_back(appCN1);
-//	appCNList.push_back(appCN2);
-//	CContextList contextList(&appCNList);
-//
-//	NsCpType::CSubSeqNormalModeParameters normalModeParameter(
-//			nullptr,
-//			&PSelLocal,
-//			&SelRemoteBerOctetString,
-//			&contextList,
-//			nullptr,
-//			nullptr,
-//			nullptr,
-//			&userData
-//			);
-//
-//	CCpType cpType( &normalModeSelector, &normalModeParameter);
 
 	CCpType cpType;
 	CAcseApdu acse;
