@@ -968,3 +968,7 @@ void CAcseAssociation::slotAcseTSduReady(const CConnection* pconn)
 	emit signalAcseTSduReady(this);
 }
 
+bool CAcseAssociation::isConnected() const
+{
+    return m_connected;
+}

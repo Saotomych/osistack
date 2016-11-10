@@ -139,6 +139,8 @@ public: // class API
 	 */
 	void setMessageTimeout(quint32 tout);
 
+    bool isConnected() const;
+
 protected:
 
 	bool m_connected;
